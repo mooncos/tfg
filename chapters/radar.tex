@@ -48,7 +48,11 @@ The printed circuit board (PCB) of the system which handles the emission and rec
 
 This antenna and MMIC module interfaces through the provided pinhole connector with a baseband board. This baseband board follows the general hardware design description outlined in \cref{sec:baseband_general}.
 
-The baseband PCB is conditions the radar signals from and to the MMIC, and filters the receiving signals to output intermediate frequency (IF) signals in phase and in quadrature, namely $I_{\mathrm{rad}}$ and $Q_{\mathrm{rad}}$.
+\subsubsection{Baseband board}
+
+The baseband PCB provides the MMIC with the \textit{Vctrl} signal in order to generate the CWLFM ramp signals based on a predefined chirp time and frequency. Additionally, the baseband PCB conditions the IF signals coming from the MMIC.
+
+ filters the receiving signals to output intermediate frequency (IF) signals in phase and in quadrature, namely $I_{\mathrm{rad}}$ and $Q_{\mathrm{rad}}$.
 \todo[inline]{Describir qué hace exactamente la PCB de banda base, según TFT de Montesano y Nacho S}
 En otra subsección
 \todo[inline]{Tengo que redactar aquí las características de la señal de IF del documento if\_stage.docx}
