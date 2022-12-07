@@ -1,0 +1,53 @@
+	\chapter{System characteristics}
+	
+	The complete system designed in this thesis consists of three parts: a 24 GHz radar from Silicon Radar based on the TRX-024-046 monolithic microwave integrated circuit (MMIC), an intermediate frequency (IF) filtering and conditioning stage, and a processing and transmission unit based on a commercially available microcontroller unit (MCU) STM32WB15CCU6. An overview of the system can be found in \cref{fig:system}.
+	
+	\section{Radar system} \label{sec:radar_sys}
+	
+	The radar system operates at 24 GHz and is made up of a printed circuit board (PCB) featuring two patch array antennas and a monolithic microwave integrated circuit (MMIC) TRX-024-046 from Silicon Radar [REF], and a baseband PCB that contains integrated circuits (IC) that take the intermediate frequency (IF) signals from the radar, filter them and output IF signals in a I-Q format, namely $I_\mathrm{rad}$ and $Q_\mathrm{rad}$, to a pair of SMA connectors (Figure ZZZ). The design of the radar system is based on the current designs at GMR \cite{Montesano2019}. A high-level architecture diagram of the currently used radar system with the two PCBs can be found in figure ZZZ. 
+	
+	\subsection{RF board}
+	
+	The RF board features the radiofrequency components of the radar system. It is designed and manufactured by Silicon Radar and features a TRX-024-046 MMIC connected to two patch array antennas (TX and RX) [REF].
+	
+	%diagrama esquematico datasheet silicon mmic
+	
+	\subsection{Baseband board}
+	
+	Currently used baseband PCB designs are geared towards other applications and radar frontends rather than the TRX-024-046 MMIC. The schematics and part lists of the currently used designs can be found in \cite{Sardinero2022, Montesano2019}. To adapt the design to radar frontend and application of this thesis, a series of modifications have been performed:
+	\paragraph{I-Q band pass filter 2nd stage removal}\mbox{}\\
+	IF signals coming from the radar frontend are filtered and amplified to obtain I and Q signals in the correct voltage range and frequencies. For that matter a band pass filter is used. The design of the filter is the same as in \cite[p.~12-14]{Sardinero2022}. However due to the 24 GHz radar frontend having enough gain, the second stage of the filter has been removed.
+	
+	\paragraph{Output impedance adaptation}\mbox{}\\	
+	The baseband PCB used for the testing radar has an output of \SI{50}{\ohm} which together with the high input impedance of the operational amplifiers of the conditioning circuits create an undesirable loading effect which increments current consumption and shifts the voltage of the output IF signals.
+	
+	
+	
+	
+	
+	
+
+	
+	\section{Signal digitisation}
+	
+	It is necessary to digitise and process the radar signals to extract useful information. Current solutions at GMR involve the use of commercial ADCs that are very expensive and do not provide real-time measurements. One such ADC currently in use is ADLINK PCI-9846D. While this ADC achieves a high sampling rate, it cannot provide real-time measurements as it only samples for a specified amount of time, stores the acquired samples, and finally outputs the sampled signal to a receiving device in a non-continuous fashion \cite[p.~43-44]{ADLINKTechnologies2010}. Moreover, one unit of this ADC retails for around 3630€, significantly increasing the cost of the complete system \cite[p.~53]{Moreno2020}.
+	
+		
+	To digitise these signals without losing useful information it is decided to use a microcontroller unit (MCU) with an integrated ADC. The integrated ADC must have a sufficient sampling rate to avoid information loss when sampling as per \cref{eq:nyquist}. In the radar operation conditions, the minimum sampling frequency ($f_{s\min}$) required for the radar signals is given in \cref{eq:if_conditions}. Therefore, for each IF signal ($I_\mathrm{rad}, Q_\mathrm{rad}$) a minimum sampling frequency of $f_{s\min} = \SI{0.5}{\mega\hertz}$ is required.
+	
+	Moreover, the digitised signals must be transmitted to a receiving device. It is of interest that this transmission is wireless and can be received in a portable device. For that matter, after consideration of multiple wireless communication protocols, Bluetooth Low Energy (BLE) is chosen due to its low-cost and low-power characteristics \cite{Gomez2012}.
+	
+	The MCU transmits the FFT of each ramp in real-time via the BLE protocol. The MCU features a set of peripherals that allow for adequate sampling, processing and transmission of the signals. 
+	
+	The chosen MCU that satisfies this conditions is STM32WB15CCU6 from ST Microelectronics which is based on an ARM Cortex-M4 processor \cite{STMicroelectronics2022}. This MCU has an embedded ADC with the following characteristics:
+	\begin{itemize}
+		\item 12-bit resolution, digital range: $[0, 4095]$.
+		\item 10 input channels sampled sequentially with a total maximum sampling rate of 2.5 MS/s at 12-bit resolution. When using 2 channels (for $I_\mathrm{rad}$ and $Q_\mathrm{rad}$), each channel is sampled at a maximum of 1.25 MS/s.
+		% \item Configurable dynamic voltage range of the inputs: $[0, V_{DDA}]$ where $V_{DDA} \le \SI{3.3}{\volt}$.
+	\end{itemize}
+
+	Additionally, the MCU has an integrated ARM Cortex-M0+ wireless co-processor that handles BLE communication. The BLE communication has the following characteristics:
+	\begin{itemize}
+		\item Maximum theoretical BLE data payload throughput: \SI{1376.2}{\kilo\bit\per\second} \cite{NordicSemiconductor2019,Bluetooth52},  which is not enough to transmit all the raw values from the ADC. Some on-device processing is needed.
+		\item Maximum theoretical BLE operating range: \SI{10}{\meter} \cite{Bluetooth52}.
+	\end{itemize}

@@ -1,0 +1,31 @@
+$R_{\max}$ and $\nu_{r\max}$ depend on the environment and the case of radar use. In the context of measuring the gait of a person, the environment is indoors and the target is a walking human being. The target linear velocity should be around $\SI{5}{\kilo\meter\per\hour} \approx \SI{1.4}{\meter\per\second}$. The goal is to obtain measurements from moving parts of the body. The fastest moving parts are the arms, which have a maximum radial velocity of around \SI{3}{\meter\per\second}. Therefore, $\nu_{r\max} = 1.4 + 3 = \SI{4.4}{\meter\per\second}$. A margin of error is left to avoid measurement errors from sudden movements of body parts. Thus, $\nu_{r\max} =\SI{5.9}{\meter\per\second}$.
+
+
+
+With these constraints, it is possible to obtain the minimum sampling frequencies and the maximum pulse repetition intervals for radars with different bandwidths and working frequencies by solving \cref{eq:fs_final}. A series of examples are shown in \cref{tab:fs_Tc}.
+\newpage
+
+\begin{longtable}{@{}cccc@{}}
+	\toprule
+	$\mathbf{f_0}$ \textbf{(GHz)}& $\mathbf{W}$ \textbf{(GHz)} & $\mathbf{f_{s\min}} \textbf{(MHz)}$& $\mathbf{T_c}$ \textbf{(\si{\micro\second})} \\* \midrule 
+	\endhead
+	24.0 & 2.0 & 0.5 & 529.7 \\
+	24.0 & 4.0 & 1.0 & 529.7 \\
+	24.0 & 5.0 & 1.3 & 529.7 \\
+	66.0 & 4.0 & 2.8 & 192.6 \\
+	134.0 & 1.0 & 1.4 & 94.9 \\* \bottomrule
+	\caption{Sampling frequencies and pulse repetition intervals for different parameters.}
+	\label{tab:fs_Tc} 
+\end{longtable}
+
+For the purpose of this Bachelor Thesis, the measurement and operation of the system is carried out under the following conditions:
+\begin{equation} \label{eq:if_conditions}
+	f_0 = \SI{24}{\giga\hertz} \qquad W = \SI{2}{\giga\hertz} \qquad f_{s\min} = \SI{0.5}{\mega\hertz} \qquad T_c = \SI{529.7}{\micro\second}
+\end{equation}
+
+This yields the following maximum operating range ($R_{\max}$):
+\begin{align}
+	f_s c^2 &= 16 R_{\max}W f_0 \nu_{r\max} \\
+	R_{\max} &= \frac{f_s c^2}{16 W f_0 \nu_{r\max}} = \SI{9.917}{\meter}
+\end{align}
+which is sufficient for an indoor environment of operation requiring around \SI{10}{\meter} distance maximum.

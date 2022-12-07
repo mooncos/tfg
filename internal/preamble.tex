@@ -1,0 +1,92 @@
+% current font configuration
+% \usepackage[default,scale=0.95]{opensans} % scaled-down version
+%\usepackage[default]{sourcesanspro}
+%\renewcommand\seriesdefault{l}
+%\renewcommand\mddefault{l}
+%\renewcommand\bfdefault{sb}% or \renewcommand\bfdefault{m}
+
+\usepackage[utf8]{inputenc}
+%\usepackage{lmodern}
+%\usepackage{amsmath, amsfonts, amsthm, amssymb}  % Some math symbols
+%\usepackage{amsmath, amsthm, amssymb}
+%\usepackage{libertinus}
+\usepackage{kpfonts}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+%\usepackage[amsthm]{libertinust1math}
+%\usepackage[scr=boondoxo,bb=boondox]{mathalpha}
+\usepackage[british]{babel}
+\usepackage[pdftex,dvipsnames]{xcolor}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\usepackage{xurl}
+\usepackage{siunitx}
+\usepackage{tikz}
+\usepackage{csquotes}
+\usepackage{amsmath}
+\usepackage[capitalise]{cleveref}
+\usepackage{longtable}
+\usepackage{pdfpages}
+\usepackage{titletoc}
+\usepackage{graphicx}
+\usepackage{scrextend}
+\usepackage{subfig}
+\usepackage{tabularray}
+\usepackage{booktabs}
+\usepackage{xargs}
+\usepackage[colorinlistoftodos,prependcaption]{todonotes}
+\usepackage[top=3cm,right=3cm,bottom=3cm,left=3cm]{geometry}
+%\usepackage[numbers]{natbib}
+%\usepackage[backend=biber,dateabbrev=false,urldate=iso,seconds=true,language=british,dashed=false,style=ieee]{biblatex}
+\pdfminorversion=7
+
+\hypersetup{
+	hidelinks = true,
+%	colorlinks = false,
+%	linkcolor =  blue,
+%	anchorcolor = blue,
+%	urlcolor  = blue,
+%	citecolor = blue,
+}
+
+\sisetup{
+	separate-uncertainty=true,
+	multi-part-units=single,
+	detect-weight=true,
+	per-mode=symbol,
+}
+
+\UseTblrLibrary{booktabs}
+\UseTblrLibrary{siunitx}
+
+% headings
+\usepackage[
+automark,
+autooneside=false,% <- needed if you want to use \leftmark and \rightmark in a onesided document
+headsepline
+]{scrlayer-scrpage}
+\pagestyle{scrheadings}
+\clearpairofpagestyles
+\ihead{\leftmark}
+\ohead{\ifstr{\leftmark}{\rightbotmark}{}{\rightbotmark}}
+\cfoot*{\pagemark}
+\renewcommand*{\chaptermarkformat}{}
+%\renewcommand*\pagestyle{scrheadings}% default pagestyle on chapter pages is plain
+
+% annotations and todos
+\newcommandx{\unsure}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
+\newcommandx{\change}[2][1=]{\todo[linecolor=blue,backgroundcolor=blue!25,bordercolor=blue,#1]{#2}}
+\newcommandx{\info}[2][1=]{\todo[linecolor=OliveGreen,backgroundcolor=OliveGreen!25,bordercolor=OliveGreen,#1]{#2}}
+\newcommandx{\improvement}[2][1=]{\todo[linecolor=Plum,backgroundcolor=Plum!25,bordercolor=Plum,#1]{#2}}
+\newcommandx{\thiswillnotshow}[2][1=]{\todo[disable,#1]{#2}}
+
+\graphicspath{{img/}{fig/}{fig/intro}}
+
+\def \titulo{Design and characterisation of a continuous-wave linear frequency-modulated radar at 24 GHz for real-time applications}
+\def \autor{Marcos Gómez Bracamonte}
+\def \director{Ignacio Esteban López Delgado}
+\def \ponente{Jesús Grajal de la Fuente}
+\def \fecha{January 2023}
+\def \fechad{Madrid}
+
+\renewcommand\labelitemi{$-$}

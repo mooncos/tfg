@@ -1,0 +1,27 @@
+\chapter{Intermediate frequency (IF) stage}
+
+The IF stage of the radar amplifies, filters and conditions the intermediate frequency (IF) signals of the radar for the analog to digital (AD) conversion. The radar outputs IF signals in an I and Q format, namely $I_\mathrm{rad}$ and $Q_\mathrm{rad}$. This stage is necessary as the range of $I_\mathrm{rad}, Q_\mathrm{rad}$ does not match the ADC input range. An illustration of this problem is shown in Figure ZZZ.
+
+\todo[inline]{Poner dibujo de señal IF que sale del radar, señal IF que sale del stage}
+
+First, the IF signal is measured and characterised in the ZZZ section. Subsequently, the performance of the ADC is analysed in section ZZZ. Afterwards, the IF stage is designed in section ZZZ, taking into account the input requirements of the ADC and the characteristics of the radar output signal. Finally, the design is laid out on a PCB and measurements and tests are carried out to ensure correct operation in the ZZZ and ZZZ sections.
+
+\section{IF signal characteristics}
+
+Two IF signals, $I_\mathrm{rad}$ and $Q_\mathrm{rad}$, are output from the radar. Each signal is composed of a series of beaten frequency ramps. Each cycle interval corresponds to the duration of the radar frequency band sweep as detailed in \cref{sec:radar_sys}. The IF signals captured during one cycle of operation at the conditions in \cref{eq:if_conditions} is shown in Figure ZZZ. It is shown that the amplitude of the IF signals at the center of the selected interval is remarkably higher than the amplitude of the IF signals at the edges of the selected interval. This is a consequence of using narrow-band antennas: the amplitude of the beat signal is higher when the antenna is resonant. This effect does not have an impact on the system.
+
+The measurement of the IF signals has been carried out in an Agilent Infiinium 54832B oscilloscope with inputs loaded with \SI{50}{\ohm}.
+
+The IF signals of the radar $I_\mathrm{rad},Q_\mathrm{rad}$ have the following characteristics:
+\todo[inline]{características documento nacho}
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.7\linewidth]{../../medidas/zenith_primeras_medidas/modulo_aprox_50cm_plancha}
+	\caption{Medida con plancha en lineales}
+	\label{fig:moduloaprox50cmplancha}
+\end{figure}
+
+
+% explicar rampa
+% poner fotos
