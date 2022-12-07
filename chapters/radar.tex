@@ -37,7 +37,7 @@ The PCB of the system which handles the emission and reception of the CWLFM sign
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=0.8\linewidth]{block_mmic_datasheet.png}
-	\caption{High-level diagram of the TRX-024-046 MMIC. The tuning voltage is controlled by the DC level on the \textit{Vctrl} pin and the bandwidth is selected with the \textit{d0...d3} pins \label{fig:block_mmic}}
+	\caption{High-level diagram of the TRX-024-046 MMIC. The tuning voltage is controlled by the DC level on the \textit{Vctrl} pin and the bandwidth is selected with the \textit{d0...d3} pins. The resulting beating signals are output in the \textit{IF\_I} and \textit{IF\_Q} pins. It is important to note that each pair of IF signals is in differential form. \label{fig:block_mmic}}
 \end{figure}
 
 The radar and baseband section of the radar has currently been developed at GMR. It features a \SI{24}{\giga\hertz} monolithic microwave integrated circuit (MMIC) from Silicon Radar, model TRX-024-046 [REF ZZZ Datasheet MMIC]. The MMIC is integrated into a PCB with a patch antenna, part of an evaluation kit from Silicon Radar, model SiRad Easy \change{Poner bien el modelo del evalkit y añadir referencia}. A picture of the integrated antenna and MMIC PCB is shown in \cref{fig:mmic}. The different parts of this PCB are outlined in the picture.
