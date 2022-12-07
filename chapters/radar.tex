@@ -52,6 +52,8 @@ This antenna and MMIC module interfaces through the provided pinhole connector w
 
 The baseband PCB provides the MMIC with the \textit{Vctrl} signal in order to generate the CWLFM ramp signals based on a predefined chirp time and frequency. Additionally, the baseband PCB conditions the IF signals coming from the MMIC.
 
+To generate the correct \textit{Vctrl} values, a phase-frequency detector (PFD) is used. The PFD integrated into the PCB is from Analog Devices, model ADF4159 [REF DS ZZZ].
+
  filters the receiving signals to output intermediate frequency (IF) signals in phase and in quadrature, namely $I_{\mathrm{rad}}$ and $Q_{\mathrm{rad}}$.
 \todo[inline]{Describir qué hace exactamente la PCB de banda base, según TFT de Montesano y Nacho S}
 En otra subsección
