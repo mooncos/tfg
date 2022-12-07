@@ -57,9 +57,8 @@ To generate the correct \textit{Vctrl} values, a phase-frequency detector (PFD) 
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=0.8\linewidth]{pfd.jpg}
-	\caption{ADF4159 PFD in a PLL architecture with the VCO of the MMIC. The \textit{DIV} signal corresponds to the signal \textit{div\_o} from the MMIC divider (\cref{fig:block_mmic}). The lumped components values are \label{fig:pfd_pll}}
+	\caption{ADF4159 PFD in a PLL architecture with the VCO of the MMIC. The \textit{DIV} signal corresponds to the signal \textit{div\_o} from the MMIC divider (\cref{fig:block_mmic}). The lumped components values are $C_1=\SI{300}{\pico\farad}, R_2=\SI{220}{\ohm}, R_3=\SI{4.7}{\nano\farad},R_3=\SI{470}{\ohm}, C_3=\SI{180}{\pico\farad}$ \label{fig:pfd_pll}}
 \end{figure}
-$C_1=\SI{300}{\pico\farad}, R_2=\SI{220}{\ohm}, R_3=\SI{4.7}{\nano\farad},R_3=\SI{470}{\ohm}, C_3=\SI{180}{\pico\farad}$
  filters the receiving signals to output intermediate frequency (IF) signals in phase and in quadrature, namely $I_{\mathrm{rad}}$ and $Q_{\mathrm{rad}}$.
 \todo[inline]{Describir qué hace exactamente la PCB de banda base, según TFT de Montesano y Nacho S}
 En otra subsección
