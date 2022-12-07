@@ -68,7 +68,151 @@ The signals are then filtered and amplified through a band-pass filter.
 
 \change[inline]{Describir filtros activos de Nacho S (?)}
 
-\change[inline]{Tengo que redactar aquí las características de la señal de IF del documento if\_stage.docx}
+\subsection{Intermediate frequency (IF) signal characteristics}
+
+Signal preprocessing is performed in this stage in order to allow the sampling by the MCU of the I-Q modulated incoming signal from the radar.
+
+This stage is necessary because the MCU has an ADC whose operating voltage input range differs from that of the incoming signal, and the incoming signal is differential, while the sampling is performed from single-ended inputs. In their limit condition [REF],
+\begin{equation} \label{eqn:iq_volts}
+	I(t), Q(t) \in [-0.4, 0.4]\ \si{\volt}
+\end{equation}
+An example output of I and Q signals at this condition can be found in figure ZZ.
+
+In this chapter, the limitations of the ADC, the proposed design to make the signal comply with its constraints, and the resulting acquisition and preprocessing stage are discussed.
+
+\section{ADC1 limitations}
+
+The chosen microcontroller unit has one integrated high-speed and general-purpose successive approximation (SAR) ADC, labelled ADC1. The sampling characteristics of ADC1, such as the input signal voltage and current bounds, as well as the maximum sampling rate, are important to account for the limitations of the acquisition system.
+
+First, the input range of ADC1 is $[0, V_{DDA}]\ \si{\volt}$, with $V_{DDA}$ being the DC voltage supply of the analogue peripherals in the MCU.
+\cite[p.~103]{STMicroelectronics2022}. The supply chosen for $V_{DDA}$ that complies with its general operating condition range \cite[p.~62]{STMicroelectronics2022} is \SI{3.3}{\volt}, resulting in an input range of $[0, 3.3]\ \si{\volt}$. This differs from the input signal range expressed in \cref{eqn:iq_volts}, so scaling and DC-shifting of the signal are necessary.
+
+Moreover, the ADC has a limitation on the sampling rate depending on the bit resolution of the ADC samples and the supply voltage. With the chosen voltage supply of \SI{3.3}{\volt} and choosing the highest resolution available of \SI{12}{\bit}, the maximum sampling rate achievable is \SI{2.5}{\mega s\per\second} \cite[p.~103]{STMicroelectronics2022}. 
+
+Finally, ADC1 features 10 single-ended input channels that can be sampled sequentially \cite[p.~355]{STMicroelectronics2022a}. The system only makes use of the first two channels, Ch1 and Ch2, mapping the previously processed I signal to Ch1 and the Q signal to Ch2.
+
+Since the channels are sequentially sampled and all information from both signals needs to be preserved, the limitations of the Nyquist-Shannon sampling theorem must then be met. Therefore,
+\begin{equation} \label{eqn:nyquist_sampling}
+	f_{s_{I}}, f_{s_{Q}} \ge 2 f_{i_{\max}}
+\end{equation}
+
+Given that ADC1 has a total sampling rate of \SI{2.5}{\mega s\per\second} \cite[p.~103]{STMicroelectronics2022}, every channel will be sampled at half the total sampling rate $2.5/2 = \SI{1.25}{\mega s\per\second}$. Thus,
+\begin{equation} \label{eqn:nyquist_sampling}
+	f_{I_{\max}}, f_{Q_{\max}} \le \frac{\SI{1.25}{\mega s\per\second}}{2} = \SI{625}{\kilo\hertz}
+\end{equation}
+
+This limits the system in such a way that the frequency of the IF signals coming from the radar system must be $ 0 \le f_i \le \SI{625}{\kilo\hertz}$.
+\todo[inline]{Write that this limitation is in accordance with targets located within a specific range of the radar (ask Nacho).}
+
+\section{Filtering step}
+The incoming I-Q signals are filtered before the conditioning stage for two main reasons: to improve the SNR by reducing high-frequency noise and limiting the processed bandwidth to useful signal information and to convert a pair of differential signals to two single-ended signals.
+\subsection{Filter design}
+\todo[inline]{? Preguntar a Nacho}
+\subsection{Filter simulation}
+\todo[inline]{? Preguntar a Nacho}
+\section{Signal conditioning step}
+In this step, the single-ended filtered signals are modified according to the input constraints of ADC1. This involves amplifying the signal and shifting it by a positive DC offset.
+\subsection{Signal conditioning design}
+In order to drive the ADC correctly and minimise measurement errors, a careful design of the driving circuit is carried out. First, considering the internal SAR ADC sampling mechanism \cite[pp.~356,~363]{STMicroelectronics2022a}, the driving input to the ADC must have low impedance to benefit from a low gain error, low settling time error, and less distortion \cite{Franco2014}. This is achieved by driving the input with a non-inverting op-amp tailored to provide a specific gain and to offset the input by a reference voltage.
+
+Parting from recommended ADC buffer design guidelines from Texas Instruments \cite[p.~17]{TexasInstruments2022}, the circuit is shown in \cref{fig:if_cir}.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\linewidth]{if_stage_sucio/prueba_impresion_ads.pdf}
+	\caption{Circuit of the IF stage signal conditioning step}
+	\label{fig:if_cir}
+\end{figure}
+
+The OA used in the driver can be any op-amp having a GBW that is able to accommodate all the incoming signal from the filter:
+\begin{equation}
+	GBW_{OA} \ge \frac{BW_{f}}{G}
+\end{equation}
+being $G$ the gain of the OA and $BW_{f}$ the bandwidth of the filter.
+
+
+\subsubsection{Gain configuration}
+The values of $R_1, R_2, R_3, R_4$ are responsible for setting the gain $G$ of the OA.
+In this particular application a pure AC waveform of $0.8 Vpp$ needs to map to a waveform of $3.3 Vpp$, thus:
+\begin{equation}
+	G = \frac{3.3}{0.8} = 4.125
+\end{equation}
+and after analysing the circuit feedback loops:
+\begin{gather}
+	G = \frac{R_4}{R_1} \frac{R_1+R_2}{R_3+R_4}\\
+	R_1 = R_3, R_2=R_4\\
+	G= \frac{R_4}{R_1}
+\end{gather}
+after giving a fixed value of \SI{10}{\kilo\ohm} to $R_1$:
+\begin{equation}
+	G \cdot \SI{10}{\kilo\ohm} = R_4 = \SI{41.25}{\kilo\ohm}
+\end{equation}
+By allowing for some margin at the extrema of the output, and considering that there aren't commercial resistors of the computed value, the closest E12 value of \SI{39}{\kilo\ohm} has been chosen for $R_4$.
+At the output of the OA, a small capacitor is placed in parallel to allow for smooth voltage output and high-frequency voltage spikes suppression.
+
+%OA selection (el del laboratorio) formula de antes
+\subsubsection{OA selection}
+The chosen OA for the task has been OPA2354AIDDA [REF], because it has a sufficiently large bandwidth for the application (suitable GBW) and there is readily available stock at the laboratory.
+
+\subsection{Signal conditioning simulation}
+
+After obtaining all these parameters, the circuit is laid out in Keysight ADS, a circuit simulation software.
+
+\subsubsection{Transient simulation}
+The circuit is simulated at its limit conditions for both voltage and frequency. The simulation result can be found in the figures according to the following list:
+\begin{description}
+	\item [$f_{i_{\max}}, V_{\max}$] \cref{fig:fmax_vmax}
+	\item [$f_{i_{\max}}, V_{\min}$] \cref{fig:fmax_vmin}
+	\item [$f_{i_{\min}}, V_{\max}$] \cref{fig:fmin_vmax}
+	\item [$f_{i_{\min}}, V_{\min}$] \cref{fig:fmin_vmin}
+\end{description}
+
+\todo[inline]{Faltan añadir: Vmin, fmax; Vmax, fmin; vmin, fmin y el ancho de banda de esta stage.}
+
+The simulations conclude that the operation of the signal conditioning stage follows the constraints of the ADC1 input signals, and having a flat response for all the specified IF operating frequencies.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\linewidth]{if_stage_sucio/1Mhz_transient.png}
+	\caption{Transient simulation with an input at $f_{i_{\max}} = \SI{1}{\mega\hertz}$ and $V_{\max} = 0.8 Vpp$}
+	\label{fig:fmax_vmax}
+\end{figure}
+
+\section{IF stage modular circuit design}
+After all the simulations are performed and verified the circuit schematic is design following power distribution design for all the stages an following manufacturer guidelines of the different ICs used in the design. The obtained schematic can be seen in \cref{fig:if_sch}.
+
+Two debug SMA connector have been installed in the transition from the filtering part to the signal conditioning part in order to check the correct operation of both parts independently. Moreover, a JTAG connector labelled (J\_AUX) has been added to provide and inspect the different power supplies of the circuit in testing.
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\linewidth]{if_stage_sucio/if_sch.png}
+	\caption{Circuit schematic of the IF stage}
+	\label{fig:if_sch}
+\end{figure}
+
+%\subsection{Power distribution}
+\subsection{Circuit integration and layout}
+Finally, according to the schematic, the PCB layout is performed. Some considerations have been accounted for in this stage such as separating the filtering part and the signal conditioning part as much as possible and providing sufficient space between the power supply part, which features high-frequency switching power components, and the analog OA parts. The 5V base power supply is obtained from an USB connector plugged in to a 5V power brick. The resulting layout can be found in \cref{fig:if_layout}.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\linewidth]{if_stage_sucio/layout.png}
+	\caption{PCB layout of the IF stage}
+	\label{fig:if_layout}
+\end{figure}
+
+The final PCB layout is sent to manufacturing, and after assembly and soldering of the ICs, the resulting PCB can be found in \cref{fig:if_phy}.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\linewidth]{if_stage_sucio/if_phy.jpeg}
+	\caption{Manufactured and assembled IF PCB}
+	\label{fig:if_phy}
+\end{figure}
+
+\section{IF stage circuit testing}
+
+\change[inline]{WIP: Insertar gráficas del csv del osciloscopio de las pruebas y explicar la obtencion de resultado y el proceso de medida, poner como he hecho las medidas, REF al datasheet del osciloscopio y sampling rate del osciloscopio (procurar poner la misma)}
+
 
 \subsection{Conditions of operation}
 \change[inline]{Referencia a las condiciones de funcionamiento del radar y explicación de la elección de las condiciones a continuación}
