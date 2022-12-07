@@ -46,13 +46,19 @@ The printed circuit board (PCB) of the system which handles the emission and rec
 	\caption{Patch antenna and MMIC PCB used in the PCB radar node \label{fig:rf_board}}
 \end{figure}
 
-This antenna and MMIC module interfaces through the provided pinhole connector with a baseband board. This baseband board follows the general hardware design description outlined in \cref{sec:baseband_general}.
+This antenna and MMIC module interfaces through the provided pinhole connector with a baseband board.
 
 \subsubsection{Baseband board}
 
-The baseband PCB provides the MMIC with the \textit{Vctrl} signal in order to generate the CWLFM ramp signals based on a predefined chirp time and frequency. Additionally, the baseband PCB conditions the IF signals coming from the MMIC.
+This baseband board follows the general hardware design description outlined in \cref{sec:baseband_general}. The baseband PCB provides the MMIC with the \textit{Vctrl} signal in order to generate the CWLFM ramp signals based on a predefined chirp time and frequency. Additionally, the baseband PCB conditions the IF signals coming from the MMIC.
 
-To generate the correct \textit{Vctrl} values, a phase-frequency detector (PFD) is used. The PFD integrated into the PCB is from Analog Devices, model ADF4159 [REF DS ZZZ].
+To generate the correct \textit{Vctrl} values, a phase-frequency detector (PFD) is used. The PFD integrated into the PCB is from Analog Devices, model ADF4159 [REF DS ZZZ]. The device acts as a frequency synthesiser that generates the \textit{Vctrl} signal fed to the MMIC. The PFD is integrated in a phase-locked loop (PLL) architecture describedn in \cite{Sardinero2022}. A high-level diagram of the PLL architecture for the VCO control voltage generation is shown in
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.8\linewidth]{pfd.jpg}
+	\caption{Patch antenna and MMIC PCB used in the PCB radar node \label{fig:rf_board}}
+\end{figure}
 
  filters the receiving signals to output intermediate frequency (IF) signals in phase and in quadrature, namely $I_{\mathrm{rad}}$ and $Q_{\mathrm{rad}}$.
 \todo[inline]{Describir qué hace exactamente la PCB de banda base, según TFT de Montesano y Nacho S}
