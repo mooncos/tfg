@@ -52,7 +52,7 @@ This antenna and MMIC module interfaces through the provided pinhole connector w
 
 This baseband board follows the general hardware design description outlined in \cref{sec:baseband_general}. The baseband PCB provides the MMIC with the \textit{Vctrl} signal in order to generate the CWLFM ramp signals based on a predefined chirp time and frequency. Additionally, the baseband PCB conditions the IF signals coming from the MMIC.
 
-To generate the correct \textit{Vctrl} values, a phase-frequency detector (PFD) is used. The PFD integrated into the PCB is from Analog Devices, model ADF4159 [REF DS ZZZ]. The device acts as a frequency synthesiser that generates the \textit{Vctrl} signal fed to the MMIC. The PFD is integrated in a phase-locked loop (PLL) architecture describedn in \cite{Sardinero2022}. A high-level diagram of the PLL architecture for the VCO control voltage generation is shown in \cref{fig:pfd_pll}.
+To generate the correct \textit{Vctrl} values, a phase-frequency detector (PFD) is used. The PFD integrated into the PCB is from Analog Devices, model ADF4159 [REF DS ZZZ]. The device acts as a frequency synthesiser that generates the \textit{Vctrl} signal fed to the MMIC. The PFD is integrated in a phase-locked loop (PLL) architecture described in \cite{Sardinero2022}. A high-level diagram of the PLL architecture for the VCO control voltage generation is shown in \cref{fig:pfd_pll}. The values of the lumped components are those outlined in \cite{Sardinero2022}.
 
 \begin{figure}[ht]
 	\centering
