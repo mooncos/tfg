@@ -4,7 +4,7 @@
 
 Continuous-wave (CW) radars are the state-of-the-art technology used in accurate position and velocity measurements of physical media. Of this type of radar systems which transmit and receive continuous radio signals, the most interesting are those which their transmitted signal is modulated in frequency. By linearly modulating the transmitted signal, information about objects having different distances and velocities can be extracted. This radars are known as continuous-wave lineal frequency modulation (CWLFM) radars.
 
-CWLFM radars provide advantages such as robustness to stationary and slow-moving obstacles and clutter, which enable precise measurement of the target of interest. CWLFM radars obtain information on the position and velocity of targets based on the Doppler effect. To understand the advantages of CWLFM radars and its suitableness for the application to the objectives of gait analysis outlined in \cref{cha:intro}, it is of interest to study the basic working principle of these radars and the system requirements necessary to process the information they generate. 
+CWLFM radars provide advantages such as robustness to stationary and slow-moving obstacles and clutter, which enable precise measurement of the target of interest. CWLFM radars obtain information on the position and velocity of targets based on the Doppler effect. To understand the advantages of CWLFM radars and its suitableness for the application to the objectives of gait analysis outlined in \cref{cha:intro}, it is of interest to study the basic working principle of these radars and the system requirements necessary to process the information they generate.
 
 \section{CWLFM radars working principle} \label{sec:cwlfm_wp}
 
@@ -44,8 +44,8 @@ By beating $s_T(t)$ and $s_R(t)$ a beat signal is generated $s_b(t, \tau_m)$. Th
 
 The beat frequency is used for target location, allowing the monitorisation of several people simultaneously \cite{Antolinos2020}. The location can be found by performing the fast Fourier transform (FFT) of the beat signal. The minimum physical separation between to targets so that they can be detected independently (called \textit{range resolution}) can be obtained from \cref{eqn_range_res}, where $W$ is the swept bandwidth and $\sigma \ge 1$ a parameter bound to FFT windowing characteristics \cite{Sardinero2022}.
 \begin{equation} \label{eqn_range_res}
-	\Delta R = \frac{\alpha c}{2W}
-\end{equation} 
+	\Delta R = \frac{c}{2W} % TODO: REVISAR \Delta R = \frac{\alpha c}{2W}
+\end{equation}
 
 \section{Radar operation} \label{sec:radar_op}
 
@@ -100,7 +100,7 @@ As a general overview based on most commercial solutions for CWLFM radars [REF],
 
 The radar element, which can be based on a monolithic microwave integrated circuit (MMIC) or a radiating antenna with custom RF hardware, transmits and receives signals which must be supplied and received, respectively. The supplied signals must be synthesised and provided to the onboard voltage-controlled oscillator (VCO) of the MMIC.
 
-These signals are provided by a frequency synthesiser based on a phase frequency detector (PFD), a precision charge pump (CP) and a reference divider. These elements mostly come bundled in a phase-locked loop (PLL) architecture. 
+These signals are provided by a frequency synthesiser based on a phase frequency detector (PFD), a precision charge pump (CP) and a reference divider. These elements mostly come bundled in a phase-locked loop (PLL) architecture.
 
 The PFD allows configuring parameters such as the bandwidth swept, the ramp or chirp time or the clock source selection. This configuration is normally provided through a serial parallel interface (SPI) o inter-integrated circuit (I2C) connection. Therefore, one requirement to control the synthesis of CWLFM signals is to utilise a microcontroller with SPI and/or I2C capabilities.
 

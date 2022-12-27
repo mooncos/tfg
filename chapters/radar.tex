@@ -15,7 +15,7 @@ With these constraints, it is possible to obtain the minimum sampling frequencie
 
 \begin{longtable}{@{}cccc@{}}
 	\toprule
-	$\mathbf{f_0}$ \textbf{(GHz)}& $\mathbf{W}$ \textbf{(GHz)} & $\mathbf{f_{s\min}} \textbf{(MHz)}$& $\mathbf{T_c}$ \textbf{(\si{\micro\second})} \\* \midrule 
+	$\mathbf{f_0}$ \textbf{(GHz)}& $\mathbf{W}$ \textbf{(GHz)} & $\mathbf{f_{s\min}} \textbf{(MHz)}$& $\mathbf{T_c}$ \textbf{(\si{\micro\second})} \\* \midrule
 	\endhead
 	24.0 & 2.0 & 0.5 & 529.7 \\
 	24.0 & 4.0 & 1.0 & 529.7 \\
@@ -23,7 +23,7 @@ With these constraints, it is possible to obtain the minimum sampling frequencie
 	66.0 & 4.0 & 2.8 & 192.6 \\
 	134.0 & 1.0 & 1.4 & 94.9 \\* \bottomrule
 	\caption{Sampling frequencies and pulse repetition intervals for different parameters.}
-	\label{tab:fs_Tc} 
+	\label{tab:fs_Tc}
 \end{longtable}
 	\change[inline]{no me convence esta tabla, cambiar por un gráfico que relacione los distintos aspectos y resumen de lo que se habla en esta sección (en forma de esquema)}
 \subsection{Hardware description of the current CWLFM node developed at GMR}
@@ -62,9 +62,9 @@ To generate the correct \textit{Vctrl} values, a phase-frequency detector (PFD) 
 
 Writing to specific registers through SPI communication is used to configure the PFD. A microcontroller unit (MCU) included on the PCB handles SPI communication. This MCU is previously programmed with the configuration data for the PFD registers. The PFD is configured in accordance with \cite{Sardinero2022}.
 
-Moreover, the baseband PCB is responsible for filtering and conditioning the IF signals output from the MMIC. The raw signals are DC coupled and require a series capacitor to draw the signals to the 0 VDC reference. 
+Moreover, the baseband PCB is responsible for filtering and conditioning the IF signals output from the MMIC. The raw signals are DC coupled and require a series capacitor to draw the signals to the 0 VDC reference.
 
-The signals are then filtered and amplified through a band-pass filter. 
+The signals are then filtered and amplified through a band-pass filter.
 
 \change[inline]{Describir filtros activos de Nacho S (?)}
 
@@ -87,7 +87,7 @@ The chosen microcontroller unit has one integrated high-speed and general-purpos
 First, the input range of ADC1 is $[0, V_{DDA}]\ \si{\volt}$, with $V_{DDA}$ being the DC voltage supply of the analogue peripherals in the MCU.
 \cite[p.~103]{STMicroelectronics2022}. The supply chosen for $V_{DDA}$ that complies with its general operating condition range \cite[p.~62]{STMicroelectronics2022} is \SI{3.3}{\volt}, resulting in an input range of $[0, 3.3]\ \si{\volt}$. This differs from the input signal range expressed in \cref{eqn:iq_volts}, so scaling and DC-shifting of the signal are necessary.
 
-Moreover, the ADC has a limitation on the sampling rate depending on the bit resolution of the ADC samples and the supply voltage. With the chosen voltage supply of \SI{3.3}{\volt} and choosing the highest resolution available of \SI{12}{\bit}, the maximum sampling rate achievable is \SI{2.5}{\mega s\per\second} \cite[p.~103]{STMicroelectronics2022}. 
+Moreover, the ADC has a limitation on the sampling rate depending on the bit resolution of the ADC samples and the supply voltage. With the chosen voltage supply of \SI{3.3}{\volt} and choosing the highest resolution available of \SI{12}{\bit}, the maximum sampling rate achievable is \SI{2.5}{\mega s\per\second} \cite[p.~103]{STMicroelectronics2022}.
 
 Finally, ADC1 features 10 single-ended input channels that can be sampled sequentially \cite[p.~355]{STMicroelectronics2022a}. The system only makes use of the first two channels, Ch1 and Ch2, mapping the previously processed I signal to Ch1 and the Q signal to Ch2.
 
@@ -232,7 +232,7 @@ To digitise these signals without losing useful information it is decided to use
 
 Moreover, the digitised signals must be transmitted to a receiving device. It is of interest that this transmission is wireless and can be received in a portable device. For that matter, after consideration of multiple wireless communication protocols, Bluetooth Low Energy (BLE) is chosen due to its low-cost and low-power characteristics \cite{Gomez2012}.
 
-The MCU transmits the FFT of each ramp in real-time via the BLE protocol. The MCU features a set of peripherals that allow for adequate sampling, processing and transmission of the signals. 
+The MCU transmits the FFT of each ramp in real-time via the BLE protocol. The MCU features a set of peripherals that allow for adequate sampling, processing and transmission of the signals.
 
 The chosen MCU that satisfies this conditions is STM32WB15CCU6 from ST Microelectronics which is based on an ARM Cortex-M4 processor \cite{STMicroelectronics2022}. This MCU has an embedded ADC with the following characteristics:
 \begin{itemize}
@@ -342,37 +342,14 @@ Aquí van las medidas del python redactadas, sobre el BLE:
 	\item Caracterización BER
 	\item Caracterización Ramp Lost Ratio to Distance
 \end{itemize}
-\begin{figure}[ht]
-	\centering
-	\includegraphics[width=0.7\linewidth]{sucio_graficos/ble/throughput.png}
-	\caption{BLE Throughput vs distance}
-	\label{fig:moduloaprox50cmplancha}
-\end{figure}
-\begin{figure}[ht]
-	\centering
-	\includegraphics[width=0.7\linewidth]{sucio_graficos/ble/bins_per_ramp.png}
-	\caption{Maximum transmitted bins per ramp without ramp loss vs distance}
-	\label{fig:moduloaprox50cmplancha}
-\end{figure}
-\begin{figure}[ht]
-	\centering
-	\includegraphics[width=0.7\linewidth]{sucio_graficos/ble/ber.png}
-	\caption{Bit error ratio (BER) of the wireless communication link (revisar ZZZ)}
-	\label{fig:moduloaprox50cmplancha}
-\end{figure}
-\begin{figure}[ht]
-	\centering
-	\includegraphics[width=0.7\linewidth]{sucio_graficos/ble/rlr.png}
-	\caption{Ramp lost ratio vs distance}
-	\label{fig:moduloaprox50cmplancha}
-\end{figure}
+
 
 \unsure[inline]{Medida de la ecuación radar}
 % el problema requiere el uso de radares cwlfm que son compactos, eficientes en coste y de bajo consumo
 
 % establecer las condiciones de operación para las pruebas, requisitos radar/comunicaciones, hablar de anchos de banda, bitrate, etc. caracterización de las señales de frecuencia intermedia.
 
-% adaptación hardware, creación sistema hardware, 
+% adaptación hardware, creación sistema hardware,
 %		hablar de mcu, seleccion mcu debido a qué criterios. hablar del adc del mcu
 %		diseño de etapa if para adaptar el nivel de la señal.
 %		desarrollo del pipeline de procesado digital de señal
@@ -381,9 +358,4 @@ Aquí van las medidas del python redactadas, sobre el BLE:
 
 % otro chapter
 %		caracterización de las distintas partes
-
-
-\appendix
-\chapter{hey}
-holo
 

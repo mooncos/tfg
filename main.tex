@@ -4,27 +4,33 @@
 %\includeonly{chapters/intro.tex}
 
 \begin{document}
-	
+
 	\include{cover/cover.tex}
-	
+
 	\pagenumbering{roman}
 	%include index and figure index and table index
 	\include{chapters/toc.tex}
-	
+
 	\include{chapters/ack.tex}
-	
+
 	\pagenumbering{arabic}
-	
+
 	\setcounter{page}{1}
-	
+
 	\include{chapters/intro.tex}
-	
+
 	\include{chapters/generalities.tex}
-	
+
 	\include{chapters/radar.tex}
-	
+
+	\include{chapters/firmware.tex}
+
+	\appendix
+
+	%\include{appendices/test.tex}
+
 	%\include{chapters/system_characteristics.tex}
-	
+
 	\bibliographystyle{IEEEtran}
 	%\bibliography{sources.bib}
 	\bibliography{IEEEabrv,ref/full.bib}
