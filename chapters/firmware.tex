@@ -1,9 +1,10 @@
 \chapter{Radar system firmware development}
 The main objective of the system is the replacement of the high-cost, deferred sampling analogue-to-digital converter (ADC) with a microcontroller unit (MCU) capable of processing the signals in real-time and transmitting the useful information to a receiving device using a Bluetooth Low Energy (BLE) link.
 
-For that purpose, a firmware has been developed. This custom firmware is executed in the embedded MCU integrated in the MCU PCB. The custom firmware is developed by leveraging the low-level register access of the MCU which controls different peripherals integrated into the MCU package, and written in the C programming language with some parts optimised with ARM assembly (ASM) instructions. These ASM instructions are low level code that is executed by the MCU. Having some parts developed directly in ASM, the control is much greater and lower level, allowing for more optimisations of the firmware in specific parts.
+For that purpose, an MCU has been selected according to selection criteria detailed in Chapter 2 and a firmware has been developed. This firmware is executed in the embedded MCU integrated in the MCU PCB, described in Chapter 4. % TODO: Section ZZZ
+The firmware is developed by leveraging the low-level register access of the MCU which controls different peripherals integrated into the MCU package, and written in the C programming language with some parts optimised with ARM assembly (ASM) instructions. These ASM instructions are low level code that is executed by the MCU. Having some parts developed directly in ASM, the control is much greater and lower level, allowing for more optimisations of the firmware in specific parts.
 
-The custom firmware that has been developed is split into two parts, which are programmed and executed in the two different central processing units (CPU) embedded into the MCU:
+The developed firmware is split into two parts, which are programmed and executed in two different central processing units (CPU) embedded into the same MCU:
 \begin{itemize}
 	\item The main processor, an ARM Cortex-M4 [REF] which handles digital signal processing (DSP) of the incoming radar signals.
 	\item The secondary processor, an ARM Cortex-M0+ [REF] which acts as a wireless co-processor handling the wireless communication.
