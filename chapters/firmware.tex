@@ -1,8 +1,12 @@
 \chapter{Radar system firmware development}
 The main objective of the system is the replacement of the high-cost, deferred sampling analogue-to-digital converter (ADC) with a microcontroller unit (MCU) capable of processing the signals in real-time and transmitting the useful information to a receiving device using a Bluetooth Low Energy (BLE) link.
 
-For that purpose, an MCU has been selected according to selection criteria detailed in Chapter 2 and a firmware has been developed. This firmware is executed in the embedded MCU integrated in the MCU PCB, described in Chapter 4. % TODO: Section ZZZ
-The firmware is developed by leveraging the low-level register access of the MCU which controls different peripherals integrated into the MCU package, and written in the C programming language with some parts optimised with ARM assembly (ASM) instructions. These ASM instructions are low level code that is executed by the MCU. Having some parts developed directly in ASM, the control is much greater and lower level, allowing for more optimisations of the firmware in specific parts.
+For that purpose, an MCU has been selected according to selection criteria detailed in Chapter 2 and a firmware has been developed and tested. This firmware is executed in the embedded MCU integrated in the MCU PCB, described in Chapter 4. % TODO: Section ZZZ
+The firmware is made up of software which controls embedded hardware in the MCU package and carries out processing of the incoming signals.
+
+The system firmware function is three-fold. First, it is responsible of configuring and handling the operation of the peripherals of the system, which enable the interaction with system elements found in different parts of the system. Secondly, it also provides the digital signal processing (DSP) needed to process the incoming data sampled from the ramp signals. Finally, it prepares the processed data to be sent wirelessly to a receiving device and handles this wireless communication.
+
+The integrated peripherals are configured using low-level registers in the MCU [REF] and the routines for the DSP are programmed in the source code. The source code is written in the C programming language with some parts optimised with ARM assembly (ASM) instructions. These ASM instructions are low level code that is executed by the MCU. Having some parts developed directly in ASM, the control is much greater and lower level, allowing for more optimisations of the firmware in specific parts.
 
 The developed firmware is split into two parts, which are programmed and executed in two different central processing units (CPU) embedded into the same MCU:
 \begin{itemize}
@@ -15,7 +19,7 @@ This dual processor architecture is provided by the manufacturer of the MCU and 
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=\linewidth]{firmware/firmware_overview}
-	\caption{Firmware and hardware architecture overview. Dotted lines represent clock lines, double lines represent data bus and uni or bidirectional arrows represent instruction flow}
+	\caption{Firmware and hardware architecture overview. Dotted lines represent clock lines, double lines represent data bus and uni or bidirectional arrows represent instruction flow. TIM1 is the Timer 1 used to trigger the sampling of the ADC, which initiates on a ramp trigger signal coming from the radar. ADC1 is the ADC that samples the $I_{\mathrm{adc}}$ and $Q_{\mathrm{adc}}$ signals coming from the IF stage. SRAM is the system memory. BLE is the hardware that handles RF communication. The DMA controls the transfer of data from devices to memory and between devices. GPIO controls the general IO of LEDs and a button}
 	\label{fig:firmware_overview}
 \end{figure}
 
@@ -23,12 +27,12 @@ In this chapter the developed firmware is described, outlining the software desi
 
 \section{Digital Signal Processing (DSP)}
 
-In this section, the firmware part devoted to the processing of the incoming conditioned signals is described. Itself, the DSP firmware contains two parts corresponding to the two operating modes of the transmission: the primary mode, based on computing the fast Fourier transform (FFT) and a secondary mode which additionally sums the frequency bins obtained from the FFT. For both approaches, the peripherals included in the MCU are used, whose operation is also described. The processing of ramp data by the DSP routines constitutes the DSP pipeline of the system. A temporal diagram showing the DSP process and peripherals is shown in \cref{fig:firmware_dsp_overview}.
+In this section, the firmware part devoted to the processing of the incoming conditioned signals is described. Itself, the DSP firmware contains two parts corresponding to the two operating modes of the transmission: the primary mode, based on computing the fast Fourier transform (FFT) and a secondary mode which additionally sums the frequency bins obtained from the FFT. In this section, the peripherals involved are described. The processing of ramp data by the DSP routines constitutes the DSP pipeline of the system. A temporal diagram showing the DSP process and peripherals is shown in \cref{fig:firmware_dsp_overview}.
 
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=\linewidth]{firmware/firmware_dsp_overview}
-	\caption{DSP routines temporal overview. Note that due to the asynchronous nature of the ADC sampling and DMA controller, the samples from a previous ramp are processed and transmitted during the next one. This allows the system to work in real time}
+	\caption{DSP routines temporal overview. Note that due to the asynchronous nature of the ADC sampling and DMA controller, the samples from a previous ramp are processed and transmitted during the next one. This allows the system to work in real time. The downward arrows represent interrupts coming from one process or peripheral to another. For instance, when the DMA controller finishes transferring the samples of a ramp to memory, the DSP routines start executing. The green boxes represent the DSP routines: Preprocess includes the sample discard and the Q15 format conversion. Dashed boxes represent optional or variable stages.}
 	\label{fig:firmware_dsp_overview}
 \end{figure}
 
@@ -37,7 +41,8 @@ In this section, the firmware part devoted to the processing of the incoming con
 The STM32WB15CC microcontroller unit (MCU) integrates several peripherals useful for the purpose of signal digitisation and processing. These peripherals must be configured by the firmware prior to performing the DSP routines. The following peripherals are used in this part of the firmware:
 \begin{itemize}
 	\item Reset and clock controller (RCC) that configures the clock frequency of the peripherals and the MCU. This is configured to the maximum possible clock frequency that the MCU allows of \SI{64}{\mega\hertz}. The maximum clock frecuency is chosen so that the processor can execute each instruction in a shorter time.
-	\item 10-channel 12-bit analogue-to-digital converter (ADC) of which two channels are used, connected to the incoming intermediate (IF) frequency signals $I_{\mathrm{adc}}$ and $Q_{\mathrm{adc}}$. As outlined in Section 2, this ADC can have a maximum sampling rate of \SI{2.5}{Msps}.
+	\item 10-channel 12-bit analogue-to-digital converter (ADC) of which two channels are used, connected to the incoming intermediate (IF) frequency signals $I_{\mathrm{adc}}$ and $Q_{\mathrm{adc}}$. As outlined in Section 2 % TODO: Section ZZZ
+	, this ADC can have a maximum sampling rate of \SI{2.5}{Msps}.
 	\item Configurable timers, used to discipline the ADCs' sampling. They are trig\-gered by the external ramp trigger signal \textit{Trig} coming from the radar.
 	\item Direct memory access (DMA) peripheral, used for memory transfers to and from peripherals and the MCU integrated static random-access memory (SRAM) without interrupting the firmware execution in the main CPU.
 	\item General purpose input/output pins (GPIO) used for reset button, indication LEDs and the external ramp trigger signal \textit{Trig} coming from the radar.
@@ -47,17 +52,17 @@ These peripherals work in conjunction with the software DSP to obtain the data t
 
 \subsubsection{Reset and clock controller (RCC) configuration} \label{sec:rcc}
 
-The reset and clock controller (RCC) handles the clock frequency configuration of the different parts of the system. All the clocks of the system are derived from a source external master clock and thus synchronised to it. The clock network tree can be seen in \cref{fig:firmware_clock_tree}. The clock frequencies are configured as follows:
+The reset and clock controller (RCC) handles the clock frequency configuration of the different parts of the system. All the clocks of the system are derived from a source external master clock of \SI{32}{\mega\hertz} and thus synchronised to it. The clock network tree can be seen in \cref{fig:firmware_clock_tree}. The clock frequencies are configured as follows:
 \begin{itemize}
-	\item Source master clock: High-speed external (HSE) oscillator of \SI{32}{\mega\hertz}.
-	\item Main CPU: maximum value of \SI{64}{\mega\hertz}.
-	\item Secondary CPU (BLE stack): maximum value of \SI{32}{\mega\hertz}.
-	\item SRAM: maximum value of \SI{64}{\mega\hertz}.
-	\item Timer: maximum value of \SI{64}{\mega\hertz}, synchronised to MCU main CPU clock.
-	\item MCU ADC: maximum value of \SI{32}{\mega\hertz}, synchronised to MCU main CPU clock.
+	\item External master clock: High-speed external (HSE) oscillator of \SI{32}{\mega\hertz}.
+	\item Main CPU: configurable between \SI{100}{\hertz} and \SI{64}{\mega\hertz}. The selected configuration is the maximum value of \SI{64}{\mega\hertz}.
+	\item Secondary CPU (BLE stack): configurable between \SI{100}{\hertz} and \SI{32}{\mega\hertz}. The selected configuration is the maximum value of \SI{32}{\mega\hertz}.
+	\item SRAM: configurable frequency range identical to Main CPU. The selected configuration is the maximum value of \SI{64}{\mega\hertz}.
+	\item Timer: configurable frequency range identical to Main CPU. The selected configuration is the maximum value of \SI{64}{\mega\hertz}, it is synchronised to the Main CPU clock.
+	\item MCU ADC: configurable between \SI{0.5}{\hertz} and \SI{32}{\mega\hertz}. The selected configuration is the maximum value of \SI{32}{\mega\hertz}, it is synchronised to the Main CPU clock.
 \end{itemize}
 
-The other clocks of the system are left to the default value or are automatically configured depending on these clocks.
+The other clocks of the system are left to the default value or are automatically configured depending on these clocks. They are used for internal caches of the processors or controlling the switched power supply, for instance.
 
 \begin{figure}[ht]
 	\centering
@@ -68,9 +73,9 @@ The other clocks of the system are left to the default value or are automaticall
 
 \subsubsection{Analogue-to-digital converter 1 (ADC1) and Timer 1 (TIM1) configuration} \label{sec:adc_tim_config_v_vector}
 
-The integrated analogue-to-digital converter (ADC1) is configured based on the frequency characteristics of the incoming intermediate frequency (IF) signals. The minimum sampling rate requirement outlined in Section 2 determines the sampling rate of the ADC. This ADC sampling rate can have a maximum sampling rate of \SI{2.5}{Msps} when a \SI{35}{\mega\hertz} clock is supplied to it. Nonetheless, this clock frequency can only be achieved when the ADC is free-running and not synchronised to the master clock. The ADC needs to be synchronised to the master clock to be able to sample the signals synchronised to the system operation. In this scenario, the maximum clock frequency that can be supplied to the ADC is of \SI{32}{\mega\hertz}.
+The integrated analogue-to-digital converter (ADC1) is configured based on the frequency characteristics of the incoming intermediate frequency (IF) signals. The minimum sampling rate requirement outlined in Section 2 determines the sampling rate of the ADC. This ADC sampling rate can have a maximum of \SI{2.5}{Msps} when a \SI{35}{\mega\hertz} clock is supplied to it. Nonetheless, this clock frequency can only be achieved when the ADC is free-running and not synchronised to the master clock. The ADC needs to be synchronised to the master clock to be synchronised to the system operation. In this scenario, the maximum clock frequency that can be supplied to the ADC is of \SI{32}{\mega\hertz}.
 
-The ADCs are configured to perform a sequential sampling of the channels $I_{\mathrm{adc}}$ and $Q_{\mathrm{adc}}$. The clock frequency of the ADC is set according to \cref{sec:rcc}. However, the triggering of the signal is done by Timer 1 (TIM1). Effectively, the clock supplied to the ADC is much higher than the triggering signal frequency coming from Timer 1. This configuration of different ``working'' and ``triggering'' clocks is used to allow the user to configure the ADC sampling rate on the fly, without needing to reconfigure the clock tree, which involves a system reset. As the ADC is a successive approximation register (SAR) ADC, the maximum sampling rate of the ADC is given by the total sample conversion time $t_\mathrm{CONV}$ such that $f_s = 1/t_\mathrm{CONV}$. $t_\mathrm{CONV}$ depends both on a predefined sampling time $t_\mathrm{S}$ and the sample successive approximation time $t_\mathrm{SAR}$. These two times are factory set by the manufacturer: $t_\mathrm{S}$ has a minimum value of 1.5 ADC clock cycles and the approximation time is a fixed value of 12.5 ADC clock cycles \cite[p.~104]{STMicroelectronics2022}.
+The ADCs are configured to perform a sequential sampling of the channels $I_{\mathrm{adc}}$ and $Q_{\mathrm{adc}}$. The clock frequency of the ADC is set to  \SI{32}{\mega\hertz} according to \cref{sec:rcc}. However, the triggering of the signal is done by Timer 1 (TIM1). Effectively, the clock frequency supplied to the ADC is much higher than the triggering signal frequency coming from Timer 1. This configuration of different ``working'' and ``triggering'' clocks is used to allow the user to configure the ADC sampling rate on the fly, without needing to reconfigure the clock tree, which involves a system reset. As the ADC is a successive approximation register (SAR) ADC, the maximum sampling rate of the ADC is given by the total sample conversion time $t_\mathrm{CONV}$ such that $f_s = 1/t_\mathrm{CONV}$. $t_\mathrm{CONV}$ depends both on a predefined sampling time $t_\mathrm{S}$ and the sample successive approximation time $t_\mathrm{SAR}$. These two times are factory set by the manufacturer: $t_\mathrm{S}$ has a minimum value of 1.5 ADC clock cycles and the approximation time is a fixed value of 12.5 ADC clock cycles \cite[p.~104]{STMicroelectronics2022}.
 By configuring the ADC clock to \SI{32}{\mega\hertz}, the maximum sampling rate of the ADC can be obtained as follows:
 \begin{align}
 	t_\mathrm{S} = \frac{1.5}{f_\mathrm{ADC}} &= \SI{46.875}{\nano\second}\\
@@ -79,7 +84,7 @@ By configuring the ADC clock to \SI{32}{\mega\hertz}, the maximum sampling rate 
 	t_\mathrm{CONV} = t_\mathrm{S} + t_\mathrm{SAR} &= \SI{437.482}{\nano\second}\\
 	f_{s,\max} = \frac{1}{t_\mathrm{CONV}} &= \SI{2.286}{Msps}
 \end{align}
-As the ADC input channels are sampled sequentially, the maximum sampling rate per channel is $f_{s,\max}/N$ with $N$ being the number of channels. For this system case, as they are two channels to be sampled, the maximum sampling frequency per channel is \SI{1.143}{Msps}.
+As the ADC input channels are sampled sequentially, the maximum sampling rate per channel is $f_{s,\max}/N$ with $N$ being the number of channels. For this system case, as they are two channels to be sampled $I_{\mathrm{adc}}$ and $Q_{\mathrm{adc}}$, the maximum sampling frequency per channel is \SI{1.143}{Msps}.
 
 To enable the user to sample at a lower frequency, the ADC running clock is left to the maximum value (\SI{1.143}{Msps}) but the sample clock (the clock of the sampling trigger signal) is provided by Timer 1 and configurable by the user.
 
@@ -119,7 +124,7 @@ The DMA controller stores in $\mathbf{v}$ the samples that are generated in the 
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=\linewidth]{firmware/firmware_adc_dma_vector}
-	\caption{Memory layout of ADC samples after DMA storage from ADC result to SRAM. Note the increasing and alternating order of channels. This layout facilitates the application of the FFT algorithm. Each sample value is of 12 bits and stored in a 16 bit unsigned integer due to the fact that variable sizes in bits must be a multiple of 8. In this particular case, as 12 bits is not a multiple of 8, the next available size is 16 bits}
+	\caption{Memory layout of ADC samples after DMA storage from ADC result to SRAM. Note the increasing and alternating order of channels. This layout facilitates the application of the FFT algorithm. Each sample value is of 12 bits and stored in a 16 bit unsigned integer due to the fact that variable sizes in bits must be a multiple of 8. In this particular case, as 12 bits is not a multiple of 8, the next available size is 16 bits. The values stored in the vector correspond to individual samples of a ramp.}
 	\label{fig:firmware_adc_dma_vector}
 \end{figure}
 
@@ -137,7 +142,20 @@ Some pins of the microcontroller have been configured as a general purpose input
 	\item A pin for the input of the external ramp trigger signal \textit{Trig} coming from the radar, this signal is tied to TIM1 start interrupt.
 \end{itemize}
 
-The firmware includes a configuration routine at the start that discards every other trigger coming from the radar, this is due to the current radar node outputting two triggers, both at the start and end of the ramps. As the triggers that must be used is only the start of the ramp triggers, the other triggers must be discarded. This configuration is modifiable by the user if a radar node with only ramp start triggers is used. The detailed configuration of the GPIO pins can be found in Appendix ZZZ.
+A diagram of the GPIO configurations in the pins of the MCU package is shown in \cref{fig:firmware_gpio}.
+
+
+
+%The firmware includes a configuration routine at the start that discards every other trigger coming from the radar, this is due to the current radar node outputting two triggers, both at the start and end of the ramps. As the triggers that must be used is only the start of the ramp triggers, the other triggers must be discarded. This configuration is modifiable by the user if a radar node with only ramp start triggers is used.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=\linewidth, draft]{example-image}
+	\caption{Outline of the MCU pin connections. The connections are classified as such: \textit{TRIG} is the trigger signal from the radar, \textit{IADC} and \textit{QADC} are the I and Q signals from the IF stage. \textit{RF} is the connection to the antenna. \textit{LED\_ERROR} and \textit{LED\_STATUS} are the output LEDs and \textit{RST} is the reset button}
+	\label{fig:firmware_gpio}
+\end{figure}
+
+Additional details of the configuration of the GPIO pins can be found in Appendix E. % TODO: Appendix ZZZ
 
 \subsection{DSP routines} \label{sec:dsp_routines}
 
@@ -152,7 +170,7 @@ The DSP pipeline is divided into four stages: outlying samples discard, sample n
 
 \subsubsection{Outlying samples discard}
 
-As commented in Section 2, for every ramp there exists a rising ramp and a dual ramp. Also, there is a short period of time at the beginning of the rising ramp where the phase-locked loop (PLL) of the voltage-controlled oscillator (VCO) is not locked. The useful samples from the intermediate frequency (IF) signal are present during the time the PLL is locked in the rising ramp. Therefore, these useless samples are discarded from the IF signal. The amount of samples discarded can be adjusted independently for each end of the ramps or set to zero. The routine operates on $\mathbf{v}$ as follows:
+As commented in Section 2, for every ramp there exists a rising ramp and a dual ramp. Also, there is a short period of time at the beginning of the rising ramp where the phase-locked loop (PLL) of the voltage-controlled oscillator (VCO) is not locked. The useful samples from the intermediate frequency (IF) signal are present during the time the PLL is locked in the rising ramp. Therefore, the useless samples are discarded from the IF signal. The amount of samples discarded can be adjusted independently for each end of the ramps or set to zero. The routine operates on $\mathbf{v}$ as follows:
 \begin{equation}
 	\mathbf{v'} = [v_{r}, v_{r+1}, ..., v_{s-1}, 0, ..., 0] \qquad r = N_F,\ s= n- (N_F+N_L)
 \end{equation}
@@ -186,15 +204,16 @@ After the CFFT algorithm execution, the data is kept in $\mathbf{v}$ and the fre
 \begin{equation}
 	\mathbf{v'''} = [\operatorname{Re}(V_0), \operatorname{Im}(V_0),\operatorname{Re}(V_1), \operatorname{Im}(V_1), ..., \operatorname{Re}(V_{N-1}), \operatorname{Im}(V_{N-1}),0,...,0]
 \end{equation}
-Where $V_i$ is the $i$-th bin of the FFT of the vector of sample data $\mathbf{v}$ and $N$ the FFT size which determine the number of frequency bins obtained. As outlined in \cref{cha:if}, the FFT size is set to 256, but the firmware source code allows for a simple modification of this parameter. The detailed implementation of the CFFT algorithm in the firmware can be found in Appendix C. A high-level diagram of the resulting frequency bins vector is found in Figure ZZZ.
+Where $V_i$ is the $i$-th bin of the FFT of the vector of sample data $\mathbf{v}$ and $N$ the FFT size which determine the number of frequency bins obtained. As outlined in Chapter 2 % TODO: Chapter ZZZ \cref{cha:if}
+, the FFT size is set to 256, but the firmware source code allows for a simple modification of this parameter. The detailed implementation of the CFFT algorithm in the firmware can be found in Appendix C. % TODO: A high-level diagram of the resulting frequency bins vector is found in Figure ZZZ.
 
-After computing the CFFT, the DMA controller transfers the data to the BLE stack queue ready for the transmission via the BLE link. Due to the BLE maximum bitrate characteristic outlined in \cref{cha:ble_characterisation}, only up to 23 complex bins per ramp can be transmitted, the selection of the bins chosen for transmission allows for configuration by the user in the source code.
+After computing the CFFT, the DMA controller transfers the data to the BLE stack queue ready for the transmission via the BLE link. Due to the BLE maximum bitrate characteristic outlined in \cref{sec:ble_characterisation}, only up to 23 complex bins per ramp can be transmitted, the selection of the bins chosen for transmission allows for configuration by the user in the source code.
 
 \subsubsection{Bin summation after FFT computation}
 
-The firmware allows for an optional processing step only active when the Doppler mode of operation is enabled. In this scenario, an additional routine is executed, in which bins of frequency information are summed. In this operation mode, the transmission via the BLE link is one complex sum per ramp. The range of the bins which are summed is configurable at runtime by the user. The sum of the bins is stored in two 32-bit integers (for the real and complex part of the sum respectively) that is later added to a queue for BLE transmission. This transmission of the bin summations enable the computation of the short-time Fourier transform (STFT) in the receiving device.
+The firmware allows for an optional processing step only active when the secondary mode of operation is enabled. In this scenario, an additional routine is executed, in which bins of frequency information are summed. In this operation mode, the transmission via the BLE link is the result of a complex sum of frequency bins, per ramp. Which bins are summed is configurable at runtime by the user. The sum of the bins is stored in two 32-bit integers (for the real and complex part of the sum respectively) that is later added to a queue for BLE transmission. This transmission of the bin summations enable the computation of the short-time Fourier transform (STFT) in the receiving device.
 
-To ensure that the summation of bins is done as fast as possible a constraint on the configuration of the number of bins that are summed is imposed, such that the number of bins summed for every ramp must be a multiple of 4. This is due to the frequency bins being aligned in SRAM in multiples of 4 bytes. When memory is aligned in this configuration, ARM ISA supports SIMD instructions that allow the computation of 4 sums in one clock cycle of the processor, allowing for a much faster computation time [REF]. A detailed analysis of the implementation of this routine and the comparison of computation times can be found in \cref{anx:bin_summation}.
+To ensure that the summation of bins is done as fast as possible a constraint on the configuration of the number of bins that are summed is imposed, such that the number of bins summed for every ramp must be a multiple of 4. This is due to the frequency bins being aligned in SRAM in multiples of 4 bytes. When memory is aligned in this configuration, ARM ISA supports SIMD instructions that allow the computation of 4 sums in one clock cycle of the processor, allowing for a much faster computation time [REF]. A detailed analysis of the implementation of this routine and the comparison of computation times can be found in Section DSP CHARACTERISATION % TODO: Section ZZZ \cref{anx:bin_summation}.
 
 %\section{DSP pipeline characterisation}
 %
@@ -219,7 +238,7 @@ To ensure that the summation of bins is done as fast as possible a constraint on
 
 \section{Wireless link} \label{sec:wireless_link}
 
-The wireless link is the part of the system used for the transmission of sampled ramp data to a receiving device for processing and viewing.
+The wireless link is the part of the system used for the transmission of sampled ramp data to a receiving device for processing and display.
 
 In this section, the firmware part responsible for handling the wireless communication is described. As previously mentioned the BLE protocol is implemented in the wireless link. The firmware for the wireless link consists of two different parts: a part devoted to the construction of packets from the processed data by the DSP routines and another part devoted to the transmission of the built packets.
 
