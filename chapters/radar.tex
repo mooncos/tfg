@@ -119,9 +119,9 @@ First, the input range of ADC1 is $[0, V_{DDA}]\ \si{\volt}$, with $V_{DDA}$ bei
 
 Moreover, the ADC has a limitation on the sampling rate depending on the bit resolution of the ADC samples and the supply voltage. With the chosen voltage supply of \SI{3.3}{\volt} and choosing the highest resolution available of \SI{12}{\bit}, the maximum sampling rate achievable is \SI{2.5}{\mega s\per\second} \cite[p.~103]{STMicroelectronics2022}.
 
-Finally, ADC1 features 10 single-ended input channels that can be sampled sequentially \cite[p.~355]{STMicroelectronics2022a}. The system only makes use of the first two channels, Ch1 and Ch2, mapping the previously processed I signal to Ch1 and the Q signal to Ch2.
+Finally, ADC1 features 10 single-ended input channels that can be sampled sequentially \cite[p.~355]{STMicroelectronics2022a}. The system only makes use of the first two channels, \textit{Ch1} and \textit{Ch2}, mapping the I signal to \textit{Ch1} and the Q signal to \textit{Ch2} respectively.
 
-Since the channels are sequentially sampled and all information from both signals needs to be preserved, the limitations of the Nyquist-Shannon sampling theorem must then be met. Therefore,
+Since the channels are sequentially sampled and all information from both signals needs to be preserved, the limitations of the Nyquist-Shannon theorem \cite{Shannon1949} must be met. Therefore,
 \begin{equation} \label{eqn:nyquist_sampling}
 	f_{s_{I}}, f_{s_{Q}} \ge 2 f_{i_{\max}}
 \end{equation}
