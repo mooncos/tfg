@@ -114,8 +114,8 @@ Additionally, the MCU has an integrated ARM Cortex-M0+ wireless co-processor tha
 
 The chosen microcontroller unit has one integrated high-speed and general-purpose successive approximation (SAR) ADC, denominated ADC1. The sampling characteristics of ADC1, such as the input signal voltage and current bounds, as well as the maximum sampling rate, are important to account for the limitations of the acquisition system.
 
-First, the input range of ADC1 is $[0, V_{DDA}]\ \si{\volt}$, with $V_{DDA}$ being the DC voltage supply of the analogue peripherals in the MCU.
-\cite[p.~103]{STMicroelectronics2022}. The supply chosen for $V_{DDA}$ that complies with its general operating condition range \cite[p.~62]{STMicroelectronics2022} is \SI{3.3}{\volt}, resulting in an input range of $[0, 3.3]\ \si{\volt}$. This differs from the input signal range expressed in \cref{eqn:iq_volts}, so scaling and DC-shifting of the signal are necessary.
+First, the input range of ADC1 is $[0, V_\mathrm{DDA}]\ \si{\volt}$, with $V_\mathrm{DDA}$ being the DC voltage supply of the analogue peripherals in the MCU.
+\cite[p.~103]{STMicroelectronics2022}. The supply chosen for $V_\mathrm{DDA}$ that complies with its general operating condition range \cite[p.~62]{STMicroelectronics2022} is \SI{3.3}{\volt}, resulting in an input range of $[0, 3.3]\ \si{\volt}$. This differs from the input signal range expressed in \cref{eqn:iq_volts}, so scaling and DC-shifting of the signal are necessary.
 
 Moreover, the ADC has a limitation on the sampling rate depending on the bit resolution of the ADC samples and the supply voltage. With the chosen voltage supply of \SI{3.3}{\volt} and choosing the highest resolution available of \SI{12}{\bit}, the maximum sampling rate achievable is \SI{2.5}{\mega s\per\second} \cite[p.~103]{STMicroelectronics2022}.
 
@@ -155,7 +155,7 @@ being $G$ the gain of the OA and $BW_{f}$ the bandwidth of the filter.
 
 \subsubsection{Gain configuration}
 The values of $R_1, R_2, R_3, R_4$ are used to set the gain $G$ of the OA.
-In this particular application a pure AC waveform of \SI{1.4}{Vpp} needs to map to a waveform of $3.3 Vpp$, thus:
+In this particular application a pure AC waveform of \SI{1.4}{Vpp} needs to map to a waveform of \SI{3.3}{Vpp}, thus:
 \begin{equation}
 	G = \frac{3.3}{0.8} = 4.125
 \end{equation}
