@@ -98,7 +98,19 @@ Based on most commercial solutions for CWLFM radars [REF], the radar system whic
 
 \subsection{RF board} \label{sec:rf_board_general}
 
-First and foremost, a printed circuit board (PCB) containing the antennas and the radar element is present. This PCB contains two patch array antennas. One antenna is used for the signal transmission while the other is used for the reception of the rebound signal from the target. The antennas are connected to a microwave integrated circuit (MMIC) from Silicon Radar model TRX-024-046 [REF] which provides an output RF signal for transmission and two intermediate frequency (IF) signals from the reception. 
+First and foremost, a printed circuit board (PCB) containing the antennas and the radar element is present. This PCB contains two patch array antennas. One antenna is used for the signal transmission while the other is used for the reception of the rebound signal from the target. The antennas are connected to a microwave integrated circuit (MMIC) from Silicon Radar model TRX-024-046 [REF] which provides an output RF signal for transmission and two intermediate frequency (IF) signals from the reception. The high-level diagram of the MMIC is shown in \cref{fig:block_mmic_general}  The signal provided to the transmission antenna is produced by a voltage controlled oscillator, whose bandwidth is configurable and the tuning is provided by a voltage control pin \textit{Vctrl} [REF]. The tuning is controlled by the DC voltage present in the \textit{Vctrl} pin [REF]. This control voltage is generated in an adjacent baseband board described in \cref{sec:baseband_general}. This PCB is manufactured in FR4 dielectric material for the core and is part of the SiRadar EvalKit Easy evaluation kit from Silicon Radar [REF]. An image of the aforementioned PCB with the antennas and MMIC is shown in  \cref{sec:rf_board_general}.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.8\linewidth]{block_mmic_datasheet.png}
+	\caption{High-level diagram of the TRX-024-046 MMIC. The tuning voltage is controlled by the DC level on the \textit{Vctrl} pin and the bandwidth is selected with the \textit{d0...d3} pins. The resulting beating signals are output in the \textit{IF\_I} and \textit{IF\_Q} pins. It is important to note that each pair of IF signals is in differential form \label{fig:block_mmic_general}}
+\end{figure}
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.8\linewidth]{radar_antenna_mmic.png}
+	\caption{Patch antenna and MMIC PCB used in the PCB radar node. The different components are outlined in the image \label{fig:rf_board_general}}
+\end{figure}
 
 \subsection{Baseband stage} \label{sec:baseband_general}
 
