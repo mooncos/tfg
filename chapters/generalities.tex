@@ -139,14 +139,6 @@ The baseband PCB is manufactured in FR4 dielectric material for the core by the 
 	\caption{Top and bottom views of a manufactured PCB layout of the baseband stage. The elements of this board are outlined by coloured rectangles. Some components are not used in the current radar node design so they are removed. These elements are outlined by grey rectangles. \label{fig:baseband_board_general}}
 \end{figure}
 
-\begin{figure}[ht]
-	\centering
-	\subfloat[Bottom view]{\includegraphics[width=0.5\linewidth]{img/radar_pcb_bot.png} \label{fig_cwlfm_ramps_freq}}
-	\subfloat[Top view]{\includegraphics[width=0.49\linewidth]{img/radar_pcb_top.png} \label{fig_cwlfm_diff}}
-	\todo[inline]{TODO: Change this layout for a diagram of necessary parts of a baseband board, leave this layout for our implementation}
-	\caption{Views of a manufactured PCB featuring an example layout of the baseband stage reference design \label{fig:bb_board}}
-\end{figure}
-
 \subsection{Intermediate frequency (IF) stage}
 
 Signals output from the baseband board have a predetermined voltage range and frequency characteristics. Most embedded ADCs have an input range covering only positive voltage values, differing from the input signal peak-to-peak voltage excursion. The I and Q signals output from the baseband board must be conditioned to the ADC voltage input range and the output impedance must be matched to the ADC input impedance.
