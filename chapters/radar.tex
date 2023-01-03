@@ -95,36 +95,7 @@ For the selection of the microcontroller several criteria are outlined:
 	\item The MCU must incorporate one or more wireless communication capabilities built in. It is preferred that the protocols used are standard and widely used in Internet of Things devices such as WiFi or Bluetooth Low Energy (BLE) \cite{AlSarawi2017}.
 \end{enumerate}
 
-After researching current available options in the market at the time of writing, a handful of MCU were selected. The summary of their characteristics is found in table A.
-
-{\scriptsize
-\begin{table}
-	\centering
-	\caption{Commercially available microcontrollers comparison list}
-	\label{tab:mcus_comparison}
-	\begin{tblr}{
-			width = \linewidth,
-			colspec = {Q[202]Q[115]Q[88]Q[65]Q[58]Q[87]Q[135]Q[87]Q[90]},
-			column{3} = {c},
-			column{4} = {c},
-			column{5} = {c},
-			column{6} = {c},
-			column{7} = {c},
-			column{8} = {c},
-			column{9} = {c},
-			hline{1,8} = {-}{0.08em},
-			hline{2} = {-}{},
-		}
-		IC & Fab. & ADC \# & Chs. & Bits & fsmax & Bluetooth & WiFi & idcmA\\
-		STM32F765VG & ST & 3 & 24 & 12 & 2.4 & N/A & N/A & 420\\
-		EFR32BG22 & SiLabs & 1 & 4 & 12 & 1 & BLE 5.3 & WiFi 5 & 105\\
-		STM32WB15CC & ST & 1 & 8 & 12 & 1.5 & BLE 5.2 & N/A & 85\\
-		STM32F091CB & ST & 1 & 4 & 12 & 1.25 & N/A & N/A & 36\\
-		STM32F303RE & ST & 4 & 40 & 12 & 5 & N/A & N/A & 145\\
-		XMC4700 & Infineon & 4 & 8 & 12 & 2.18 & N/A & N/A & 98
-	\end{tblr}
-\end{table}
-}
+After researching current available options in the market at the time of writing, a handful of MCU were selected. The result of the research of the commercial available microcontrollers is detailed in Appendix ZZZ. From the final list, the MCU that complied to all criteria is the STM32WB15CC MCU from ST Microelectronics \cite{STMicroelectronics2022}.
 
 \section{ADC1 limitations}
 
