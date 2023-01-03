@@ -126,13 +126,13 @@ Also, the applications of each radar are studied. Specifically, the W band radar
   number = {Datasheet DS13258},
 }
 
-@Manual{STMicroelectronics2022a,
-  title  = {{Multiprotocol wireless 32-bit MCU Arm®-based Cortex®-M4 with FPU, Bluetooth® Low Energy or 802.15.4 radio solution}},
+@Manual{STMicroelectronics2022b,
+  title  = {{Building wireless applications with STM32WB Series microcontrollers}},
   author = {{ST Microelectronics}},
-  month  = mar,
-  note   = {Rev. 6},
+  month  = nov,
+  note   = {Rev. 8},
   year   = {2022},
-  number = {Reference Manual RM0473},
+  number = {Application Note AN5289},
 }
 
 @Manual{TexasInstruments2022,
@@ -260,4 +260,6 @@ Also, the applications of each radar are studied. Specifically, the W band radar
   year      = {2020},
   month     = jun,
   number    = {12},
-  pages     =
+  pages     = {3529},
+  volume    = {20},
+  doi       = {10.3
