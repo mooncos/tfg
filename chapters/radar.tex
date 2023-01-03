@@ -56,13 +56,19 @@ It can be seen that the voltage range of the IF signals from the baseband board 
 \end{align}
 The acquisition stage input range must contain these values, otherwise an additional conditioning stage must be developed to adequate the signals to the input range of the ADC in the acquisition stage.
 
+
+
+% TODO: contar rising ramp, double ramp, pll unlocked
+
 \subsubsection{Trigger signals characterisation}
 
-In addition to the IF signals, the baseband stage also outputs trigger signals to allow the ADC in the acquisition stage to determine the sampling start instant. The trigger signals are measured in conjunction with the intermediate frequency signals with an Agilent MS ZZZ oscilloscope and the data is captured. The measured ramps and trigger signals are shown in Figure ZZZ.
+In addition to the IF signals, the baseband stage also outputs trigger signals to allow the ADC in the acquisition stage to determine the beginning of each ramp of the signal. The trigger signals are measured in conjunction with the IF signals with an Agilent MS ZZZ oscilloscope and the data is captured. The measured ramps and trigger signals are shown in Figure ZZZ.
+
+It can be seen that a trigger signal is generated at the beginning 
 
 
 
-\subsection{New acquisition stage design}
+\section{New acquisition stage design}
 
 To address the problems related to the high-cost, non real-time operation and scalability of the current radar node, a new acquisition stage is designed. This design addresses the more expensive part of the current radar node, which is the acquisition stage, as shown in \cref{sec:hw_cost} and allows for the simultaneous capture of signals from different radar nodes. For this purpose the new acquisition stage principle involves the substitution of the high-cost, energy-inefficient and voluminous PC with ADC card configuration with a microcontroller unit (MCU). This new stage is designed in a printed circuit board (PCB) layout and manufactured accordingly. The MCU chosen is the STM32WB15CC MCU from ST Microelectronics \cite{STMicroelectronics2022} and the criteria based on its selection is described in this section.
 
