@@ -74,12 +74,6 @@ The IF signals from the baseband board have the following characteristics:
 \end{align}
 Where $V_{\mathrm{DC},I}$ and $V_{\mathrm{DC},Q}$ refer to the DC voltage level of the $I_\mathrm{rad}$ and $Q_\mathrm{rad}$ signals, respectively. The maximum amplitude of both signals is \SI{1.4}{Vpp}. The acquisition stage input range must contain these values, otherwise an additional conditioning stage must be developed to adequate the signals to the input range of the ADC in the acquisition stage. 
 
-
-
-% TODO: contar rising ramp, double ramp, pll unlocked
-
-
-
 \section{New radar node design}
 
 To address the problems related to the high-cost, non real-time operation and scalability of the current radar node, a new acquisition stage is designed. This design addresses the more expensive part of the current radar node, which is the acquisition stage, as shown in \cref{sec:hw_cost} and allows for the simultaneous capture of signals from different radar nodes. For this purpose the new acquisition stage principle involves the substitution of the high-cost, energy-inefficient and voluminous PC with ADC card configuration with a microcontroller unit (MCU). This new stage is designed in a printed circuit board (PCB) layout and manufactured accordingly. The MCU chosen is the STM32WB15CC MCU from ST Microelectronics \cite{STMicroelectronics2022} and the criteria based on its selection is described in this section.
