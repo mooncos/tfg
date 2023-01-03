@@ -126,13 +126,13 @@ Finally, the IF signals output by the RF stage are amplified and conditioned to 
 
 The baseband PCB is manufactured in FR4 dielectric material for the core by the manufacturer Eurocircuits. A high-level diagram of the parts present in the baseband board can be found in \cref{fig:baseband_board_general_diagram}. An image of the manufactured baseband board is found in \cref{fig:baseband_board_general}.
 
-\begin{figure}[ht]
+\begin{figure}[htb]
 	\centering
 	\includegraphics[width=\linewidth, draft]{example-image}
 	\caption{High-level diagram of the baseband board elements. The elements depicted are those currently used by the current designed based on \cite{Sardinero2022} \label{fig:baseband_board_general_diagram}}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[htb]
 	\centering
 	\subfloat[Bottom view]{\includegraphics[width=0.5\linewidth]{img/radar_pcb_bot.png} \label{fig:baseband_board_general_bot}}
 	\subfloat[Top view]{\includegraphics[width=0.49\linewidth]{img/radar_pcb_top.png} \label{fig:baseband_board_general_top}}
@@ -183,7 +183,7 @@ The different stages described in \cref{sec:general_hw_req} are composed of a se
 
 State-of-the-art commercial implementations follow the requirements outlined in \cref{sec:general_hw_req}. A specific implementation has been developed at GMR that features the stages present on a CWLFM radar node \cite{Sardinero2022}. For this implementation, the cost per unit of a single radar node has been analysed at the time of writing. A summarised overview of the cost per part of the system is shown in \cref{tab:cost_stages}. The detailed cost per component for a single node is outlined in Appendix ZZZ.
 
-Firstly, it can be seen that the IF stage cost, even when necessary, is negligible compared to the total cost of the node, thus its analysis is not of interest. The baseband stage contributes minimally to the overall cost, despite being priced more than one order of magnitude than the IF stage. Nonetheless, the most expensive stage by far is the acquisition stage. In fact, this stage contributes to almost the entirety of the cost of the system. Conclusively, a radar node costing almost as much as the cost of the its acquisition stage is not a figure of merit of the system.
+Firstly, it can be seen that the baseband stage contributes minimally to the overall cost, despite being somewhat expensive derived from the cost of the RF components. Nonetheless, the most expensive stage by far is the acquisition stage. In fact, this stage contributes to almost the entirety of the cost of the system. Conclusively, a radar node costing almost as much as the cost of the its acquisition stage is not a figure of merit of the system.
 
 \begin{table}
 	\centering
@@ -233,7 +233,7 @@ Firstly, it can be seen that the IF stage cost, even when necessary, is negligib
 	\label{tab:cost_acquisition}
 \end{table}
 
-To understand the high cost of the acquisition stage, it is of interest to study the parts included in the general design of this stage \cite{Sardinero2022}. \cref{tab:cost_acquisition} shows the cost of the different parts comprising the acquisition stage of the general design. It is shown that the ADC itself assumes more than half the cost of a single radar node. Additionally, other high costs of the stage cannot be neglected. Those costs are related with the equipment and software necessary to interface with ADC. This is currently achieved with a PC executing the MATLAB software to extract data from readings of the ADC and later process the samples accordingly. Thus, a sufficiently fast PC and a MATLAB license are required as well.
+To understand the high cost of the acquisition stage, it is of interest to study the parts included in the general design of this stage \cite{Sardinero2022}. \cref{tab:cost_acquisition} shows the cost of the different parts comprising the acquisition stage of the current design. It is shown that the ADC itself assumes more than half the cost of a single radar node. Additionally, other high costs of the stage cannot be neglected. Those costs are related with the equipment and software necessary to interface with ADC. This is currently achieved with a PC executing the MATLAB software to extract data from readings of the ADC and later process the samples accordingly. Thus, a sufficiently fast PC and a MATLAB license are required as well.
 
 For the objective of developing multi-static radar networks, a high cost per node entails difficulties in scaling up the number of nodes to be manufactured and integrated into a system. Furthermore, the need to use a PC to obtain and process the samples poses a problem for the portability, energy efficiency and compactness of the nodes, making it difficult to integrate them in closed spaces.
 
