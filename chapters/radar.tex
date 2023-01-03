@@ -51,7 +51,13 @@ As described in \cref{sec:cwlfm_wp}, CWFM radars sweep continuously a certain RF
 
 During a sweep cycle the voltage at the input of the VCO increases constantly to cover the whole frequency band. The evolution of the voltage with time has the shape of a rising ramp, as it is shown in Figure ZZZ. At the end of the sweep cycle, the voltage at the input of the VCO decreases to begin another sweep cycle. To prevent the PLL from unlocking during a large period of time, at the end of the sweep cycle, the voltage at the input of the VCO decreases smoothly. The evolution of the voltage with time has the shape of a falling ramp steeper than the aforementioned rising ramp. This falling ramp is referred to as dual ramp.
 
-Under the conditions described in \cref{sec:cwlfm_wp}, the rising ramp has a duration of \SI{505}{\micro\second}. The dual ramp has a duration of \SI{20}{\micro\second}. Thus, a complete sweep cycle has a duration of $T_c = \SI{525}{\micro\second}$. The voltage at the input of the VCO is shown in Figure ZZZ. Despite the dual ramp, the PLL unlocks for a short period of time at the beginning of the rising ramp. The state of the PLL during the ramp phases is shown in Figure ZZZ.
+The VCO ramps are measured with an Agilent MS ZZZ oscilloscope and the data is captured. Under the conditions described in \cref{sec:cwlfm_wp}, the rising ramp has a duration of \SI{505}{\micro\second}. The dual ramp has a duration of \SI{20}{\micro\second}. Thus, a complete sweep cycle has a duration of $T_c = \SI{525}{\micro\second}$. The voltage at the input of the VCO is shown in Figure ZZZ. Despite the dual ramp, the PLL unlocks for a short period of time at the beginning of the rising ramp. The state of the PLL during the ramp phases is shown in Figure ZZZ. 
+
+\subsection{Trigger signals characterisation}
+
+In addition to the IF signals, the baseband stage also outputs a trigger signal to allow the ADC in the acquisition stage to determine the beginning of each ramp of the signal. The trigger signal is measured in conjunction with the VCO ramps with an Agilent MS ZZZ oscilloscope and the data is captured. In Figure ZZZ, it is shown the measured ramps and trigger signal.
+
+It can be seen that the trigger signal has a high value at the end of the rising ramp and and at the end of the dual ramp. It has a low value elsewhere. The characteristics of the trigger signal are shown in Table ZZZ.
 
 \subsection{Intermediate frequency (IF) signals characterisation} \label{sec:if_signals_characterisation}
 
@@ -69,12 +75,6 @@ The acquisition stage input range must contain these values, otherwise an additi
 
 
 % TODO: contar rising ramp, double ramp, pll unlocked
-
-\subsection{Trigger signals characterisation}
-
-In addition to the IF signals, the baseband stage also outputs trigger signals to allow the ADC in the acquisition stage to determine the beginning of each ramp of the signal. The trigger signals are measured in conjunction with the IF signals with an Agilent MS ZZZ oscilloscope and the data is captured. The measured ramps and trigger signals are shown in Figure ZZZ.
-
-It can be seen that a trigger signal has a high value at the end of the rising ramp and and at the end of the dual ramp. It has a low value elsewhere.
 
 
 
