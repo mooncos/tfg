@@ -88,17 +88,21 @@ To enable processing and acquisition of this signal, it is important to use hard
 
 As seen in \cref{sec:radar_op}, depending on the variation and range of the magnitudes of interest to be measured, different hardware requirements must be met. In this section, they are detailed the hardware characteristics and parts of the radar system to enable correct processing of the CWLFM radar signals, based on the current CWLFM 24 GHz radar node developed at GMR-SSR \cite{Montesano2019}.
 
-Based on most commercial solutions for CWLFM radars [REF], the radar system which works with CWLFM signals features a baseband stage to control the radiating elements or RF subsystem and an acquisition stage featuring an analogue-to-digital converter (ADC). The acquisition stage is responsible for the digitisation of the CWLFM signals for posterior processing and/or transmission to extract useful information. If the signals from the baseband stage have characteristics that lay outside the working conditions of the ADC, an intermediate frequency (IF) stage is necessary to condition these signals. A diagram showing the elements present in the currently developed radar is shown in \cref{fig:system}.
+Based on most commercial solutions for CWLFM radars [REF], the radar system which works with CWLFM signals features a baseband stage to control the radiating elements or RF subsystem and an acquisition stage featuring an analogue-to-digital converter (ADC). The acquisition stage is responsible for the digitisation of the CWLFM signals for posterior processing and/or transmission to extract useful information. If the signals from the baseband stage have characteristics that lay outside the working conditions of the ADC, an intermediate frequency (IF) stage is necessary to condition these signals. A diagram showing the elements present in the currently developed radar node is shown in \cref{fig:system}.
 
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=\linewidth]{complete_sys_pc.pdf}
-	\caption{Overview of the full system components with corresponding inputs and outputs. Baseband signals are denoted as $I_{\mathrm{rad}}$ and $Q_{\mathrm{rad}}$. Conditioned signals from the IF stage are denoted as $I_{\mathrm{adc}}$ and $Q_{\mathrm{adc}}$ \label{fig:system}}
+	\caption{Overview of the full radar system components with corresponding inputs and outputs. Baseband signals are denoted as $I_{\mathrm{rad}}$ and $Q_{\mathrm{rad}}$. Conditioned signals from the IF stage are denoted as $I_{\mathrm{adc}}$ and $Q_{\mathrm{adc}}$ \label{fig:system}}
 \end{figure}
+
+\subsection{RF board} \label{sec:rf_board_general}
+
+First and foremost, a printed circuit board (PCB) containing the antennas and the radar element is present. This PCB contains two patch array antennas. One antenna is used for the signal transmission while the other is used for the reception of the rebound signal from the target. The antennas are connected to a microwave integrated circuit (MMIC) from Silicon Radar model TRX-024-046 [REF] which provides an output RF signal for transmission and two intermediate frequency (IF) signals from the reception. 
 
 \subsection{Baseband stage} \label{sec:baseband_general}
 
-The radar element, which can be based on a monolithic microwave integrated circuit (MMIC) or a radiating antenna with custom RF hardware, transmits and receives signals which must be supplied and received, respectively. The supplied signals must be synthesised and provided to the onboard voltage-controlled oscillator (VCO) of the MMIC.
+The radar element is based on a monolithic microwave integrated circuit (MMIC) from Silicon Radar model TRX-024-046 [REF]. It transmits and receives signals which must be supplied and received, respectively. The supplied signals must be synthesised and provided to the onboard voltage-controlled oscillator (VCO) of the MMIC.
 
 These signals are provided by a frequency synthesiser based on a phase frequency detector (PFD), a precision charge pump (CP) and a reference divider. These elements mostly come bundled in a phase-locked loop (PLL) architecture.
 
