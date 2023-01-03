@@ -88,12 +88,12 @@ To enable processing and acquisition of this signal, it is important to use hard
 
 As seen in \cref{sec:radar_op}, depending on the variation and range of the magnitudes of interest to be measured, different hardware requirements must be met. In this section, they are detailed the hardware characteristics and parts of the radar system to enable correct processing of the CWLFM radar signals, based on the current CWLFM 24 GHz radar node developed at GMR-SSR \cite{Montesano2019}.
 
-Based on most commercial solutions for CWLFM radars [REF], the radar system which works with CWLFM signals features a baseband stage to control the radiating elements or RF subsystem and an acquisition stage featuring an analogue-to-digital converter (ADC). The acquisition stage is responsible for the digitisation of the CWLFM signals for posterior processing and/or transmission to extract useful information. If the signals from the baseband stage have characteristics that lay outside the working conditions of the ADC, an intermediate frequency (IF) stage is necessary to condition these signals. A diagram showing the elements present in the currently developed radar node is shown in \cref{fig:system}.
+Based on most commercial solutions for CWLFM radars [REF], the radar system which works with CWLFM signals features a baseband stage to control the radiating elements or RF subsystem and an acquisition stage featuring an analogue-to-digital converter (ADC). The acquisition stage is responsible for the digitisation of the CWLFM signals for posterior processing and/or transmission to extract useful information. If the signals from the baseband stage have characteristics that lay outside the working conditions of the ADC, an additional intermediate frequency (IF) stage is necessary to condition these signals. This stage is not present in the current radar node system. A diagram showing the elements present in the currently developed radar node is shown in \cref{fig:system}.
 
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=\linewidth]{complete_sys_pc.pdf}
-	\caption{Overview of the full radar system components of the currently developed 24 GHz CWLFM radar with corresponding inputs and outputs. Baseband signals are denoted as $I_{\mathrm{rad}}$ and $Q_{\mathrm{rad}}$. Conditioned signals from the IF stage are denoted as $I_{\mathrm{adc}}$ and $Q_{\mathrm{adc}}$ \label{fig:system}}
+	\caption{Overview of the full radar system components of the currently developed 24 GHz CWLFM radar with corresponding inputs and outputs. Baseband signals are denoted as $I_{\mathrm{rad}}$ and $Q_{\mathrm{rad}}$. Conditioned signals from the IF stage are denoted as $I_{\mathrm{adc}}$ and $Q_{\mathrm{adc}}$ \label{fig:system}} % TODO: change
 \end{figure}
 
 \subsection{RF board} \label{sec:rf_board_general}
@@ -116,11 +116,13 @@ The signal provided to the transmission antenna is produced by a voltage control
 
 \subsection{Baseband stage} \label{sec:baseband_general}
 
-The operation of the MMIC is determined by the control signal voltage \textit{Vctrl}. This signal is provided by a frequency synthesiser based on a phase frequency detector (PFD), a precision charge pump (CP) and a reference divider. These elements come bundled in a phase-locked loop (PLL) architecture.
+The baseband PCB provides the MMIC with the \textit{Vctrl} signal in order to generate the CWLFM ramp signals based on a predefined chirp time and frequency. Additionally, the baseband PCB conditions the IF signals coming from the MMIC.
 
-The PFD allows configuring parameters such as the bandwidth swept, the ramp or chirp time or the clock source selection. This configuration is provided through a serial parallel interface (SPI) connection by writing to some specific registers of the PFD integrated circuit (IC). Therefore, one requirement to control the synthesis of CWLFM signals is to utilise a microcontroller with SPI and/or I2C capabilities.
+This signal is provided by a frequency synthesiser based on a phase frequency detector (PFD), a precision charge pump (CP) and a reference divider. These elements come bundled in a phase-locked loop (PLL) architecture \cite{Sardinero2022}.
 
-Finally, the IQ signals output by the RF stage must be amplified and conditioned to provide a sufficient voltage excursion to enable processing. Therefore amplifying and filtering components must be present in this stage.
+The PFD used in the developed baseband PCB at GMR-SSR is from Analog Devices, model ADF4159 [REF DS ZZZ]. The PFD allows configuring parameters such as the bandwidth swept, the ramp or chirp time or the clock source selection through a serial parallel interface (SPI) connection by writing to some specific registers of the PFD integrated circuit (IC) \cite{Sardinero2022}. Therefore, the board also integrates a microcontroller unit (MCU) that is programmed to write to the registers as described in \cite{Sardinero2022}.
+
+Finally, the IF signals output by the RF stage are amplified and conditioned to provide a sufficient voltage excursion to enable processing. Therefore amplifying and filtering components must be present in this stage.
 
 For reference, a current design at GMR has been used for identifying the requirements of this stage \cite{Sardinero2022}. Annotated images of the high-level architecture of the baseband board used as a reference design are shown in \cref{fig:bb_board}. Only the basic general elements of this board are kept, marked in the figure with coloured rectangles. Greyed-out rectangles indicate non-essential or specific parts that can be added for a particular application.
 
