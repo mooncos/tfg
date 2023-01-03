@@ -83,7 +83,7 @@ By combining \cref{eq:nyquist,eq:range_max,eqn_chirp,eq:doppler_max_tc,eq:dopple
 
 To enable processing and acquisition of this signal, it is important to use hardware that meets specific requirements.
 
-\section[Hardware requirements for CWLFM signal processing]{Hardware requirements for the processing of CWLFM signals} \label{sec:general_hw_req}
+\section[Hardware requirements for CWLFM signal processing]{Hardware requirements for generation and processing of CWLFM signals} \label{sec:general_hw_req}
 \sectionmark{General hardware requirements}
 
 As seen in \cref{sec:radar_op}, depending on the variation and range of the magnitudes of interest to be measured, different hardware requirements must be met. In this section, they are detailed the hardware characteristics and parts of the radar system to enable correct processing of the CWLFM radar signals, based on the current CWLFM 24 GHz radar node developed at GMR-SSR \cite{Montesano2019}.
@@ -116,11 +116,9 @@ The signal provided to the transmission antenna is produced by a voltage control
 
 \subsection{Baseband stage} \label{sec:baseband_general}
 
-The radar element is based on a monolithic microwave integrated circuit (MMIC) from Silicon Radar model TRX-024-046 [REF]. It transmits and receives signals which must be supplied and received, respectively. The supplied signals must be synthesised and provided to the onboard voltage-controlled oscillator (VCO) of the MMIC.
+The operation of the MMIC is determined by the control signal voltage \textit{Vctrl}. This signal is provided by a frequency synthesiser based on a phase frequency detector (PFD), a precision charge pump (CP) and a reference divider. These elements come bundled in a phase-locked loop (PLL) architecture.
 
-These signals are provided by a frequency synthesiser based on a phase frequency detector (PFD), a precision charge pump (CP) and a reference divider. These elements mostly come bundled in a phase-locked loop (PLL) architecture.
-
-The PFD allows configuring parameters such as the bandwidth swept, the ramp or chirp time or the clock source selection. This configuration is normally provided through a serial parallel interface (SPI) o inter-integrated circuit (I2C) connection. Therefore, one requirement to control the synthesis of CWLFM signals is to utilise a microcontroller with SPI and/or I2C capabilities.
+The PFD allows configuring parameters such as the bandwidth swept, the ramp or chirp time or the clock source selection. This configuration is provided through a serial parallel interface (SPI) connection by writing to some specific registers of the PFD integrated circuit (IC). Therefore, one requirement to control the synthesis of CWLFM signals is to utilise a microcontroller with SPI and/or I2C capabilities.
 
 Finally, the IQ signals output by the RF stage must be amplified and conditioned to provide a sufficient voltage excursion to enable processing. Therefore amplifying and filtering components must be present in this stage.
 
