@@ -98,7 +98,7 @@ Based on most commercial solutions for CWLFM radars [REF], the radar system whic
 
 \subsection{RF board} \label{sec:rf_board_general}
 
-First and foremost, a printed circuit board (PCB) containing the antennas and the radar element is present. This PCB contains two patch array antennas. One antenna is used for the signal transmission while the other is used for the reception of the rebound signal from the target. The antennas are connected to a microwave integrated circuit (MMIC) from Silicon Radar model TRX-024-046 [REF] which provides an output RF signal for transmission and two intermediate frequency (IF) signals from the reception. The high-level diagram of the MMIC is shown in \cref{fig:block_mmic_general}.
+First and foremost, a printed circuit board (PCB) containing the antennas and the radar element is present. This PCB contains two patch array antennas. One antenna is used for the signal transmission while the other is used for the reception of the rebound signal from the target. The antennas are connected to a microwave integrated circuit (MMIC) from Silicon Radar model TRX-024-046 [REF] which provides an output RF signal for transmission and two intermediate frequency (IF) signals in I and Q format from the reception. The high-level diagram of the MMIC is shown in \cref{fig:block_mmic_general}.
 
 \begin{figure}[ht]
 	\centering
@@ -120,7 +120,7 @@ The baseband PCB provides the MMIC with the \textit{Vctrl} signal in order to ge
 
 This signal is provided by a frequency synthesiser based on a phase frequency detector (PFD), a precision charge pump (CP) and a reference divider. These elements come bundled in a phase-locked loop (PLL) architecture \cite{Sardinero2022}.
 
-The PFD used in the developed baseband PCB at GMR-SSR is from Analog Devices, model ADF4159 [REF DS ZZZ]. The PFD allows configuring parameters such as the bandwidth swept, the ramp or chirp time or the clock source selection through a serial parallel interface (SPI) connection by writing to some specific registers of the PFD integrated circuit (IC) \cite{Sardinero2022}. Therefore, the board also integrates a microcontroller unit (MCU) that is programmed to write to the registers as described in \cite{Sardinero2022}.
+The PFD used in the developed baseband PCB at GMR-SSR is from Analog Devices, model ADF4159 [REF DS ZZZ]. The PFD allows configuring parameters such as the bandwidth swept, the ramp or chirp time or the clock source selection through a serial parallel interface (SPI) connection by writing to some specific registers of the PFD integrated circuit (IC) \cite{Sardinero2022, AnalogDevices}. Therefore, the board also integrates a microcontroller unit (MCU) that is programmed to write to the registers as described in \cite{Sardinero2022}.
 
 Finally, the IF signals output by the RF stage are amplified and conditioned to provide a sufficient voltage excursion to enable processing. Therefore amplifying and filtering components must be present in this stage.
 
