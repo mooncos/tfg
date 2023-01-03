@@ -45,9 +45,11 @@ which is sufficient for an indoor environment of operation requiring around \SI{
 
 \subsection{Intermediate frequency (IF) signals characterisation}
 
-With the configuration described in
+With the configuration described in \cref{sec:radar_operating_conditions}, the signals output by the baseband stage from the current radar node are characterised. From the characterisation, the most important aspect is the voltage range of the signal. As the sampling of this signal is later carried out by the acquisition stage, its input range must be compatible with the output voltage range of the IF signal from the baseband stage.
 
-\section{New acquisition stage design}
+The radar is configured according to \cref{sec:radar_operating_conditions} and put in operation. The I and Q signals are then measured with an Agilent MS ZZZ oscilloscope. Along the descriptions of the baseband signals, this IF signals output from the baseband stage are denominated $I_\mathrm{rad}$ and $Q_\mathrm{rad}$ respectively.
+
+\subsection{New acquisition stage design}
 
 To address the problems related to the high-cost, non real-time operation and scalability of the current radar node, a new acquisition stage is designed. This design addresses the more expensive part of the current radar node, which is the acquisition stage, as shown in \cref{sec:hw_cost} and allows for the simultaneous capture of signals from different radar nodes. For this purpose the new acquisition stage principle involves the substitution of the high-cost, energy-inefficient and voluminous PC with ADC card configuration with a microcontroller unit (MCU). This new stage is designed in a printed circuit board (PCB) layout and manufactured accordingly. The MCU chosen is the STM32WB15CC MCU from ST Microelectronics \cite{STMicroelectronics2022} and the criteria based on its selection is described in this section.
 
