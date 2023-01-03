@@ -88,12 +88,12 @@ To enable processing and acquisition of this signal, it is important to use hard
 
 As seen in \cref{sec:radar_op}, depending on the variation and range of the magnitudes of interest to be measured, different hardware requirements must be met. In this section, they are detailed the hardware characteristics and parts of the radar system necessary to enable correct processing of the CWLFM radar signals, based on the current CWLFM 24 GHz radar node developed at GMR-SSR \cite{Montesano2019}.
 
-Based on most commercial solutions for CWLFM radars [REF], the radar system which works with CWLFM signals features a baseband stage to control the radiating elements or RF subsystem and an acquisition stage featuring an analogue-to-digital converter (ADC). The acquisition stage is responsible for the digitisation of the CWLFM signals for posterior processing and/or transmission to extract useful information. If the signals from the baseband stage have characteristics that lay outside the working conditions of the ADC, an additional intermediate frequency (IF) stage is necessary to condition these signals. This stage is not present in the current radar node system. A diagram showing the elements present in the currently developed radar node is shown in \cref{fig:system}.
+Based on most commercial solutions for CWLFM radars [REF], the radar system which works with CWLFM signals features a baseband stage to control the radiating elements or RF subsystem and an acquisition stage featuring an analogue-to-digital converter (ADC). The acquisition stage is responsible for the digitisation of the CWLFM signals for posterior processing and/or transmission to extract useful information. If the signals from the baseband stage have characteristics that lay outside the working conditions of the ADC, an additional intermediate frequency (IF) stage is necessary to condition these signals. This stage is not present in the current radar node system. A diagram showing the elements present in the currently developed radar node is shown in \cref{fig:current_system}.
 
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=\linewidth]{complete_sys_pc.pdf}
-	\caption{Overview of the full radar system components of the currently developed 24 GHz CWLFM radar with corresponding inputs and outputs. Baseband signals are denoted as $I_{\mathrm{rad}}$ and $Q_{\mathrm{rad}}$. Conditioned signals from the IF stage are denoted as $I_{\mathrm{adc}}$ and $Q_{\mathrm{adc}}$ \label{fig:system}} % TODO: change
+	\caption{Overview of the full radar system components of the currently developed 24 GHz CWLFM radar with corresponding inputs and outputs. Baseband signals are denoted as $I_{\mathrm{rad}}$ and $Q_{\mathrm{rad}}$. Conditioned signals from the IF stage are denoted as $I_{\mathrm{adc}}$ and $Q_{\mathrm{adc}}$ \label{fig:current_system}} % TODO: change
 \end{figure}
 
 \subsection{RF board} \label{sec:rf_board_general}
