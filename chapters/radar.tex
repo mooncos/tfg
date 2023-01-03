@@ -57,7 +57,7 @@ The VCO ramps are measured with an Agilent MS ZZZ oscilloscope and the data is c
 
 In addition to the IF signals, the baseband stage also outputs a trigger signal to allow the ADC in the acquisition stage to determine the beginning of each ramp of the signal. The trigger signal is measured in conjunction with the VCO ramps with an Agilent MS ZZZ oscilloscope and the data is captured. In Figure ZZZ, it is shown the measured ramps and trigger signal.
 
-It can be seen that the trigger signal has a high value at the end of the rising ramp and and at the end of the dual ramp. It has a low value elsewhere. The characteristics of the trigger signal are shown in Table ZZZ.
+The trigger signal has a high value at the end of the rising ramp and and at the end of the dual ramp. It has a low value elsewhere. The characteristics of the trigger signal are shown in Table ZZZ.
 
 \subsection{Intermediate frequency (IF) signals characterisation} \label{sec:if_signals_characterisation}
 
@@ -65,13 +65,13 @@ With the configuration described in \cref{sec:radar_operating_conditions}, the s
 
 The radar is configured according to \cref{sec:radar_operating_conditions} and put in operation. The $I_\mathrm{rad}$ and $Q_\mathrm{rad}$ signals are then measured with an Agilent MS ZZZ oscilloscope and the data is captured. The measured ramp signals for one sweep cycle are shown in Figure ZZZ.
 
-It can be seen that the IF signals from the baseband board have the following characteristics:
+The IF signals from the baseband board have the following characteristics:
 \begin{align} \label{eqn:iq_volts}
-	I_\mathrm{rad}(t) &\in [-0.8, 0.8]\ \si{\volt} \\
+	I_\mathrm{rad}(t) &\in [-0.7, 0.7]\ \si{\volt} \\
 	Q_\mathrm{rad}(t) &\in [-0.4, 0.4]\ \si{\volt} \\
 	V_{\mathrm{DC},I} &= V_{\mathrm{DC},Q} = \SI{0}{\volt}
 \end{align}
-The acquisition stage input range must contain these values, otherwise an additional conditioning stage must be developed to adequate the signals to the input range of the ADC in the acquisition stage.
+The acquisition stage input range must contain these values, otherwise an additional conditioning stage must be developed to adequate the signals to the input range of the ADC in the acquisition stage. The maximum amplitude of both signals is \SI{1.4}{Vpp}.
 
 
 
