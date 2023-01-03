@@ -49,15 +49,16 @@ With the configuration described in \cref{sec:radar_operating_conditions}, the s
 
 The radar is configured according to \cref{sec:radar_operating_conditions} and put in operation. The $I_\mathrm{rad}$ and $Q_\mathrm{rad}$ signals are then measured with an Agilent MS ZZZ oscilloscope and the data is captured. The measured ramp signals for one period are shown in Figure ZZZ.
 
-It can be seen that the voltage range of the IF signals from the baseband board have the following characteristic:
-\begin{equation} \label{eqn:iq_volts}
-	I_\mathrm{rad}(t), Q_\mathrm{rad}(t) \in [-0.4, 0.4]\ \si{\volt}
-\end{equation}
+It can be seen that the voltage range of the IF signals from the baseband board have the following characteristics:
+\begin{gather} \label{eqn:iq_volts}
+	I_\mathrm{rad}(t) \in [-0.8, 0.8]\ \si{\volt} \\
+	Q_\mathrm{rad}(t) \in [-0.4, 0.4]\ \si{\volt}
+\end{gather}
 The acquisition stage input range must contain these values, otherwise an additional conditioning stage must be developed to adequate the signals to the input range of the ADC in the acquisition stage.
 
 \subsubsection{Trigger signals characterisation}
 
-In addition to the IF signals, the baseband stage also outputs trigger signals to 
+In addition to the IF signals, the baseband stage also outputs trigger signals to allow the ADC in the acquisition stage to determine the sampling start instant. The trigger signals are measured in conjunction with the intermediate frequency signals with an Agilent MS ZZZ oscilloscope and the data is captured. The measured ramps and trigger signals are shown in Figure ZZZ.
 
 
 
