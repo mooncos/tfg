@@ -110,9 +110,9 @@ Additionally, the MCU has an integrated ARM Cortex-M0+ wireless co-processor tha
 	\item Maximum theoretical BLE operating range: \SI{10}{\meter} \cite{Bluetooth52}.
 \end{itemize}
 
-\section{ADC1 limitations}
+\subsection{ADC1 characterisation}
 
-The chosen microcontroller unit has one integrated high-speed and general-purpose successive approximation (SAR) ADC, labelled ADC1. The sampling characteristics of ADC1, such as the input signal voltage and current bounds, as well as the maximum sampling rate, are important to account for the limitations of the acquisition system.
+The chosen microcontroller unit has one integrated high-speed and general-purpose successive approximation (SAR) ADC, denominated ADC1. The sampling characteristics of ADC1, such as the input signal voltage and current bounds, as well as the maximum sampling rate, are important to account for the limitations of the acquisition system.
 
 First, the input range of ADC1 is $[0, V_{DDA}]\ \si{\volt}$, with $V_{DDA}$ being the DC voltage supply of the analogue peripherals in the MCU.
 \cite[p.~103]{STMicroelectronics2022}. The supply chosen for $V_{DDA}$ that complies with its general operating condition range \cite[p.~62]{STMicroelectronics2022} is \SI{3.3}{\volt}, resulting in an input range of $[0, 3.3]\ \si{\volt}$. This differs from the input signal range expressed in \cref{eqn:iq_volts}, so scaling and DC-shifting of the signal are necessary.
