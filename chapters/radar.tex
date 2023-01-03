@@ -37,7 +37,15 @@ This yields the following maximum operating range ($R_{\max}$):
 	f_s c^2 &= 16 R_{\max}W f_0 \nu_{r\max} \\
 	R_{\max} &= \frac{f_s c^2}{16 W f_0 \nu_{r\max}} = \SI{9.917}{\meter}
 \end{align}
-which is sufficient for an indoor environment of operation requiring around \SI{10}{\meter} distance maximum.
+which is sufficient for an indoor environment of operation requiring around \SI{10}{\meter} distance maximum. The current radar node is configured with the obtained parameters of the CWLFM signal.
+
+\section{New acquisition stage design}
+
+To address the problems related to the high-cost, non real-time operation and scalability of the current radar node, a new acquisition stage is designed. This design addresses the more expensive part of the current radar node, which is the acquisition stage, as shown in \cref{sec:hw_cost} and allows for the simultaneous capture of signals from different radar nodes. For this purpose the new acquisition stage principle involves the substitution of the high-cost, energy-inefficient and voluminous PC with ADC card configuration with a microcontroller unit (MCU). This new stage is designed in a printed circuit board (PCB) layout and manufactured accordingly. The MCU chosen is the STM32WB15CC MCU from ST Microelectronics \cite{STMicroelectronics2022} and the criteria based on its selection is described in this section.
+
+Moreover, it is decided that the new acquisition stage must communicate and transmit the digital signals from the radar wirelessly. To benefit from low energy consumption, real-time transmission of data, minimal power requirements as well as ease of integration [REF], the Bluetooth Low Energy (BLE) protocol is chosen as the interface to transmit sampled data. This interface substitutes the physical connection of the ADC card to the PC via de PCI port. A receiving device equipped with Bluetooth capabilities receives the sampled data coming from the radar node to visualise and perform additional processing if needed. The characteristics of this wireless communication link and the criteria based on its selection is also described in this section.
+
+The MCU present in the new acquisition stage handles the sampling of the signals using and embedded ADC, further lowering the cost as it is not necessary to include an external ADC component into the acquisition stage. Due to this fact, the embedded ADC input voltage range is different to the one of the current acquisition stage. As a consequence, an additional intermediate frequency (IF) stage has been designed to condition the signal to the operating range of the MCU ADC. The design of this IF stage is described in this section 
 
 
 \subsection{Intermediate frequency (IF) signal characteristics}
