@@ -7,7 +7,9 @@ Moreover, the current system proposals are designed exclusively to work with one
 
 \section{Radar and communications requirements}
 
-To understand the characteristics of the radar signal used for gait analysis, it is important to fix the radar parameters that enable gait analysis in a particular scenario. For the purposes of this Bachelor's Thesis, and aligned to the common application of CWLFM radars for gait analysis [REF ZZZ], an indoor scenario and a target of a human being is considered.
+To understand the characteristics of the radar signal used for gait analysis, it is important to fix the radar parameters that enable gait analysis in a particular scenario. For the purposes of this Bachelor's Thesis, and aligned to the common application of CWLFM radars for gait analysis [REF ZZZ], an indoor scenario and a target of a human being is considered. In this section, the resulting radar operating conditions are described.
+
+Moreover, the signals generated at the input of the voltage-controlled oscillator (VCO), the output trigger signals and the output intermediate frequency (IF) signals in the baseband board are characterised to understand the operation of the radar.
 
 \subsection{Radar parameters}
 
@@ -33,7 +35,7 @@ With these constraints, it is possible to obtain the minimum sampling frequencie
 
 For the purpose of this Bachelor's Thesis, the measurement and operation of the system is carried out under the following conditions:
 \begin{equation} \label{eq:if_conditions}
-	f_0 = \SI{24}{\giga\hertz} \qquad W = \SI{2}{\giga\hertz} \qquad f_{s\min} = \SI{0.5}{\mega\hertz} \qquad T_c = \SI{529.7}{\micro\second}
+	f_0 = \SI{24}{\giga\hertz} \qquad W = \SI{2}{\giga\hertz} \qquad f_{s\min} = \SI{0.5}{\mega\hertz} \qquad T_c = \SI{525}{\micro\second}
 \end{equation}
 
 This yields the following maximum operating range ($R_{\max}$):
@@ -42,6 +44,12 @@ This yields the following maximum operating range ($R_{\max}$):
 	R_{\max} &= \frac{f_s c^2}{16 W f_0 \nu_{r\max}} = \SI{9.917}{\meter}
 \end{align}
 which is sufficient for an indoor environment of operation requiring around \SI{10}{\meter} distance maximum. The current radar node is configured with the obtained parameters of the CWLFM signal.
+
+\subsection{Voltage ramp at the input of the voltage controlled oscillator}
+
+As described in \cref{sec:cwlfm_wp}, CWFM radars sweep continuously a certain RF band. The MMIC used in the current radar node, TRX-024-046 \cite{ZZZ}, with the operating conditions described in \cref{sec:radar_operating_conditions}, sweeps the frequency band between \SI{23}{\giga\hertz} and \SI{25}{\giga\hertz}. The RF sweep is controlled by the VCO present in the baseband board. The voltage at its input is controlled with a phase-locked loop (PLL) as described in \cref{sec:baseband_general}.
+
+During a sweep cycle the voltage at the input of the VCO increases constantly to cover the whole frequency band. The evolution of the voltage with time has the shape of a rising ramp, as it is shown in Figure ZZZ. At the end of the sweep cycle, the voltage at the input of the VCO decreases to begin another sweep cycle. To prevent the PLL from unlocking during a large period of time, at the end of the sweep cycle, the voltage at the input of the VCO decreases smoothly. The evolution of the voltage with time has the shape of a falling ramp steeper than the aforementioned rising ramp. This falling ramp is referred to as dual ramp.
 
 \subsection{Intermediate frequency (IF) signals characterisation} \label{sec:if_signals_characterisation}
 
@@ -60,11 +68,11 @@ The acquisition stage input range must contain these values, otherwise an additi
 
 % TODO: contar rising ramp, double ramp, pll unlocked
 
-\subsubsection{Trigger signals characterisation}
+\subsection{Trigger signals characterisation}
 
 In addition to the IF signals, the baseband stage also outputs trigger signals to allow the ADC in the acquisition stage to determine the beginning of each ramp of the signal. The trigger signals are measured in conjunction with the IF signals with an Agilent MS ZZZ oscilloscope and the data is captured. The measured ramps and trigger signals are shown in Figure ZZZ.
 
-It can be seen that a trigger signal is generated at the beginning 
+It can be seen that a trigger signal has a high value at the end of the rising ramp and and at the end of the dual ramp. It has a low value elsewhere.
 
 
 
