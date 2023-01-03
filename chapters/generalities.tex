@@ -120,13 +120,24 @@ The baseband PCB provides the MMIC with the \textit{Vctrl} signal in order to ge
 
 This signal is provided by a frequency synthesiser based on a phase frequency detector (PFD), a precision charge pump (CP) and a reference divider. These elements come bundled in a phase-locked loop (PLL) architecture \cite{Sardinero2022}.
 
-The PFD used in the developed baseband PCB at GMR-SSR is from Analog Devices, model ADF4159 [REF DS ZZZ]. The PFD allows configuring parameters such as the bandwidth swept, the ramp or chirp time or the clock source selection through a serial parallel interface (SPI) connection by writing to some specific registers of the PFD integrated circuit (IC) \cite{Sardinero2022, ZZZ}. Therefore, the board also integrates a microcontroller unit (MCU) that is programmed to write to the registers as described in \cite{Sardinero2022}. A detailed description of the PLL architecture of the VCO can be found in Appendix ZZZ.
+The PFD used in the baseband PCB developed at GMR-SSR is from Analog Devices, model ADF4159 [REF DS ZZZ]. The PFD allows configuring parameters such as the bandwidth swept, the ramp or chirp time or the clock source selection through a serial parallel interface (SPI) connection by writing to some specific registers of the PFD integrated circuit (IC) \cite{Sardinero2022, ZZZ}. Therefore, the board also integrates a microcontroller unit (MCU) that is programmed to write to the registers as described in \cite{Sardinero2022}. A detailed description of the PLL architecture of the VCO can be found in Appendix ZZZ.
 
 Finally, the IF signals output by the RF stage are amplified and conditioned to provide a sufficient voltage excursion to enable processing \cite{Sardinero2022}. Therefore amplifying and filtering components are present in this stage. The amplifying and filtering components are described in Appendix ZZZ.
 
-A high-level diagram of the parts present in the baseband board can be found in 
+The baseband PCB is manufactured in FR4 dielectric material for the core by the manufacturer Eurocircuits. A high-level diagram of the parts present in the baseband board can be found in \cref{fig:baseband_board_general_diagram}. An image of the manufactured baseband board is found in \cref{fig:baseband_board_general}.
 
-For reference, a current design at GMR has been used for identifying the requirements of this stage \cite{Sardinero2022}. Annotated images of the high-level architecture of the baseband board used as a reference design are shown in \cref{fig:bb_board}. Only the basic general elements of this board are kept, marked in the figure with coloured rectangles. Greyed-out rectangles indicate non-essential or specific parts that can be added for a particular application.
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=\linewidth, draft]{example-image}
+	\caption{High-level diagram of the baseband board elements. The elements depicted are those currently used by the current designed based on \cite{Sardinero2022} \label{fig:baseband_board_general_diagram}}
+\end{figure}
+
+\begin{figure}[ht]
+	\centering
+	\subfloat[Bottom view]{\includegraphics[width=0.5\linewidth]{img/radar_pcb_bot.png} \label{fig:baseband_board_general_bot}}
+	\subfloat[Top view]{\includegraphics[width=0.49\linewidth]{img/radar_pcb_top.png} \label{fig:baseband_board_general_top}}
+	\caption{Top and bottom views of a manufactured PCB layout of the baseband stage. The elements of this board are outlined by coloured rectangles. Some components are not used in the current radar node design so they are removed. These elements are outlined by grey rectangles. \label{fig:baseband_board_general}}
+\end{figure}
 
 \begin{figure}[ht]
 	\centering
