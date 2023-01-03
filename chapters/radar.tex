@@ -97,35 +97,35 @@ For the selection of the microcontroller several criteria are outlined:
 
 After researching current available options in the market at the time of writing, a handful of MCU were selected. The summary of their characteristics is found in table A.
 
+{\footnotesize
 \begin{table}
 	\centering
 	\caption{Commercially available microcontrollers comparison list}
 	\label{tab:mcus_comparison}
-	\resizebox{\linewidth}{!}{%
-		\begin{tblr}{
-				width = \linewidth,
-				colspec = {Q[106]Q[69]Q[56]Q[46]Q[40]Q[167]Q[81]Q[60]Q[219]Q[79]},
-				column{3} = {c},
-				column{4} = {c},
-				column{5} = {c},
-				column{6} = {c},
-				column{7} = {c},
-				column{8} = {c},
-				column{9} = {c},
-				column{10} = {c},
-				hline{1,8} = {-}{0.08em},
-				hline{2} = {-}{},
-			}
-			IC & Fab. & ADC \# & Chs. & Bits & fs & Bluetooth & WiFi & idc & References\\
-			STM32F765VG & ST & 3 & 24 & 12 & 2.4 & N/A & N/A & 420 & ~\\
-			EFR32BG22 & SiLabs & 1 & 4 & 12 & 1 & BLE 5.3 & WiFi 5 & 105 & ~\\
-			STM32WB15CC & ST & 1 & 8 & 12 & 1.5 & BLE 5.2 & N/A & 85 & ~\\
-			STM32F091CB & ST & 1 & 4 & 12 & 1.25 & N/A & N/A & 36 & ~\\
-			STM32F303RE & ST & 4 & 40 & 12 & 5 & N/A & N/A & 145 & ~\\
-			XMC4700 & Infineon & 4 & 8 & 12 & 2.18 & N/A & N/A & 98 & ~
-		\end{tblr}
-	}
+	\begin{tblr}{
+			width = \linewidth,
+			colspec = {Q[106]Q[69]Q[56]Q[46]Q[40]Q[167]Q[81]Q[60]Q[219]Q[79]},
+			column{3} = {c},
+			column{4} = {c},
+			column{5} = {c},
+			column{6} = {c},
+			column{7} = {c},
+			column{8} = {c},
+			column{9} = {c},
+			column{10} = {c},
+			hline{1,8} = {-}{0.08em},
+			hline{2} = {-}{},
+		}
+		IC & Fab. & ADC \# & Chs. & Bits & fsmax & Bluetooth & WiFi & idc & References\\
+		STM32F765VG & ST & 3 & 24 & 12 & 2.4 & N/A & N/A & 420 & ~\\
+		EFR32BG22 & SiLabs & 1 & 4 & 12 & 1 & BLE 5.3 & WiFi 5 & 105 & ~\\
+		STM32WB15CC & ST & 1 & 8 & 12 & 1.5 & BLE 5.2 & N/A & 85 & ~\\
+		STM32F091CB & ST & 1 & 4 & 12 & 1.25 & N/A & N/A & 36 & ~\\
+		STM32F303RE & ST & 4 & 40 & 12 & 5 & N/A & N/A & 145 & ~\\
+		XMC4700 & Infineon & 4 & 8 & 12 & 2.18 & N/A & N/A & 98 & ~
+	\end{tblr}
 \end{table}
+}
 
 \section{ADC1 limitations}
 
