@@ -139,36 +139,36 @@ The baseband PCB is manufactured in FR4 dielectric material for the core by the 
 	\caption{Top and bottom views of a manufactured PCB layout of the baseband stage. The elements of this board are outlined by coloured rectangles. Some components are not used in the current radar node design so they are removed. These elements are outlined by grey rectangles. \label{fig:baseband_board_general}}
 \end{figure}
 
-\subsection{Intermediate frequency (IF) stage}
-
-Signals output from the baseband board have a predetermined voltage range and frequency characteristics. Most embedded ADCs have an input range covering only positive voltage values, differing from the input signal peak-to-peak voltage excursion. The I and Q signals output from the baseband board must be conditioned to the ADC voltage input range and the output impedance must be matched to the ADC input impedance.
-
-In many instances, the output signals from the baseband board lack DC level and the baseband stage voltage excursion is not adapted to the ADC voltage range, allowing high discretization errors. Moreover, some MMICs \cite{Antolinos2020} output baseband signals in a differential format. For single-ended ADCs, the signals must be converted to single-ended format.
-% TODO: cambiar cita de elias a una buena
-
-Nonetheless, this stage is not necessary provided that the ADC input voltage range can be adjusted and fitted to the baseband signals voltage excursion and the output configuration matches the input configuration of the ADC.
-
-Should it be necessary to condition the signal, an intermediate frequency (IF) stage is used. The IF stage provides gain and DC shifting to the input signals for correct digitisation. To that effect, the IF stage must have the following capabilities:
-\begin{itemize}
-	\item Conversion from differential to single-ended signal configurations (bypassable)
-	\item Linear, low-noise amplification, filtering and DC shifting
-\end{itemize}
-
-A high-level overview of the architecture for this stage is shown in \cref{fig:if_general}. This stage can be laid out in a separate board to prioritise modularity or integrated with other stages in a single board to favour compactness and power efficiency.
-
-\begin{figure}[ht]
-	\centering
-	\includegraphics[width=\linewidth]{if_stage_diagram.pdf}
-	\caption{High-level architecture of the intermediate frequency (IF) stage for signal conditioning and impedance matching \label{fig:if_general}}
-\end{figure}
+%\subsection{Intermediate frequency (IF) stage}
+%
+%Signals output from the baseband board have a predetermined voltage range and frequency characteristics. Most embedded ADCs have an input range covering only positive voltage values, differing from the input signal peak-to-peak voltage excursion. The I and Q signals output from the baseband board must be conditioned to the ADC voltage input range and the output impedance must be matched to the ADC input impedance.
+%
+%In many instances, the output signals from the baseband board lack DC level and the baseband stage voltage excursion is not adapted to the ADC voltage range, allowing high discretization errors. Moreover, some MMICs \cite{Antolinos2020} output baseband signals in a differential format. For single-ended ADCs, the signals must be converted to single-ended format.
+%% TODO: cambiar cita de elias a una buena
+%
+%Nonetheless, this stage is not necessary provided that the ADC input voltage range can be adjusted and fitted to the baseband signals voltage excursion and the output configuration matches the input configuration of the ADC.
+%
+%Should it be necessary to condition the signal, an intermediate frequency (IF) stage is used. The IF stage provides gain and DC shifting to the input signals for correct digitisation. To that effect, the IF stage must have the following capabilities:
+%\begin{itemize}
+%	\item Conversion from differential to single-ended signal configurations (bypassable)
+%	\item Linear, low-noise amplification, filtering and DC shifting
+%\end{itemize}
+%
+%A high-level overview of the architecture for this stage is shown in \cref{fig:if_general}. This stage can be laid out in a separate board to prioritise modularity or integrated with other stages in a single board to favour compactness and power efficiency.
+%
+%\begin{figure}[ht]
+%	\centering
+%	\includegraphics[width=\linewidth]{if_stage_diagram.pdf}
+%	\caption{High-level architecture of the intermediate frequency (IF) stage for signal conditioning and impedance matching \label{fig:if_general}}
+%\end{figure}
 
 \subsection{Acquisition stage}
 
-Conversion of the filtered (and conditioned, if applicable) signals from the analogue domain to a digital representation is carried out in this stage. Most commercial implementations feature an acquisition stage composed of an ADC connected to a PC. This setup allows for post-processing the captured signals on the PC.
+In the current design, the IF signals from the baseband board are driven directly to the acquisition stage. Conversion of the filtered and conditioned signals from the analogue domain to a digital representation is carried out in this stage. The current implementation feature an acquisition stage composed of an ADC connected to a PC, which follows the current commercial and state-of-the-art implementations [REF]. This setup allows for post-processing the captured signals on the PC.
 
 To subsequently achieve a correct sampling of the signals, the ADC must be able to sample at a rate higher than the minimum sample rate $f_s$ as per \cref{eq:fs_final}, which is dependant of the Nyquist criteria outlined in \cref{eq:nyquist} and the Doppler range-frequency characteristic shown in \cref{eq:doppler_max_vr}. These characteristics vary depending on the application, for instance, they rely on the maximum Doppler velocity to be measured. Ensuring correct acquisition in a wide variety of scenarios can only be achieved by selecting an ADC with a sufficiently high $f_{s_{\max}}$.
 
-\cref{fig:adc_general} shows a high-level diagram describing the general requirements of the acquisition stage. Signals from the baseband stage ---or conditioned with an IF stage--- must be sampled and processed accordingly. The general processing pipeline features a digitiser card connected to a PC via a high-speed port (such as Peripheral Component Interconnect (PCI)). The ADC card is instructed by a control program to sample for a predetermined amount of time at a particular sampling frequency. After collecting the samples and storing them on the on board memory of the ADC, they are transferred to the random access memory (RAM) of the computer to be accessed by a digital signal processing (DSP) software such as MATLAB. It is important to note that the sampling and processing is done in a deferred way, as the DSP takes place after the measurement capture process finishes \cite[p.~43-44]{ADLINKTechnologies2010}. The implementation of the radar node available at GMR makes use of the ADLINK Technologies PCI-9846 ADC card.
+\cref{fig:adc_general} shows a high-level diagram describing the hardware present in the acquisition stage. Signals from the baseband stage ---or conditioned with an IF stage--- must be sampled and processed accordingly. The general processing pipeline features a digitiser card connected to a PC via a high-speed port (such as Peripheral Component Interconnect (PCI)). The ADC card is instructed by a control program to sample for a predetermined amount of time at a particular sampling frequency. After collecting the samples and storing them on the on board memory of the ADC, they are transferred to the random access memory (RAM) of the computer to be accessed by a digital signal processing (DSP) software such as MATLAB. It is important to note that the sampling and processing is done in a deferred way, as the DSP takes place after the measurement capture process finishes \cite[p.~43-44]{ADLINKTechnologies2010}. The implementation of the radar node available at GMR makes use of the ADLINK Technologies PCI-9846 ADC card.
 
 \begin{figure}[ht]
 	\centering
