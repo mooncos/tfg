@@ -42,7 +42,7 @@ The STM32WB15CC microcontroller unit (MCU) integrates several peripherals useful
 \begin{itemize}
 	\item Reset and clock controller (RCC) that configures the clock frequency of the peripherals and the MCU. This is configured to the maximum possible clock frequency that the MCU allows of \SI{64}{\mega\hertz}. The maximum clock frecuency is chosen so that the processor can execute each instruction in a shorter time.
 	\item 10-channel 12-bit analogue-to-digital converter (ADC) of which two channels are used, connected to the incoming intermediate (IF) frequency signals $I_{\mathrm{adc}}$ and $Q_{\mathrm{adc}}$. As outlined in Section 2 % TODO: Section ZZZ
-	, this ADC can have a maximum sampling rate of \SI{2.5}{Msps}.
+	, this ADC can have a maximum sampling rate of \SI{2.5}{MSps}.
 	\item Configurable timers, used to discipline the ADCs' sampling. They are trig\-gered by the external ramp trigger signal \textit{Trig} coming from the radar.
 	\item Direct memory access (DMA) peripheral, used for memory transfers to and from peripherals and the MCU integrated static random-access memory (SRAM) without interrupting the firmware execution in the main CPU.
 	\item General purpose input/output pins (GPIO) used for reset button, indication LEDs and the external ramp trigger signal \textit{Trig} coming from the radar.
@@ -73,7 +73,7 @@ The other clocks of the system are left to the default value or are automaticall
 
 \subsubsection{Analogue-to-digital converter 1 (ADC1) and Timer 1 (TIM1) configuration} \label{sec:adc_tim_config_v_vector}
 
-The integrated analogue-to-digital converter (ADC1) is configured based on the frequency characteristics of the incoming intermediate frequency (IF) signals. The minimum sampling rate requirement outlined in Section 2 determines the sampling rate of the ADC. This ADC sampling rate can have a maximum of \SI{2.5}{Msps} when a \SI{35}{\mega\hertz} clock is supplied to it. Nonetheless, this clock frequency can only be achieved when the ADC is free-running and not synchronised to the master clock. The ADC needs to be synchronised to the master clock to be synchronised to the system operation. In this scenario, the maximum clock frequency that can be supplied to the ADC is of \SI{32}{\mega\hertz}.
+The integrated analogue-to-digital converter (ADC1) is configured based on the frequency characteristics of the incoming intermediate frequency (IF) signals. The minimum sampling rate requirement outlined in Section 2 determines the sampling rate of the ADC. This ADC sampling rate can have a maximum of \SI{2.5}{MSps} when a \SI{35}{\mega\hertz} clock is supplied to it. Nonetheless, this clock frequency can only be achieved when the ADC is free-running and not synchronised to the master clock. The ADC needs to be synchronised to the master clock to be synchronised to the system operation. In this scenario, the maximum clock frequency that can be supplied to the ADC is of \SI{32}{\mega\hertz}.
 
 The ADCs are configured to perform a sequential sampling of the channels $I_{\mathrm{adc}}$ and $Q_{\mathrm{adc}}$. The clock frequency of the ADC is set to  \SI{32}{\mega\hertz} according to \cref{sec:rcc}. However, the triggering of the signal is done by Timer 1 (TIM1). Effectively, the clock frequency supplied to the ADC is much higher than the triggering signal frequency coming from Timer 1. This configuration of different ``working'' and ``triggering'' clocks is used to allow the user to configure the ADC sampling rate on the fly, without needing to reconfigure the clock tree, which involves a system reset. As the ADC is a successive approximation register (SAR) ADC, the maximum sampling rate of the ADC is given by the total sample conversion time $t_\mathrm{CONV}$ such that $f_s = 1/t_\mathrm{CONV}$. $t_\mathrm{CONV}$ depends both on a predefined sampling time $t_\mathrm{S}$ and the sample successive approximation time $t_\mathrm{SAR}$. These two times are factory set by the manufacturer: $t_\mathrm{S}$ has a minimum value of 1.5 ADC clock cycles and the approximation time is a fixed value of 12.5 ADC clock cycles \cite[p.~104]{STMicroelectronics2022}.
 By configuring the ADC clock to \SI{32}{\mega\hertz}, the maximum sampling rate of the ADC can be obtained as follows:
@@ -82,11 +82,11 @@ By configuring the ADC clock to \SI{32}{\mega\hertz}, the maximum sampling rate 
 	t_\mathrm{SAR} = \frac{12.5}{f_\mathrm{ADC}}
 	&= \SI{390.625}{\nano\second}\\
 	t_\mathrm{CONV} = t_\mathrm{S} + t_\mathrm{SAR} &= \SI{437.482}{\nano\second}\\
-	f_{s,\max} = \frac{1}{t_\mathrm{CONV}} &= \SI{2.286}{Msps}
+	f_{s,\max} = \frac{1}{t_\mathrm{CONV}} &= \SI{2.286}{MSps}
 \end{align}
-As the ADC input channels are sampled sequentially, the maximum sampling rate per channel is $f_{s,\max}/N$ with $N$ being the number of channels. For this system case, as they are two channels to be sampled $I_{\mathrm{adc}}$ and $Q_{\mathrm{adc}}$, the maximum sampling frequency per channel is \SI{1.143}{Msps}.
+As the ADC input channels are sampled sequentially, the maximum sampling rate per channel is $f_{s,\max}/N$ with $N$ being the number of channels. For this system case, as they are two channels to be sampled $I_{\mathrm{adc}}$ and $Q_{\mathrm{adc}}$, the maximum sampling frequency per channel is \SI{1.143}{MSps}.
 
-To enable the user to sample at a lower frequency, the ADC running clock is left to the maximum value (\SI{1.143}{Msps}) but the sample clock (the clock of the sampling trigger signal) is provided by Timer 1 and configurable by the user.
+To enable the user to sample at a lower frequency, the ADC running clock is left to the maximum value (\SI{1.143}{MSps}) but the sample clock (the clock of the sampling trigger signal) is provided by Timer 1 and configurable by the user.
 
 The sampling clock is provided by an external trigger generated by TIM1. For this purpose, TIM1 is configured to produce this signal with the frequency $f_{s}$ desired. This frequency can be easily adjusted by the user of the system and is computed as follows:
 \begin{equation}
