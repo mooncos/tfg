@@ -45,17 +45,17 @@ This yields the following maximum operating range ($R_{\max}$):
 \end{align}
 which is sufficient for an indoor environment of operation requiring around \SI{10}{\meter} distance maximum. The current radar node is configured with the obtained parameters of the CWLFM signal.
 
-\subsection{Voltage ramp at the input of the voltage controlled oscillator}
+\subsection{Voltage ramp at the input of the voltage controlled oscillator}  \label{sec:vco_characterisation}
 
 As described in \cref{sec:cwlfm_wp}, CWFM radars sweep continuously a certain RF band. The MMIC used in the current radar node, TRX-024-046 \cite{ZZZ}, with the operating conditions described in \cref{sec:radar_operating_conditions}, sweeps the frequency band between \SI{23}{\giga\hertz} and \SI{25}{\giga\hertz}. The RF sweep is controlled by the VCO present in the baseband board. The voltage at its input is controlled with a phase-locked loop (PLL) as described in \cref{sec:baseband_general}.
 
 During a sweep cycle the voltage at the input of the VCO increases constantly to cover the whole frequency band. The evolution of the voltage with time has the shape of a rising ramp, as it is shown in Figure ZZZ. At the end of the sweep cycle, the voltage at the input of the VCO decreases to begin another sweep cycle. To prevent the PLL from unlocking during a large period of time, at the end of the sweep cycle, the voltage at the input of the VCO decreases smoothly. The evolution of the voltage with time has the shape of a falling ramp steeper than the aforementioned rising ramp. This falling ramp is referred to as dual ramp.
 
-The VCO ramps are measured with an Agilent MS ZZZ oscilloscope and the data is captured. Under the conditions described in \cref{sec:cwlfm_wp}, the rising ramp has a duration of \SI{505}{\micro\second}. The dual ramp has a duration of \SI{20}{\micro\second}. Thus, a complete sweep cycle has a duration of $T_c = \SI{525}{\micro\second}$. The voltage at the input of the VCO is shown in Figure ZZZ. Despite the dual ramp, the PLL unlocks for a short period of time at the beginning of the rising ramp. The state of the PLL during the ramp phases is shown in Figure ZZZ. 
+The VCO ramps are measured with an Agilent MSO8104A Infiniium oscilloscope and the data is captured. Under the conditions described in \cref{sec:cwlfm_wp}, the rising ramp has a duration of \SI{505}{\micro\second}. The dual ramp has a duration of \SI{20}{\micro\second}. Thus, a complete sweep cycle has a duration of $T_c = \SI{525}{\micro\second}$. The voltage at the input of the VCO is shown in Figure ZZZ. Despite the dual ramp, the PLL unlocks for a short period of time at the beginning of the rising ramp. The state of the PLL during the ramp phases is shown in Figure ZZZ. 
 
-\subsection{Trigger signals characterisation}
+\subsection{Trigger signal characterisation} \label{sec:trigger_signal_characterisation}
 
-In addition to the IF signals, the baseband stage also outputs a trigger signal to allow the ADC in the acquisition stage to determine the beginning of each ramp of the signal. The trigger signal is measured in conjunction with the VCO ramps with an Agilent MS ZZZ oscilloscope and the data is captured. In Figure ZZZ, it is shown the measured ramps and trigger signal.
+In addition to the IF signals, the baseband stage also outputs a trigger signal to allow the ADC in the acquisition stage to determine the beginning of each ramp of the signal. The trigger signal is measured in conjunction with the VCO ramps with an Agilent MSO8104A Infiniium oscilloscope and the data is captured. In Figure ZZZ, it is shown the measured ramps and trigger signal.
 
 The trigger signal has a high value at the end of the rising ramp and and at the end of the dual ramp. It has a low value elsewhere. The characteristics of the trigger signal are shown in Table ZZZ.
 
@@ -63,7 +63,7 @@ The trigger signal has a high value at the end of the rising ramp and and at the
 
 With the configuration described in \cref{sec:radar_operating_conditions}, the signals output by the baseband stage from the current radar node are characterised. From the characterisation, the most important aspect is the voltage range of the signal. As the sampling of these signals is later carried out by the acquisition stage, the input range of the acquisition stage must be compatible with the output voltage range of the IF signals from the baseband stage.
 
-The radar is configured according to \cref{sec:radar_operating_conditions} and put in operation. The $I_\mathrm{rad}$ and $Q_\mathrm{rad}$ signals are then measured with an Agilent MS ZZZ oscilloscope and the data is captured. The measured ramp signals for one sweep cycle are shown in Figure ZZZ.
+The radar is configured according to \cref{sec:radar_operating_conditions} and put in operation. The $I_\mathrm{rad}$ and $Q_\mathrm{rad}$ signals are then measured with an Agilent MSO8104A Infiniium oscilloscope and the data is captured. The measured ramp signals for one sweep cycle are shown in Figure ZZZ.
 
 The IF signals from the baseband board have the following characteristics:
 \begin{align} \label{eqn:iq_volts}
@@ -71,7 +71,8 @@ The IF signals from the baseband board have the following characteristics:
 	Q_\mathrm{rad}(t) &\in [-0.4, 0.4]\ \si{\volt} \\
 	V_{\mathrm{DC},I} &= V_{\mathrm{DC},Q} = \SI{0}{\volt}
 \end{align}
-The acquisition stage input range must contain these values, otherwise an additional conditioning stage must be developed to adequate the signals to the input range of the ADC in the acquisition stage. The maximum amplitude of both signals is \SI{1.4}{Vpp}.
+Where $V_{\mathrm{DC},I}$ and $V_{\mathrm{DC},Q}$ refer to the DC voltage level of the $I_\mathrm{rad}$ and $Q_\mathrm{rad}$ signals, respectively. The maximum amplitude of both signals is \SI{1.4}{Vpp}.
+The acquisition stage input range must contain these values, otherwise an additional conditioning stage must be developed to adequate the signals to the input range of the ADC in the acquisition stage. 
 
 
 
@@ -277,7 +278,7 @@ First, the IF signal is measured and characterised in the ZZZ section. Subsequen
 
 Two IF signals, $I_\mathrm{rad}$ and $Q_\mathrm{rad}$, are output from the radar. Each signal is composed of a series of beaten frequency ramps. Each cycle interval corresponds to the duration of the radar frequency band sweep as detailed in \cref{sec:radar_sys}. The IF signals captured during one cycle of operation at the conditions in \cref{eq:if_conditions} is shown in Figure ZZZ. It is shown that the amplitude of the IF signals at the center of the selected interval is remarkably higher than the amplitude of the IF signals at the edges of the selected interval. This is a consequence of using narrow-band antennas: the amplitude of the beat signal is higher when the antenna is resonant.
 
-The measurement of the IF signals has been carried out in an Agilent Infiinium 54832B oscilloscope with inputs loaded with \SI{50}{\ohm}.
+The measurement of the IF signals has been carried out in an Agilent MSO8104A Infiniium oscilloscope with inputs loaded with \SI{50}{\ohm}.
 
 The IF signals of the radar $I_\mathrm{rad},Q_\mathrm{rad}$ have the following characteristics:
 \todo[inline]{características del if\_signal\_excursion.docx}.
