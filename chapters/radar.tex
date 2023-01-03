@@ -3,7 +3,7 @@
 
 It has been shown in \cref{cha:generalities} that the most promising method for gait analysis involves the use of continuous-wave lineal frequency modulation (CWLFM) radars. Employing a single radar or a network of radars to analyse gait and extract useful information has been proved accurate and robust to other factors that could hinder the data extraction from the signals, compared to other methods. For that matter, it has been shown that current radar solutions require voluminous, expensive and inefficient hardware that is not scalable and easy to deploy in real-life scenarios, should the gait of a patient be analysed.
 
-Moreover, the current system proposals are designed exclusively to work with one radar node. State-of-the-art research is now focused on implementations that feature a multi-static radar network, composed of several radar nodes, positioned in different locations that ---by working synchronously--- can extract data simultaneously, and by processing the netted radar signals, the extraction of more accurate and useful information for gait analysis is achieved [REF ZZZ]. The current design described in \cref{cha:generalities} is not suitable for modification to support the configuration of a radar network of multiple nodes. It is of interest to design a new radar system pipeline that can be adapted to work in a multi-static radar network. In this chapter, a new radar node design is described, which addresses the problems of current implementations, focusing on compactness, energy-efficiency, cost-efficiency and ability to be adapted to work in a multi-static radar network.
+Moreover, the current system proposals are designed exclusively to work with one radar node. State-of-the-art research is now focused on implementations that feature a multi-static radar network, composed of several radar nodes, positioned in different locations that ---by working synchronously--- can extract data simultaneously, and by processing the netted radar signals, the extraction of more accurate and useful information for gait analysis is achieved [REF ZZZ]. The current design described in \cref{cha:generalities} is not suitable to support the configuration of a radar network of multiple nodes due to the high-cost and amount of space required by the system. It is of interest to design a new radar system pipeline that can be adapted to work in a multi-static radar network. In this chapter, the radar and communication requirements specific to gait analysis are analysed. After analysing the requirements of the application, a new radar node design is described, which addresses the problems of current implementations, focusing on compactness, energy-efficiency, cost-efficiency and ability to be adapted to work in a multi-static radar network.
 
 \section{Radar and communications requirements}
 
@@ -26,47 +26,19 @@ With these constraints, it is possible to obtain the minimum sampling frequencie
 	\label{tab:fs_Tc}
 \end{longtable}
 	\change[inline]{no me convence esta tabla, cambiar por un gráfico que relacione los distintos aspectos y resumen de lo que se habla en esta sección (en forma de esquema)}
-\subsection{Hardware description of the current CWLFM node developed at GMR}
-\subsectionmark{Hardware of current CWLFM node}
 
-In this section, the hardware of the currently used radar node at GMR is described.
-\subsubsection{RF board}
+For the purpose of this Bachelor's Thesis, the measurement and operation of the system is carried out under the following conditions:
+\begin{equation} \label{eq:if_conditions}
+	f_0 = \SI{24}{\giga\hertz} \qquad W = \SI{2}{\giga\hertz} \qquad f_{s\min} = \SI{0.5}{\mega\hertz} \qquad T_c = \SI{529.7}{\micro\second}
+\end{equation}
 
-The printed circuit board (PCB) of the system which handles the emission and reception of the CWLFM signals contains several elements. First, the PCB contains a pair of patch array antennas printed on the surface of the PCB, one antenna is associated with the signal transmission while the other is related to the reception of the rebound signal from the target. The antennas are connected to a monolithic microwave integrated circuit (MMIC) from Silicon Radar, model TRX-024-046 [REF ZZZ Datasheet MMIC] which provides an output signal for transmission and intermediate frequency (IF) signals after reception. The high-level diagram of the MMIC is shown in \cref{fig:block_mmic}. The VCO bandwith is controlled with pins \textit{d0} to \textit{d3} and the frequency tuning is performed by means the \textit{Vctrl} DC voltage level. An image of the resulting PCB with the antennas and MMIC is shown in \cref{fig:rf_board}. This PCB is fabricated in FR4 dielectric material and is part of the SiRadar EvalKit Easy evaluation kit from Silicon Radar [REF to evalkit DS ZZZ].
+This yields the following maximum operating range ($R_{\max}$):
+\begin{align}
+	f_s c^2 &= 16 R_{\max}W f_0 \nu_{r\max} \\
+	R_{\max} &= \frac{f_s c^2}{16 W f_0 \nu_{r\max}} = \SI{9.917}{\meter}
+\end{align}
+which is sufficient for an indoor environment of operation requiring around \SI{10}{\meter} distance maximum.
 
-\begin{figure}[ht]
-	\centering
-	\includegraphics[width=0.8\linewidth]{block_mmic_datasheet.png}
-	\caption{High-level diagram of the TRX-024-046 MMIC. The tuning voltage is controlled by the DC level on the \textit{Vctrl} pin and the bandwidth is selected with the \textit{d0...d3} pins. The resulting beating signals are output in the \textit{IF\_I} and \textit{IF\_Q} pins. It is important to note that each pair of IF signals is in differential form \label{fig:block_mmic}}
-\end{figure}
-
-\begin{figure}[ht]
-	\centering
-	\includegraphics[width=0.8\linewidth]{radar_antenna_mmic.png}
-	\caption{Patch antenna and MMIC PCB used in the PCB radar node. The different components are outlined in the image \label{fig:rf_board}}
-\end{figure}
-
-This antenna and MMIC module interfaces through the provided pinhole connector with a baseband board.
-
-\subsubsection{Baseband board}
-
-This baseband board follows the general hardware design description outlined in \cref{sec:baseband_general}. The baseband PCB provides the MMIC with the \textit{Vctrl} signal in order to generate the CWLFM ramp signals based on a predefined chirp time and frequency. Additionally, the baseband PCB conditions the IF signals coming from the MMIC.
-
-To generate the correct \textit{Vctrl} values, a phase-frequency detector (PFD) is used. The PFD integrated into the PCB is from Analog Devices, model ADF4159 [REF DS ZZZ]. The device acts as a frequency synthesiser that generates the \textit{Vctrl} signal fed to the MMIC. The PFD is integrated in a phase-locked loop (PLL) architecture described in \cite{Sardinero2022}. A high-level diagram of the PLL architecture for the VCO control voltage generation is shown in \cref{fig:pfd_pll}.
-
-\begin{figure}[ht]
-	\centering
-	\includegraphics[width=0.9\linewidth]{pfd.jpg}
-	\caption{ADF4159 PFD in a PLL architecture with the VCO of the MMIC. The \textit{DIV} signal corresponds to the signal \textit{div\_o} from the MMIC divider (\cref{fig:block_mmic}). The lumped components values are $C_1=\SI{300}{\pico\farad}, R_2=\SI{220}{\ohm}, R_3=\SI{4.7}{\nano\farad},R_3=\SI{470}{\ohm}, C_3=\SI{180}{\pico\farad}$. \cite{Sardinero2022} \label{fig:pfd_pll}}
-\end{figure}
-
-Writing to specific registers through SPI communication is used to configure the PFD. A microcontroller unit (MCU) included on the PCB handles SPI communication. This MCU is previously programmed with the configuration data for the PFD registers. The PFD is configured in accordance with \cite{Sardinero2022}.
-
-Moreover, the baseband PCB is responsible for filtering and conditioning the IF signals output from the MMIC. The raw signals are DC coupled and require a series capacitor to draw the signals to the 0 VDC reference.
-
-The signals are then filtered and amplified through a band-pass filter.
-
-\change[inline]{Describir filtros activos de Nacho S (?)}
 
 \subsection{Intermediate frequency (IF) signal characteristics}
 
