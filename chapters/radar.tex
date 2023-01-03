@@ -97,7 +97,7 @@ For the selection of the microcontroller several criteria are outlined:
 
 After researching current available options in the market at the time of writing, a handful of MCU were selected. The result of the research of the commercial available microcontrollers is detailed in Appendix ZZZ. From the final list, the MCU that complied to all criteria is the STM32WB15CC MCU from ST Microelectronics \cite{STMicroelectronics2022}.
 
-The STM32WB15CC MCU features a dual processor architecture. The first processor is an ARM Cortex-M4 processor \cite{STMicroelectronics2022}. This MCU has an embedded ADC with the following characteristics:
+The STM32WB15CC MCU features a dual processor architecture. The first processor is an ARM Cortex-M4 processor \cite{STMicroelectronics2022}. This MCU has an embedded ADC, denominated ADC1, with the following characteristics:
 \begin{itemize}
 	\item 12-bit resolution, digital range: $[0, 4095]$.
 	\item 10 input channels sampled sequentially with a total maximum sampling rate of 2.5 MSps at 12-bit resolution. When using 2 channels (for $I_\mathrm{rad}$ and $Q_\mathrm{rad}$), each channel is sampled at a maximum of 1.25 MSps.
