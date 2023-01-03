@@ -80,22 +80,13 @@ Where $V_{\mathrm{DC},I}$ and $V_{\mathrm{DC},Q}$ refer to the DC voltage level 
 
 To address the problems related to the high-cost, non real-time operation and scalability of the current radar node, a new radar node is designed. A high-level diagram of the new radar node system is shown in Figure ZZZ. It is of interest to compare the diagram of the new node with the diagram of the current node present in . This design addresses the more expensive part of the current radar node, which is the acquisition stage, as shown in \cref{sec:hw_cost}. For this purpose the new acquisition stage involves the substitution of the high-cost, energy-inefficient and voluminous PC with ADC card configuration with a microcontroller unit (MCU). This new stage is designed in a printed circuit board (PCB) layout and manufactured accordingly. The MCU chosen is the STM32WB15CC MCU from ST Microelectronics \cite{STMicroelectronics2022} and the criteria based on its selection is described in this section.
 
-Moreover, it is decided that the new acquisition stage must communicate and transmit the digital signals from the radar wirelessly to enable real-time data acquisition and design the node for use in a multi-radar netted configuration. To benefit from low energy consumption, real-time transmission of data, minimal power requirements as well as ease of integration [REF], the Bluetooth Low Energy (BLE) protocol is chosen as the interface to transmit sampled data. This interface substitutes the physical connection of the ADC card to the PC via de PCI port. A receiving device equipped with Bluetooth capabilities receives the sampled data coming from the radar node to visualise and perform additional processing if needed. The characteristics of this wireless communication link and the criteria based on its selection is also described in this section.
+Moreover, it is decided that the new acquisition stage must communicate and transmit the digital signals from the radar wirelessly to enable real-time data acquisition and design the node for use in a multi-radar netted configuration. To benefit from low energy consumption, real-time transmission of data, minimal power requirements as well as ease of integration [REF], the Bluetooth Low Energy (BLE) protocol is chosen as the interface to transmit sampled data. This interface substitutes the physical connection of the ADC card to the PC via the PCI port. A receiving device equipped with Bluetooth capabilities receives the sampled data coming from the radar node to visualise and perform additional processing if needed. The characteristics of this wireless communication link and the criteria based on its selection is also described in this section.
 
-The MCU present in the new acquisition stage handles the sampling of the signals using and embedded ADC, further lowering the cost as it is not necessary to include an external ADC component into the acquisition stage. Due to this fact, the embedded ADC input voltage range is different to the one of the current acquisition stage. As a consequence, an additional intermediate frequency (IF) stage has been designed to condition the signal to the operating range of the MCU ADC. The design of this IF stage is described in this section.
+The MCU present in the new acquisition stage handles the sampling of the signals using an embedded ADC, further lowering the cost as it is not necessary to include an external ADC component into the acquisition stage. Due to this fact, the embedded ADC input voltage range is different to the one of the current acquisition stage. As a consequence, an additional intermediate frequency (IF) stage has been designed to condition the signal to the operating range of the MCU ADC. The design of this IF stage is described in this section.
+
+\subsection{Acquisition stage, MCU selection}
 
 
-\subsection{Intermediate frequency (IF) signal characteristics}
-
-Signal preprocessing is performed in this stage in order to allow the sampling by the MCU of the I-Q modulated incoming signal from the radar.
-
-This stage is necessary because the MCU has an ADC whose operating voltage input range differs from that of the incoming signal, and the incoming signal is differential, while the sampling is performed from single-ended inputs. In their limit condition [REF],
-\begin{equation} \label{eqn:iq_volts}
-	I(t), Q(t) \in [-0.4, 0.4]\ \si{\volt}
-\end{equation}
-An example output of I and Q signals at this condition can be found in figure ZZ.
-
-In this chapter, the limitations of the ADC, the proposed design to make the signal comply with its constraints, and the resulting acquisition and preprocessing stage are discussed.
 
 \section{ADC1 limitations}
 
