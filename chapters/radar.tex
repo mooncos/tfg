@@ -45,7 +45,10 @@ This yields the following maximum operating range ($R_{\max}$):
 \end{align}
 which is sufficient for an indoor environment of operation requiring around \SI{10}{\meter} distance maximum. The current radar node is configured with the obtained parameters of the CWLFM signal.
 
-As per \cref{eqn:range_res}, the \textit{range resolution} per frequency bin of the FFT 
+As per \cref{eqn:range_res}, the \textit{range resolution} per frequency bin of the FFT can be obtained:
+\begin{equation} \label{eqn:range_res_ours}
+	\Delta R = \frac{c}{2W} = \frac{c}{2 \cdot \num{2e9}}
+\end{equation}
 
 \subsection{Voltage ramp at the input of the voltage controlled oscillator (VCO)}  \label{sec:vco_characterisation}
 
