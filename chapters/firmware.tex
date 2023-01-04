@@ -409,7 +409,7 @@ At first instance, the raw binary throughput of the BLE link has been measured. 
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[width=0.7\linewidth]{sucio_graficos/ble/throughput.png}
+	\includegraphics[width=0.6\linewidth]{sucio_graficos/ble/throughput.png}
 	\caption{BLE link binary throughput with respect to distance from the BLE antenna. The transmission achieves a bitrate nearing \SI{700}{\kilo\bit\per\second} in distances less than \SI{4}{\meter}. The bitrate is greatly affected in distances greater than \SI{6}{\meter}}
 	\label{fig:firmware_ble_char_bitrate}
 \end{figure}
@@ -422,7 +422,7 @@ A characterisation regarding the bins per ramp that can be sent without any erro
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[width=0.7\linewidth]{sucio_graficos/ble/bins_per_ramp.png}
+	\includegraphics[width=0.6\linewidth]{sucio_graficos/ble/bins_per_ramp.png}
 	\caption{Maximum transmitted bins per ramp without ramp loss with respect to distance from the BLE antenna. A maximum of 23 bins per ramp is obtained for the shortest distance. The system configuration of 20 bins per ramp yields no error for distances up to \SI{7}{\metre}. The maximum amount of bins decreases rapidly when the distance is close to \SI{10}{\metre}
 	\label{fig:firmware_ble_char_bins}}
 \end{figure}
@@ -433,11 +433,9 @@ The system is capable of permitting up to 23 bins per ramp for distances up to \
 
 A characterisation of the bit error ratio (BER) of the communication has been performed. The system is left transmitting \SI{5}{\mega\bit} of data at different distances of the receiving device from the BLE antenna. The system is configured to transmit incrementing and decrementing (in a loop) 16-bit numbers up to the specified data amount. The distances studied are \SI{25}{\centi\metre}, \SI{50}{\centi\metre} and 1 to 10 \si{\metre} at \SI{1}{\metre} steps. For every distance, the BER is computed as the failed/erroneous bits over transmitted bits, detected as bits out of the expected incremental values. The results are shown in \cref{fig:firmware_ble_char_ber}.
 
-
-
 \begin{figure}[ht]
 	\centering
-	\includegraphics[width=0.7\linewidth]{sucio_graficos/ble/ber.png}
+	\includegraphics[width=0.6\linewidth]{sucio_graficos/ble/ber.png}
 	\caption{Bit error ratio (BER) of the wireless communication link (revisar)}
 	\label{fig:firmware_ble_char_ber}
 \end{figure}
@@ -447,7 +445,7 @@ A final characterisation has been carried out, in which the ramps that are lost 
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[width=0.7\linewidth]{sucio_graficos/ble/rlr.png}
+	\includegraphics[width=0.6\linewidth]{sucio_graficos/ble/rlr.png}
 	\caption{Ramp lost ratio with respect to distance from the BLE antenna. No ramps are lost up to 6 m in all configurations, coinciding with the results obtained in \cref{sec:max_number_bins_vs_distance}. The ratio for 20 bins/ramp begins increasing from 6. The ratio for 10 and 5 bins/ramps is only perceived from a distance starting at 9m. The ordinate axis is represented in a logarithmic scale}
 	\label{fig:firmware_ble_char_rlr}
 \end{figure}
