@@ -248,26 +248,42 @@ In this section, the firmware part responsible for handling the wireless communi
 
 % Bluetooth Low Energy has been developed by the Bluetooth SIG so as to achieve a low power, low latency standard wireless communication protocol while maintaining reasonable data transmission rate [REF].
 
-The Bluetooth Low Energy (BLE) stack implemented in the system follows the standard specification formally adopted by the Bluetooth core specification version 5.0 [REF]. This guarantees interoperability with any receiving device supporting at least the Bluetooth core specification version previously mentioned [REF].
+The Bluetooth Low Energy (BLE) stack implemented in the system follows the standard specification formally adopted by the Bluetooth core specification version 5.0 [REF]. This guarantees interoperability with any receiving device supporting at least the Bluetooth core specification version 5.0. Nonetheless, it is possible to connect with a receiving device supporting the Bluetooth core specification version 4.0 [REF], although with more limited range of operation regarding distance to the BLE antenna.
 
-The system makes use of the newer Bluetooth core specification version 5.0 [REF] characteristics, which include a initial connection time of 2-4 ms (which is faster compared to the previous Bluetooth core specification version 4.0 [REF]), a higher data length per packet of 247 bytes and a \SI{2}{\mega\bit\per\second} physical layer bitrate, among other additional features [REF]. It is advised that the receiving device implements at least Bluetooth core specification version 5.0 to benefit from the enhancements of the wireless communication link, despite being also compatible with receiving implementing the Bluetooth core specification version 4.0 [REF].
+The system makes use of the newer Bluetooth core specification version 5.0 [REF] characteristics, which include a initial connection time of 2-4 ms (which allows a quick connection with the node), a data length per packet of 247 bytes and a \SI{2}{\mega\bit\per\second} physical layer bitrate (which permits establishing a connection fulfilling the requirements needed for our application), among other additional features [REF].
 
-At boot, the system automatically configures the BLE link following the characteristics outlined in this section. An overview of the protocol stack and interfaces implementation in the MCU can be found in \cref{fig:firmware_ble_stack_communications}. The diagram shows the different parts of hardware associated with running different firmware parts related with the BLE communication. The main application logic is contained within the main CPU of the MCU. The BLE stack is contained entirely in the secondary CPU of the MCU. The application logic controlls the BLE stack operation (for sending packets of data, for instance) via communication interfaces connected with a special inter process communication controller peripheral (IPCC) responsible of interfacing the commands between both devices. % ZZZ
+At boot, the system automatically configures the BLE link following the characteristics outlined in this section. An overview of the protocol stack and interfaces implementation in the MCU can be found in \cref{fig:firmware_ble_stack_communications}. The diagram shows the different parts of hardware associated with running different firmware parts related with the BLE communication. The BLE stack is contained entirely in the secondary CPU of the MCU. The main CPU controls the BLE stack operation (for sending packets of data, for instance) via communication interfaces connected with a special inter process communication controller peripheral (IPCC) responsible of interfacing the commands between both devices. % ZZZ
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=\linewidth]{firmware/firmware_ble_stack_communications}
+	\caption{BLE protocol stack and interfaces system implementation. The BLE stack processing and operation is abstracted from the main CPU, which runs the system firmware. The control of the BLE stack in the secondary CPU is performed by the main CPU via commands issued through an inter process communication controller (IPCC) to and from the secondary CPU. This architecture provided by the MCU design allows for system logic in the main CPU to run in parallel to BLE logic in the secondary CPU}
+	\label{fig:firmware_ble_stack_communications}
+\end{figure}
 
 \subsubsection{BLE protocol stack overview and configuration} \label{sec:ble_stack}
 
 The Bluetooth Low Energy protocol is made up of several layers in an architecture that makes up the BLE protocol stack. In broad terms, the stack can be divided into two parts: \textit{Controller} and \textit{Host}. An overview of the BLE stack layer architecture is provided in \cref{fig:firmware_ble_stack_layers}. A summary of the system BLE stack configuration is provided in \cref{tab:ble_stack_config}.
 
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.3\linewidth]{firmware/firmware_ble_stack_layers}
+	\caption{BLE protocol stack layer architecture. On the lowest level, the PHY layer is connected to a 2.4 GHz antenna. On the highest level, control of the BLE link is performed by the user application through the ACI. The \textit{Host} and \textit{Controller} communicate via the HCI.}
+	\label{fig:firmware_ble_stack_layers}
+\end{figure}
+
+\paragraph{Host}
+
 The \textit{Host} is the higher level part of the stack and is made up of software layers. It includes several protocols itself: \textit{Logical Link Control and Adaptation Protocol} (L2CAP), \textit{Generic Attribute Profile} or \textit{Attribute Protocol} (GATT/ATT), \textit{Security Module} (SM) and \textit{Generic Access Profile} (GAP).
 
 \paragraph{GAP}
-This protocol manages device connection flow and enumeration, as well as \textit{GATT Characteristics} discovery when a connection is established. It is based on the role of a device, with respect to its \textit{connection profile}. A device in a BLE connection can be either a \textit{GAP Peripheral}, which allows connections in advertising mode and idles when not connected, or a \textit{GAP Central} device, which scans for peripheral devices and never advertises. The advertisement mode is active when a BLE connection is yet to be established and peripherals are visible to central devices waiting for a central device to issue a connection request. The system is configured such that it acts as a \textit{GAP Peripheral} allowing connections from a data receiving device, the system identifier and device name is set to \textit{SiRadarBLE}.
+This protocol manages device connections, and the discovery of the capabilities of a device when a connection is established. It is based on the role of a device, with respect to its \textit{connection profile}. The roles of a device in BLE can be either \textit{GAP Peripheral} or \textit{GAP Central}. The GAP protocol is used when the devices are in advertisement mode, which is the state of a BLE connection before devices have established a connection. When a BLE connection is yet to be established (advertisement mode) peripherals are visible to central devices and central devices scan for peripherals to issue a connection request. The system is configured such that it acts as a \textit{GAP Peripheral} allowing connections from a data receiving device, the system identifier and device name is set to \textit{SiRadarBLE}.
 
 \paragraph{SM}
 This protocol manages encryption and connection security. It is disabled for the configuration of the system, but can be activated by modification of the source code such that the system asks for a password when trying to establish a connection or the data transmission is encrypted in some form [REF].
 
 \paragraph{GATT}
-This protocol is used for the transmission and retrieval of information. It is based on the role of a device, with respect to \textit{data flow}. A device in a BLE connection can be either a \textit{GATT Server}, which stores information and provides means for clients to access it, or a \textit{GATT Client}, which accesses data on the remote \textit{GATT Server} through data access operations. These operations are performed on data attribute types called \textit{Characteristics}. \textit{Characteristics} hold a single data value and an arbitrary number of descriptors, which give information about the type of data it represents and the data access configuration. \textit{Notify} and \textit{indicate} are a type of data access operations driven by a subscription of the \textit{GATT Client} to a \textit{Characteristic} of the \textit{GATT Server}. Using \textit{notify} a client can receive data generated by the server. The system implements a single \textit{Characteristic} called \textit{DSP\_DATA} which holds the data generated by the DSP routines in a packet form. This \textit{Characteristic} is only \textit{read} enabled and is configured as a \textit{notification}, such that clients can subscribe to the event of data change and receive new data via the BLE connection.
+This protocol is used for the transmission and retrieval of information. It is based on the role of a device, with respect to \textit{data flow}. A device in a BLE connection can be either a \textit{GATT Server}, which stores information and provides means for clients to access it, or a \textit{GATT Client}, which accesses data on the remote \textit{GATT Server} through data access operations. These operations are performed on data attribute types called \textit{Characteristics}. \textit{Characteristics} hold a single data value and an arbitrary number of descriptors, which give information about the type of data it represents and the data access configuration. \textit{Notify} and \textit{indicate} are a type of data access operations driven by a subscription of the \textit{GATT Client} to a \textit{Characteristic} of the \textit{GATT Server}. Using \textit{notify} a client can receive data generated by the server. The system implements a single \textit{Characteristic} called \textit{DSP\_DATA} which holds the data generated by the DSP routines in a packet form. This \textit{Characteristic} is only \textit{read} enabled and is configured as a \textit{notification}, such that clients can subscribe to the event of data change and receive new data via the BLE connection. For example: a device wishes to read data sent from another device. In this case, the\textit{GATT Client} who whishes to obtain changing data from a \textit{GATT Server} sends a \textit{notify} command subscribing to changes in the data. As it is a \textit{notify} command, every time the \textit{GATT Server} has new data available, it is sent to the \textit{GATT Client}.
 
 \paragraph{L2CAP}
 This protocol manages higher-level protocol multiplexing (i.e. interleaving data from different protocols in the BLE packets [REF]) and packet segmentation and reassembly operations. The system implements this protocol such that if packets are lost or corrupted they are re-sent through the connection.
@@ -279,20 +295,6 @@ The communication between \textit{Host} and \textit{Controller} is done via a \t
 On the other hand, the communication between \textit{Controller}, the system application and the \textit{Host} is performed via the \textit{Application Controller Interface} (ACI). The ACI makes use of the same IPCC used by the HCI. The ACI is formed by a subset of vendor specific commands provided by the manufacturer. These commands encapsulate sets of HCI commands for easier use. ACI commands can be issued to control the BLE connection, such as accepting incoming connection requests or sending a data packet. In the system firmware, ACI commands are used to enable advertisement mode, send data packets and control device disconnection behaviour. The communication between the different parts is depicted in \cref{fig:firmware_ble_stack_communications}.
 
 \change[inline]{Tengo que repensar mejor como explicar este párrafo porque es complicado, a la vez que imporante}
-
-\begin{figure}[ht]
-	\centering
-	\includegraphics[width=\linewidth]{firmware/firmware_ble_stack_communications}
-	\caption{BLE protocol stack and interfaces system implementation. The BLE stack processing and operation is abstracted from the main CPU, which runs the system firmware. The control of the BLE stack in the secondary CPU is performed by the main CPU via commands issued through an inter process communication controller (IPCC) to and from the secondary CPU. This architecture provided by the MCU design allows for system logic in the main CPU to run in parallel to BLE logic in the secondary CPU}
-	\label{fig:firmware_ble_stack_communications}
-\end{figure}
-
-\begin{figure}[ht]
-	\centering
-	\includegraphics[width=0.3\linewidth]{firmware/firmware_ble_stack_layers}
-	\caption{BLE protocol stack layer architecture. On the lowest level, the PHY layer is connected to a 2.4 GHz antenna. On the highest level, control of the BLE link is performed by the user application through the ACI. The \textit{Host} and \textit{Controller} communicate via the HCI.}
-	\label{fig:firmware_ble_stack_layers}
-\end{figure}
 
 {\footnotesize\renewcommand*{\arraystretch}{1.4}
 \begin{longtable}{@{}>{\raggedright\arraybackslash\bfseries}m{0.25\linewidth}>{\raggedright\arraybackslash}m{0.2\linewidth}>{\raggedright\arraybackslash}m{0.5\linewidth}@{}}
