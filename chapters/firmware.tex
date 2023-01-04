@@ -215,7 +215,7 @@ The firmware allows for an optional processing step only active when the seconda
 
 To ensure that the summation of bins is done as fast as possible a constraint on the configuration of the number of bins that are summed is imposed, such that the number of bins summed for every ramp must be a multiple of 4. This is due to the frequency bins being aligned in SRAM in multiples of 4 bytes. When memory is aligned in this configuration, ARM ISA supports SIMD instructions that allow the computation of 4 sums in one clock cycle of the processor, allowing for a much faster computation time [REF]. A detailed analysis of the implementation of this routine and the comparison of computation times can be found in Section DSP CHARACTERISATION % TODO: Section ZZZ \cref{anx:bin_summation}.
 
-%\section{DSP pipeline characterisation}
+%\section{DSP pipeline characterisation} \label{sec:dsp_test}
 %
 %In order to evaluate the performance of the firmware related with the DSP routines a series of metrics are gathered and analysed. These characterisations of the DSP routines execution have been performed with the developed system with the hardware implementation described in Section 4 and the firmware implementation described in this section.
 %
@@ -223,7 +223,7 @@ To ensure that the summation of bins is done as fast as possible a constraint on
 %
 %\subsection{Binary throughput after every DSP routine}
 %
-%The binary throughput at every routine of the DSP chain is measured. To perform this measurement the system has been configured to use an external, non-related to the operation, timer ---Timer 2--- for measuring the amount of time that each DSP routine takes to process 320 bits (the bits corresponding to 10 samples of a ramp). The result is later converted to standard binary throughput units. The results are shown in Table ZZZ and Figure ZZZ.
+%The binary throughput at every routine of the DSP chain is measured. To perform this measurement the system has been configured to use an external (non-related to the operation) timer ---Timer 2--- for measuring the amount of time that each DSP routine takes to process 320 bits (the bits corresponding to 10 samples of a ramp). The result is later converted to standard binary throughput units. The results are shown in Table ZZZ and Figure ZZZ.
 %
 %ZZZ
 %
