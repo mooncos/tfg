@@ -139,7 +139,7 @@ To characterise the ADC, a measurement of the noise floor is carried out. To per
 
 The results show that for signals whose amplitude is greater than \SI{4}{\milli\volt} they can be detected and correctly digitised. Moreover it can be seen that the noise floor level averages around \SI{-70}{dBm}. Despite not being the the same level as the high-cost, high-precision ADC used in the current design which averages around \SI{-110}{dBm} \cite{ADLINKTechnologies2010}, it is sufficiently enough to digitise the IF signals. The part of the signals which has the lowest amplitude is the start of the ramps, where the PLL is unlocked and no useful information is present. As these samples that can be affected by noise are discarded, the effect is minimal.
 
-\subsection{Signal conditioning, additional IF stage}
+\subsection{Signal conditioning, additional IF stage design}
 
 As the input voltage range of the ADC in the MCU and the voltage range of $I_\mathrm{rad}$ and $Q_\mathrm{rad}$ differs, an additional IF stage is designed and tested, which introduces a DC-shift and amplifies the signal. Additionally, this stage provides a low impedance input to the ADC. After characterising the IF signals and the embedded ADC, it is possible to design this stage. 
 
@@ -180,7 +180,7 @@ after giving a fixed value of \SI{10}{\kilo\ohm} to $R_1$:
 By allowing for some margin at the extrema of the output, and considering that there aren't commercial resistors of the computed value, the closest value of \SI{39}{\kilo\ohm} has been chosen for $R_4$. This value corresponds to the closest E12 value available, which is the preferred series of values for electronic components \cite{IEC2015}. Leaving some margin also lessens the impact of the noise floor of the ADC.
 At the output of the OA, a small capacitor is placed in parallel to allow for smooth voltage output and high-frequency voltage spikes suppression.
 
-The chosen OA has been OPA2354AIDDA [REF], because it has a sufficiently large bandwidth for the application (suitable GBW) and there is readily available stock at the laboratory. This OA is rated to work with input signals of up to 2 MHz. Additional capabilities such as a stage to convert from differential format IF signals to single-ended has also been added in case working with other radars require it. This implementation is described in Appendix C. %TODO: Appendix ZZZ
+The chosen OA has been OPA2354AIDDA [REF], because it has a sufficiently large bandwidth for the application (suitable GBW) and there is readily available stock at the laboratory. This is chosen so that the design is capable of working for input signals frequencies of well over the required 1 MHz bandwidth. Additional capabilities such as a stage to convert from differential format IF signals to single-ended has also been added in case working with other radars require it. This implementation is described in Appendix C. %TODO: Appendix ZZZ
 
 Finally, the design has been laid out in a PCB of 5 cm x 5 cm and manufactured by JLCPCB. The resulting design is shown in \cref{fig:if_phy}. Details of the layout and implementation, with circuit schematic and layout images can be found in Appendix C. %TODO: Appendix ZZZ
 
@@ -195,7 +195,7 @@ Finally, the design has been laid out in a PCB of 5 cm x 5 cm and manufactured b
 
 The IF stage design has been simulated using the Keysight ADS software as well as tested after manufacturing. The test results show the correct operation of the IF stage. The transient and frequency operation have been tested.
 
-First, the transient characteristic has been tested. The IF stage inputs have been connected to a sinusoidal signal generator with the same amplitude characteristics as $I_\mathrm{rad}$ and $Q_\mathrm{rad}$. The frequency of the generated signal was changed up to 1 MHz. The output of the signal at some key frequencies have been measured by a Agilent MSO8104A Infiniium oscilloscope. The results are compared to the simulations and the input signals. The results are shown in ZZZ. As the configurations for both $I_\mathrm{rad}$ and $Q_\mathrm{rad}$ is identical, only the results from one are shown.
+First, the transient characteristic has been tested. The IF stage inputs have been connected to a sinusoidal signal generator with the same amplitude characteristics as $I_\mathrm{rad}$ and $Q_\mathrm{rad}$. The frequency of the generated signal was varied up to 1 MHz. The output of the signal at some key frequencies have been measured by a Agilent MSO8104A Infiniium oscilloscope. The results are compared to the simulations and the input signals. The results are shown in ZZZ. As the configurations for both $I_\mathrm{rad}$ and $Q_\mathrm{rad}$ is identical, only the results from one are shown.
 
 \begin{figure}[htb]
 	\centering
@@ -216,6 +216,8 @@ Secondly, the frequency response of the IF stage is measured. This is to verify 
 	\caption{Frequency response of the IF stage. It is shown that the frequency response is flat well more than the required 1 MHz bandwidth}
 	\label{fig:if_bode}
 \end{figure}
+
+\subsection{MCU PCB design}
 
 %\subsection{Signal conditioning simulation}
 %
