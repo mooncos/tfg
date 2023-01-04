@@ -195,7 +195,7 @@ Finally, the design has been laid out in a 5 cm x 5 cm PCB and manufactured by J
 
 The IF stage design has been simulated using the Keysight ADS software as well as tested after manufacturing. The test results show the correct operation of the IF stage. The transient and frequency operation have been tested.
 
-First, the transient characteristic has been tested. The IF stage inputs have been connected to a sinusoidal signal generator with the same amplitude characteristics as $I_\mathrm{rad}$ and $Q_\mathrm{rad}$. The frequency of the generated signal was varied up to 1 MHz. The output of the signal at some key frequencies have been measured by a Agilent MSO8104A Infiniium oscilloscope. The results are compared to the simulations and the input signals. The results are shown in ZZZ. As the configurations for both $I_\mathrm{rad}$ and $Q_\mathrm{rad}$ is identical, only the results from one are shown.
+First, the transient characteristic has been tested. The IF stage inputs have been connected to a sinusoidal signal generator with the same amplitude characteristics as $I_\mathrm{rad}$ and $Q_\mathrm{rad}$. The frequency of the generated signal was varied up to 1 MHz. The output of the signal at some key frequencies have been measured by a Agilent MSO8104A Infiniium oscilloscope. The results are compared to the simulations and the input signals. The results are shown in \cref{fig:if_signal_test}. As the configurations for both $I_\mathrm{rad}$ and $Q_\mathrm{rad}$ is identical, only the results from one are shown.
 
 \begin{figure}[htb]
 	\centering
@@ -221,7 +221,7 @@ Secondly, the frequency response of the IF stage is measured. This is to verify 
 
 The PCB in which the MCU will be embedded is designed. The PCB is designed such that it follows all the manufacturer recommendations outlined in \cite{STMicroelectronics2022, STMicroelectronics2022a, STMicroelectronics2022b}. It includes an embedded BLE antenna, low dropout (LDO) voltage regulators to distribute power to the circuit, a micro universal serial bus (USB) connector to provide power input to the circuit, two SMA connectors to input the signals output from the IF stage, a programming header for the MCU and several header pins to allow the easy diagnosis of all signals in the PCB.
 
-The PCB measures 5 cm x 5 cm and is manufactured with a ROGERS 4350B dielectric core by L.A.B. Circuits S.A. Details of the layout and implementation, including circuit schematic and layout images, can be found in Appendix D. An image of the manufactured PCB is shown in 
+The PCB measures 5 cm x 5 cm and is manufactured with a ROGERS 4350B dielectric core by L.A.B. Circuits S.A. Details of the layout and implementation, including circuit schematic and layout images, can be found in Appendix D. An image of the manufactured PCB is shown in \cref{fig:mcu_pcb}
 
 \begin{figure}[h]
 	\centering
