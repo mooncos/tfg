@@ -165,24 +165,22 @@ being $G$ the gain of the OA and $BW_{f}$ the bandwidth of the filter.
 The values of $R_1, R_2, R_3, R_4$ are used to set the gain $G$ of the OA.
 In this particular application a pure AC waveform of \SI{1.4}{Vpp} needs to map to a waveform of \SI{3.3}{Vpp}, thus:
 \begin{equation}
-	G = \frac{3.3}{0.8} = 4.125
+	G = \frac{3.3}{0.8} = 4.125 %TODO: change to correct values
 \end{equation}
 and after analysing the circuit feedback loops:
 \begin{gather}
 	G = \frac{R_4}{R_1} \frac{R_1+R_2}{R_3+R_4}\\
 	R_1 = R_3, R_2=R_4\\
-	G= \frac{R_4}{R_1}
+	G= \frac{R_4}{R_1} %TODO: change to correct values and calculations
 \end{gather}
 after giving a fixed value of \SI{10}{\kilo\ohm} to $R_1$:
 \begin{equation}
-	G \cdot \SI{10}{\kilo\ohm} = R_4 = \SI{41.25}{\kilo\ohm}
+	G \cdot \SI{10}{\kilo\ohm} = R_4 = \SI{41.25}{\kilo\ohm} %TODO: change to correct values and calculations
 \end{equation}
 By allowing for some margin at the extrema of the output, and considering that there aren't commercial resistors of the computed value, the closest value of \SI{39}{\kilo\ohm} has been chosen for $R_4$. This value corresponds to the closest E12 value available, which is the preferred series of values for electronic components \cite{IEC2015}. Leaving some margin also lessens the impact of the noise floor of the ADC.
 At the output of the OA, a small capacitor is placed in parallel to allow for smooth voltage output and high-frequency voltage spikes suppression.
 
-%OA selection (el del laboratorio) formula de antes
-\subsubsection{OA selection}
-The chosen OA for the task has been OPA2354AIDDA [REF], because it has a sufficiently large bandwidth for the application (suitable GBW) and there is readily available stock at the laboratory.
+The chosen OA has been OPA2354AIDDA [REF], because it has a sufficiently large bandwidth for the application (suitable GBW) and there is readily available stock at the laboratory.
 
 \subsection{Signal conditioning simulation}
 
