@@ -182,199 +182,199 @@ At the output of the OA, a small capacitor is placed in parallel to allow for sm
 
 The chosen OA has been OPA2354AIDDA [REF], because it has a sufficiently large bandwidth for the application (suitable GBW) and there is readily available stock at the laboratory.
 
-\subsection{Signal conditioning simulation}
-
-After obtaining all these parameters, the circuit is laid out in Keysight ADS, a circuit simulation software.
-
-\subsubsection{Transient simulation}
-The circuit is simulated at its limit conditions for both voltage and frequency. The simulation result can be found in the figures according to the following list:
-\begin{description}
-	\item [$f_{i_{\max}}, V_{\max}$] \cref{fig:fmax_vmax}
-	\item [$f_{i_{\max}}, V_{\min}$] \cref{fig:fmax_vmin}
-	\item [$f_{i_{\min}}, V_{\max}$] \cref{fig:fmin_vmax}
-	\item [$f_{i_{\min}}, V_{\min}$] \cref{fig:fmin_vmin}
-\end{description}
-
-\todo[inline]{Faltan añadir: Vmin, fmax; Vmax, fmin; vmin, fmin y el ancho de banda de esta stage.}
-
-The simulations conclude that the operation of the signal conditioning stage follows the constraints of the ADC1 input signals, and having a flat response for all the specified IF operating frequencies.
-
-\begin{figure}[h]
-	\centering
-	\includegraphics[width=\linewidth]{if_stage_sucio/1Mhz_transient.png}
-	\caption{Transient simulation with an input at $f_{i_{\max}} = \SI{1}{\mega\hertz}$ and $V_{\max} = 0.8 Vpp$}
-	\label{fig:fmax_vmax}
-\end{figure}
-
-\section{IF stage modular circuit design}
-After all the simulations are performed and verified the circuit schematic is design following power distribution design for all the stages an following manufacturer guidelines of the different ICs used in the design. The obtained schematic can be seen in \cref{fig:if_sch}.
-
-Two debug SMA connector have been installed in the transition from the filtering part to the signal conditioning part in order to check the correct operation of both parts independently. Moreover, a JTAG connector labelled (J\_AUX) has been added to provide and inspect the different power supplies of the circuit in testing.
-\begin{figure}[h]
-	\centering
-	\includegraphics[width=\linewidth]{if_stage_sucio/if_sch.png}
-	\caption{Circuit schematic of the IF stage}
-	\label{fig:if_sch}
-\end{figure}
-
-%\subsection{Power distribution}
-\subsection{Circuit integration and layout}
-Finally, according to the schematic, the PCB layout is performed. Some considerations have been accounted for in this stage such as separating the filtering part and the signal conditioning part as much as possible and providing sufficient space between the power supply part, which features high-frequency switching power components, and the analog OA parts. The 5V base power supply is obtained from an USB connector plugged in to a 5V power brick. The resulting layout can be found in \cref{fig:if_layout}.
-
-\begin{figure}[h]
-	\centering
-	\includegraphics[width=\linewidth]{if_stage_sucio/layout.png}
-	\caption{PCB layout of the IF stage}
-	\label{fig:if_layout}
-\end{figure}
-
-The final PCB layout is sent to manufacturing, and after assembly and soldering of the ICs, the resulting PCB can be found in \cref{fig:if_phy}.
-
-\begin{figure}[h]
-	\centering
-	\includegraphics[width=\linewidth]{if_stage_sucio/if_phy.jpeg}
-	\caption{Manufactured and assembled IF PCB}
-	\label{fig:if_phy}
-\end{figure}
-
-\section{IF stage circuit testing}
-
-\change[inline]{WIP: Insertar gráficas del csv del osciloscopio de las pruebas y explicar la obtención de resultado y el proceso de medida, poner como he hecho las medidas, REF al datasheet del osciloscopio y sampling rate del osciloscopio (procurar poner la misma)}
-
-
-\subsection{Conditions of operation}
-\change[inline]{Referencia a las condiciones de funcionamiento del radar y explicación de la elección de las condiciones a continuación}
-For the purpose of this Bachelor's Thesis, the measurement and operation of the system is carried out under the following conditions:
-\begin{equation} \label{eq:if_conditions}
-	f_0 = \SI{24}{\giga\hertz} \qquad W = \SI{2}{\giga\hertz} \qquad f_{s\min} = \SI{0.5}{\mega\hertz} \qquad T_c = \SI{529.7}{\micro\second}
-\end{equation}
-
-This yields the following maximum operating range ($R_{\max}$):
-\begin{align}
-	f_s c^2 &= 16 R_{\max}W f_0 \nu_{r\max} \\
-	R_{\max} &= \frac{f_s c^2}{16 W f_0 \nu_{r\max}} = \SI{9.917}{\meter}
-\end{align}
-which is sufficient for an indoor environment of operation requiring around \SI{10}{\meter} distance maximum.
-
-\section{Hardware adaptation and development}
-\todo[inline]{Principales desarrollos de la parte MCU e IF (redactar del documento if\_stage.docx), aquí detallar elección de MCU según constraints}
-To digitise these signals without losing useful information it is decided to use a microcontroller unit (MCU) with an integrated ADC. The integrated ADC must have a sufficient sampling rate to avoid information loss when sampling as per \cref{eq:nyquist}. In the radar operation conditions, the minimum sampling frequency ($f_{s\min}$) required for the radar signals is given in \cref{eq:if_conditions}. Therefore, for each IF signal ($I_\mathrm{rad}, Q_\mathrm{rad}$) a minimum sampling frequency of $f_{s\min} = \SI{0.5}{\mega\hertz}$ is required.
-
-Moreover, the digitised signals must be transmitted to a receiving device. It is of interest that this transmission is wireless and can be received in a portable device. For that matter, after consideration of multiple wireless communication protocols, Bluetooth Low Energy (BLE) is chosen due to its low-cost and low-power characteristics \cite{Gomez2012}.
-
-The MCU transmits the FFT of each ramp in real-time via the BLE protocol. The MCU features a set of peripherals that allow for adequate sampling, processing and transmission of the signals.
-
-The chosen MCU that satisfies this conditions is STM32WB15CCU6 from ST Microelectronics which is based on an ARM Cortex-M4 processor \cite{STMicroelectronics2022}. This MCU has an embedded ADC with the following characteristics:
-\begin{itemize}
-	\item 12-bit resolution, digital range: $[0, 4095]$.
-	\item 10 input channels sampled sequentially with a total maximum sampling rate of 2.5 MS/s at 12-bit resolution. When using 2 channels (for $I_\mathrm{rad}$ and $Q_\mathrm{rad}$), each channel is sampled at a maximum of 1.25 MS/s.
-	% \item Configurable dynamic voltage range of the inputs: $[0, V_{DDA}]$ where $V_{DDA} \le \SI{3.3}{\volt}$.
-\end{itemize}
-
-Additionally, the MCU has an integrated ARM Cortex-M0+ wireless co-processor that handles BLE communication. The BLE communication has the following characteristics:
-\begin{itemize}
-	\item Maximum theoretical BLE data payload throughput: \SI{1376.2}{\kilo\bit\per\second} \cite{NordicSemiconductor2019,Bluetooth52},  which is not enough to transmit all the raw values from the ADC. Some on-device processing is needed.
-	\item Maximum theoretical BLE operating range: \SI{10}{\meter} \cite{Bluetooth52}.
-\end{itemize}
-\subsection{Signal conditioning}
-\unsure[inline]{Tengo que centrarme aquí más en la parte de IF}
-
-The IF stage of the radar amplifies, filters and conditions the intermediate frequency (IF) signals of the radar for the analog to digital (AD) conversion. The radar outputs IF signals in an I and Q format, namely $I_\mathrm{rad}$ and $Q_\mathrm{rad}$. This stage is necessary as the range of $I_\mathrm{rad}, Q_\mathrm{rad}$ does not match the ADC input range. An illustration of this problem is shown in Figure ZZZ.
-
-\todo[inline]{Poner dibujo de señal IF que sale del radar, señal IF que sale del stage}
-
-First, the IF signal is measured and characterised in the ZZZ section. Subsequently, the performance of the ADC is analysed in section ZZZ. Afterwards, the IF stage is designed in section ZZZ, taking into account the input requirements of the ADC and the characteristics of the radar output signal. Finally, the design is laid out on a PCB and measurements and tests are carried out to ensure correct operation in the ZZZ and ZZZ sections.
-
-Two IF signals, $I_\mathrm{rad}$ and $Q_\mathrm{rad}$, are output from the radar. Each signal is composed of a series of beaten frequency ramps. Each cycle interval corresponds to the duration of the radar frequency band sweep as detailed in \cref{sec:radar_sys}. The IF signals captured during one cycle of operation at the conditions in \cref{eq:if_conditions} is shown in Figure ZZZ. It is shown that the amplitude of the IF signals at the center of the selected interval is remarkably higher than the amplitude of the IF signals at the edges of the selected interval. This is a consequence of using narrow-band antennas: the amplitude of the beat signal is higher when the antenna is resonant.
-
-The measurement of the IF signals has been carried out in an Agilent MSO8104A Infiniium oscilloscope with inputs loaded with \SI{50}{\ohm}.
-
-The IF signals of the radar $I_\mathrm{rad},Q_\mathrm{rad}$ have the following characteristics:
-\todo[inline]{características del if\_signal\_excursion.docx}.
-
-\begin{figure}[ht]
-	\centering
-	\includegraphics[width=0.7\linewidth]{sucio_graficos/if/10hz.png}
-	\caption{Sin 10 Hz}
-	\label{fig:moduloaprox50cmplancha}
-\end{figure}
-\begin{figure}[ht]
-	\centering
-	\includegraphics[width=0.7\linewidth]{sucio_graficos/if/50khz.png}
-	\caption{Sin 50 kHz}
-	\label{fig:moduloaprox50cmplancha}
-\end{figure}
-\begin{figure}[ht]
-	\centering
-	\includegraphics[width=0.7\linewidth]{sucio_graficos/if/500khz.png}
-	\caption{Sin 500 kHz}
-	\label{fig:moduloaprox50cmplancha}
-\end{figure}
-\begin{figure}[ht]
-	\centering
-	\includegraphics[width=0.7\linewidth]{sucio_graficos/if/1mhz.png}
-	\caption{Sin 1 MHz}
-	\label{fig:moduloaprox50cmplancha}
-\end{figure}
-
-\subsection{Digital signal processing}
-\unsure[inline]{Tengo que centrarme aquí más en la parte del pipeline de procesado (tengo que redactar microdoppler mode junto con la documentación del sistema), sacar esto del dsp\_chain.md}
-\subsection{Wireless communication}
-\unsure[inline]{Tengo que centrarme aquí más en la parte del pipeline de procesado (tengo que redactar microdoppler mode junto con la documentación del sistema), tramas, etc, hablar de protocolos y comparación de protocolos wireless (ble al final mejor por compatibilidad, y consumo energético)}
-
-\begin{figure}[ht]
-	\centering
-	\subfloat[Bottom view]{\includegraphics[width=0.5\linewidth]{img/radar_pcb_bot.png} \label{fig_cwlfm_ramps_freq}}
-	\subfloat[Top view]{\includegraphics[width=0.49\linewidth]{img/radar_pcb_top.png} \label{fig_cwlfm_diff}}
-	\todo[inline]{TODO: Change this layout for a diagram of necessary parts of a baseband board, leave this layout for our implementation}
-	\caption{Views of a manufactured PCB featuring an example layout of the baseband stage reference design \label{fig:bb_board}}
-\end{figure}
-
-\chapter{Characterisation of the radar node}
-\section{IF stage characterisation}
-Aquí van las medidas del powerpoint redactadas:
-\begin{itemize}
-	\item Simulaciones de señales IF en el rango de tensiones y frecuencias
-	\item Medidas de señales IF en el rango de tensiones y frecuencias
-	\item Respuesta en frecuencia, simulación del TINA: bode\_plot.tiff y explicar que cubre el ancho de banda de las señales en banda base.
-	\item Respuesta en frecuencia, medidas bode manual: del bodeplot del matplotlib y explicar que cubre el ancho de banda de las señales en banda base, y que es similar a la simulación
-\end{itemize}
-
-\section{ADC characterisation}
-Aquí van las medidas del powerpoint redactadas, sobre el ADC:
-\begin{itemize}
-	\item Ruido de fondo del ADC. En tensiones y en dB.
-	\item Simulación de adquisición del ADC del MCU: medidas adc\_sampling.staertsim3, sacar esto a .csv y poner plots
-	\item Medidas de adquisición del ADC del MCU: medidas adc\_iq\_raw.hex de la memoria del micro, poner y explicar los gráficos del python
-\end{itemize}
-\begin{figure}[ht]
-	\centering
-	\includegraphics[width=0.7\linewidth]{sucio_graficos/adc/nf_mv.png}
-	\caption{Noise Floor in mV}
-	\label{fig:adc_characterisation_noisefloor}
-\end{figure}
-\begin{figure}[ht]
-	\centering
-	\includegraphics[width=0.7\linewidth]{sucio_graficos/adc/nf_dbm.png}
-	\caption{Noise Floor in dBm}
-	\label{fig:moduloaprox50cmplancha}
-\end{figure}
-\section{DSP Characterisation}
-Aquí van las medidas del python redactadas, sobre el DSP pipeline:
-\begin{itemize}
-	\item Conversión a coma fija, explicar gráfico del error: conv\_q15\_error.eps y concluir que el error es menor del 1\% del rango de entrada del ADC, por lo que guay.
-	\item Conversión a coma fija, ejemplos de medidas reales, del memdump adc\_iq\_q15.hex
-\end{itemize}
-\section{Wireless stack Characterisation}
-Aquí van las medidas del python redactadas, sobre el BLE:
-\begin{itemize}
-	\item Caracterización binary throughput
-	\item Caracterización BER
-	\item Caracterización Ramp Lost Ratio to Distance
-\end{itemize}
-
-
-\unsure[inline]{Medida de la ecuación radar}
+%\subsection{Signal conditioning simulation}
+%
+%After obtaining all these parameters, the circuit is laid out in Keysight ADS, a circuit simulation software.
+%
+%\subsubsection{Transient simulation}
+%The circuit is simulated at its limit conditions for both voltage and frequency. The simulation result can be found in the figures according to the following list:
+%\begin{description}
+%	\item [$f_{i_{\max}}, V_{\max}$] \cref{fig:fmax_vmax}
+%	\item [$f_{i_{\max}}, V_{\min}$] \cref{fig:fmax_vmin}
+%	\item [$f_{i_{\min}}, V_{\max}$] \cref{fig:fmin_vmax}
+%	\item [$f_{i_{\min}}, V_{\min}$] \cref{fig:fmin_vmin}
+%\end{description}
+%
+%\todo[inline]{Faltan añadir: Vmin, fmax; Vmax, fmin; vmin, fmin y el ancho de banda de esta stage.}
+%
+%The simulations conclude that the operation of the signal conditioning stage follows the constraints of the ADC1 input signals, and having a flat response for all the specified IF operating frequencies.
+%
+%\begin{figure}[h]
+%	\centering
+%	\includegraphics[width=\linewidth]{if_stage_sucio/1Mhz_transient.png}
+%	\caption{Transient simulation with an input at $f_{i_{\max}} = \SI{1}{\mega\hertz}$ and $V_{\max} = 0.8 Vpp$}
+%	\label{fig:fmax_vmax}
+%\end{figure}
+%
+%\section{IF stage modular circuit design}
+%After all the simulations are performed and verified the circuit schematic is design following power distribution design for all the stages an following manufacturer guidelines of the different ICs used in the design. The obtained schematic can be seen in \cref{fig:if_sch}.
+%
+%Two debug SMA connector have been installed in the transition from the filtering part to the signal conditioning part in order to check the correct operation of both parts independently. Moreover, a JTAG connector labelled (J\_AUX) has been added to provide and inspect the different power supplies of the circuit in testing.
+%\begin{figure}[h]
+%	\centering
+%	\includegraphics[width=\linewidth]{if_stage_sucio/if_sch.png}
+%	\caption{Circuit schematic of the IF stage}
+%	\label{fig:if_sch}
+%\end{figure}
+%
+%%\subsection{Power distribution}
+%\subsection{Circuit integration and layout}
+%Finally, according to the schematic, the PCB layout is performed. Some considerations have been accounted for in this stage such as separating the filtering part and the signal conditioning part as much as possible and providing sufficient space between the power supply part, which features high-frequency switching power components, and the analog OA parts. The 5V base power supply is obtained from an USB connector plugged in to a 5V power brick. The resulting layout can be found in \cref{fig:if_layout}.
+%
+%\begin{figure}[h]
+%	\centering
+%	\includegraphics[width=\linewidth]{if_stage_sucio/layout.png}
+%	\caption{PCB layout of the IF stage}
+%	\label{fig:if_layout}
+%\end{figure}
+%
+%The final PCB layout is sent to manufacturing, and after assembly and soldering of the ICs, the resulting PCB can be found in \cref{fig:if_phy}.
+%
+%\begin{figure}[h]
+%	\centering
+%	\includegraphics[width=\linewidth]{if_stage_sucio/if_phy.jpeg}
+%	\caption{Manufactured and assembled IF PCB}
+%	\label{fig:if_phy}
+%\end{figure}
+%
+%\section{IF stage circuit testing}
+%
+%\change[inline]{WIP: Insertar gráficas del csv del osciloscopio de las pruebas y explicar la obtención de resultado y el proceso de medida, poner como he hecho las medidas, REF al datasheet del osciloscopio y sampling rate del osciloscopio (procurar poner la misma)}
+%
+%
+%\subsection{Conditions of operation}
+%\change[inline]{Referencia a las condiciones de funcionamiento del radar y explicación de la elección de las condiciones a continuación}
+%For the purpose of this Bachelor's Thesis, the measurement and operation of the system is carried out under the following conditions:
+%\begin{equation} \label{eq:if_conditions}
+%	f_0 = \SI{24}{\giga\hertz} \qquad W = \SI{2}{\giga\hertz} \qquad f_{s\min} = \SI{0.5}{\mega\hertz} \qquad T_c = \SI{529.7}{\micro\second}
+%\end{equation}
+%
+%This yields the following maximum operating range ($R_{\max}$):
+%\begin{align}
+%	f_s c^2 &= 16 R_{\max}W f_0 \nu_{r\max} \\
+%	R_{\max} &= \frac{f_s c^2}{16 W f_0 \nu_{r\max}} = \SI{9.917}{\meter}
+%\end{align}
+%which is sufficient for an indoor environment of operation requiring around \SI{10}{\meter} distance maximum.
+%
+%\section{Hardware adaptation and development}
+%\todo[inline]{Principales desarrollos de la parte MCU e IF (redactar del documento if\_stage.docx), aquí detallar elección de MCU según constraints}
+%To digitise these signals without losing useful information it is decided to use a microcontroller unit (MCU) with an integrated ADC. The integrated ADC must have a sufficient sampling rate to avoid information loss when sampling as per \cref{eq:nyquist}. In the radar operation conditions, the minimum sampling frequency ($f_{s\min}$) required for the radar signals is given in \cref{eq:if_conditions}. Therefore, for each IF signal ($I_\mathrm{rad}, Q_\mathrm{rad}$) a minimum sampling frequency of $f_{s\min} = \SI{0.5}{\mega\hertz}$ is required.
+%
+%Moreover, the digitised signals must be transmitted to a receiving device. It is of interest that this transmission is wireless and can be received in a portable device. For that matter, after consideration of multiple wireless communication protocols, Bluetooth Low Energy (BLE) is chosen due to its low-cost and low-power characteristics \cite{Gomez2012}.
+%
+%The MCU transmits the FFT of each ramp in real-time via the BLE protocol. The MCU features a set of peripherals that allow for adequate sampling, processing and transmission of the signals.
+%
+%The chosen MCU that satisfies this conditions is STM32WB15CCU6 from ST Microelectronics which is based on an ARM Cortex-M4 processor \cite{STMicroelectronics2022}. This MCU has an embedded ADC with the following characteristics:
+%\begin{itemize}
+%	\item 12-bit resolution, digital range: $[0, 4095]$.
+%	\item 10 input channels sampled sequentially with a total maximum sampling rate of 2.5 MS/s at 12-bit resolution. When using 2 channels (for $I_\mathrm{rad}$ and $Q_\mathrm{rad}$), each channel is sampled at a maximum of 1.25 MS/s.
+%	% \item Configurable dynamic voltage range of the inputs: $[0, V_{DDA}]$ where $V_{DDA} \le \SI{3.3}{\volt}$.
+%\end{itemize}
+%
+%Additionally, the MCU has an integrated ARM Cortex-M0+ wireless co-processor that handles BLE communication. The BLE communication has the following characteristics:
+%\begin{itemize}
+%	\item Maximum theoretical BLE data payload throughput: \SI{1376.2}{\kilo\bit\per\second} \cite{NordicSemiconductor2019,Bluetooth52},  which is not enough to transmit all the raw values from the ADC. Some on-device processing is needed.
+%	\item Maximum theoretical BLE operating range: \SI{10}{\meter} \cite{Bluetooth52}.
+%\end{itemize}
+%\subsection{Signal conditioning}
+%\unsure[inline]{Tengo que centrarme aquí más en la parte de IF}
+%
+%The IF stage of the radar amplifies, filters and conditions the intermediate frequency (IF) signals of the radar for the analog to digital (AD) conversion. The radar outputs IF signals in an I and Q format, namely $I_\mathrm{rad}$ and $Q_\mathrm{rad}$. This stage is necessary as the range of $I_\mathrm{rad}, Q_\mathrm{rad}$ does not match the ADC input range. An illustration of this problem is shown in Figure ZZZ.
+%
+%\todo[inline]{Poner dibujo de señal IF que sale del radar, señal IF que sale del stage}
+%
+%First, the IF signal is measured and characterised in the ZZZ section. Subsequently, the performance of the ADC is analysed in section ZZZ. Afterwards, the IF stage is designed in section ZZZ, taking into account the input requirements of the ADC and the characteristics of the radar output signal. Finally, the design is laid out on a PCB and measurements and tests are carried out to ensure correct operation in the ZZZ and ZZZ sections.
+%
+%Two IF signals, $I_\mathrm{rad}$ and $Q_\mathrm{rad}$, are output from the radar. Each signal is composed of a series of beaten frequency ramps. Each cycle interval corresponds to the duration of the radar frequency band sweep as detailed in \cref{sec:radar_sys}. The IF signals captured during one cycle of operation at the conditions in \cref{eq:if_conditions} is shown in Figure ZZZ. It is shown that the amplitude of the IF signals at the center of the selected interval is remarkably higher than the amplitude of the IF signals at the edges of the selected interval. This is a consequence of using narrow-band antennas: the amplitude of the beat signal is higher when the antenna is resonant.
+%
+%The measurement of the IF signals has been carried out in an Agilent MSO8104A Infiniium oscilloscope with inputs loaded with \SI{50}{\ohm}.
+%
+%The IF signals of the radar $I_\mathrm{rad},Q_\mathrm{rad}$ have the following characteristics:
+%\todo[inline]{características del if\_signal\_excursion.docx}.
+%
+%\begin{figure}[ht]
+%	\centering
+%	\includegraphics[width=0.7\linewidth]{sucio_graficos/if/10hz.png}
+%	\caption{Sin 10 Hz}
+%	\label{fig:moduloaprox50cmplancha}
+%\end{figure}
+%\begin{figure}[ht]
+%	\centering
+%	\includegraphics[width=0.7\linewidth]{sucio_graficos/if/50khz.png}
+%	\caption{Sin 50 kHz}
+%	\label{fig:moduloaprox50cmplancha}
+%\end{figure}
+%\begin{figure}[ht]
+%	\centering
+%	\includegraphics[width=0.7\linewidth]{sucio_graficos/if/500khz.png}
+%	\caption{Sin 500 kHz}
+%	\label{fig:moduloaprox50cmplancha}
+%\end{figure}
+%\begin{figure}[ht]
+%	\centering
+%	\includegraphics[width=0.7\linewidth]{sucio_graficos/if/1mhz.png}
+%	\caption{Sin 1 MHz}
+%	\label{fig:moduloaprox50cmplancha}
+%\end{figure}
+%
+%\subsection{Digital signal processing}
+%\unsure[inline]{Tengo que centrarme aquí más en la parte del pipeline de procesado (tengo que redactar microdoppler mode junto con la documentación del sistema), sacar esto del dsp\_chain.md}
+%\subsection{Wireless communication}
+%\unsure[inline]{Tengo que centrarme aquí más en la parte del pipeline de procesado (tengo que redactar microdoppler mode junto con la documentación del sistema), tramas, etc, hablar de protocolos y comparación de protocolos wireless (ble al final mejor por compatibilidad, y consumo energético)}
+%
+%\begin{figure}[ht]
+%	\centering
+%	\subfloat[Bottom view]{\includegraphics[width=0.5\linewidth]{img/radar_pcb_bot.png} \label{fig_cwlfm_ramps_freq}}
+%	\subfloat[Top view]{\includegraphics[width=0.49\linewidth]{img/radar_pcb_top.png} \label{fig_cwlfm_diff}}
+%	\todo[inline]{TODO: Change this layout for a diagram of necessary parts of a baseband board, leave this layout for our implementation}
+%	\caption{Views of a manufactured PCB featuring an example layout of the baseband stage reference design \label{fig:bb_board}}
+%\end{figure}
+%
+%\chapter{Characterisation of the radar node}
+%\section{IF stage characterisation}
+%Aquí van las medidas del powerpoint redactadas:
+%\begin{itemize}
+%	\item Simulaciones de señales IF en el rango de tensiones y frecuencias
+%	\item Medidas de señales IF en el rango de tensiones y frecuencias
+%	\item Respuesta en frecuencia, simulación del TINA: bode\_plot.tiff y explicar que cubre el ancho de banda de las señales en banda base.
+%	\item Respuesta en frecuencia, medidas bode manual: del bodeplot del matplotlib y explicar que cubre el ancho de banda de las señales en banda base, y que es similar a la simulación
+%\end{itemize}
+%
+%\section{ADC characterisation}
+%Aquí van las medidas del powerpoint redactadas, sobre el ADC:
+%\begin{itemize}
+%	\item Ruido de fondo del ADC. En tensiones y en dB.
+%	\item Simulación de adquisición del ADC del MCU: medidas adc\_sampling.staertsim3, sacar esto a .csv y poner plots
+%	\item Medidas de adquisición del ADC del MCU: medidas adc\_iq\_raw.hex de la memoria del micro, poner y explicar los gráficos del python
+%\end{itemize}
+%\begin{figure}[ht]
+%	\centering
+%	\includegraphics[width=0.7\linewidth]{sucio_graficos/adc/nf_mv.png}
+%	\caption{Noise Floor in mV}
+%	\label{fig:adc_characterisation_noisefloor}
+%\end{figure}
+%\begin{figure}[ht]
+%	\centering
+%	\includegraphics[width=0.7\linewidth]{sucio_graficos/adc/nf_dbm.png}
+%	\caption{Noise Floor in dBm}
+%	\label{fig:moduloaprox50cmplancha}
+%\end{figure}
+%\section{DSP Characterisation}
+%Aquí van las medidas del python redactadas, sobre el DSP pipeline:
+%\begin{itemize}
+%	\item Conversión a coma fija, explicar gráfico del error: conv\_q15\_error.eps y concluir que el error es menor del 1\% del rango de entrada del ADC, por lo que guay.
+%	\item Conversión a coma fija, ejemplos de medidas reales, del memdump adc\_iq\_q15.hex
+%\end{itemize}
+%\section{Wireless stack Characterisation}
+%Aquí van las medidas del python redactadas, sobre el BLE:
+%\begin{itemize}
+%	\item Caracterización binary throughput
+%	\item Caracterización BER
+%	\item Caracterización Ramp Lost Ratio to Distance
+%\end{itemize}
+%
+%
+%\unsure[inline]{Medida de la ecuación radar}
 % el problema requiere el uso de radares cwlfm que son compactos, eficientes en coste y de bajo consumo
 
 % establecer las condiciones de operación para las pruebas, requisitos radar/comunicaciones, hablar de anchos de banda, bitrate, etc. caracterización de las señales de frecuencia intermedia.
