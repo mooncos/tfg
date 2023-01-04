@@ -145,7 +145,7 @@ As the input voltage range of the ADC in the MCU and the voltage range of $I_\ma
 
 In order to drive the ADC correctly and minimise measurement errors, a careful design of the driving circuit is carried out. First, considering the internal SAR ADC sampling mechanism \cite[pp.~356,~363]{STMicroelectronics2022a}, the driving input to the ADC must have low impedance to benefit from a low gain error, low settling time error, and less distortion \cite{Franco2014}. This is achieved by driving the input with a non-inverting op-amp tailored to provide a specific gain and to offset the input by a reference voltage.
 
-Parting from recommended ADC buffer design guidelines from Texas Instruments \cite[p.~17]{TexasInstruments2022}, the circuit is shown in \cref{fig:if_cir}.
+Parting from recommended ADC buffer design guidelines from Texas Instruments \cite[p.~17]{TexasInstruments2022} and \cite{Franco2014}, a common circuit used for this purpose is laid out in the multi-purpose simulation software Keysight ADS. The circuit is shown in \cref{fig:if_cir}.
 
 \begin{figure}[h]
 	\centering
