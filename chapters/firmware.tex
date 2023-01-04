@@ -219,20 +219,24 @@ To ensure that the summation of bins is done as fast as possible a constraint on
 
 In order to evaluate the performance of the firmware related with the DSP routines a series of metrics are gathered and analysed. These characterisations of the DSP routines execution have been performed with the developed system with the hardware implementation described in \cref{sec:new_design} and the firmware implementation described in this section.
 
-The results gained from this characterisation demonstrate that the system is capable of executing the DSP routines in real-time with the imposed conditions that $T_c \ge ZZZ$ and that the raw binary throughput of the DSP stage is of ZZZ Mbps.
+The results gained from this characterisation demonstrate that the system is capable of executing the DSP routines in real-time with the imposed conditions that $T_c \ge \SI{467}{\micro\second}$ and that the raw binary throughput of the DSP stage is of ZZZ Mbps.
 
 \subsection{Binary throughput after every DSP routine}
 
-The binary throughput at every routine of the DSP chain is measured. To perform this measurement the system has been configured to use an external (non-related to the operation) timer ---Timer 2--- for measuring the amount of time that each DSP routine takes to process 320 bits (the bits corresponding to 10 samples of a ramp). The result is later converted to standard binary throughput units. The results are shown in Table ZZZ and Figure ZZZ.
+The binary throughput at every routine of the DSP chain is measured. To perform this measurement the system has been configured to use an external (non-related to the operation) timer ---Timer 2--- for measuring the amount of time that each DSP routine takes to process 320 bits (the bits corresponding to 10 samples of a ramp). The result is later converted to standard binary throughput units. The results are shown in Figure ZZZ.
 
 ZZZ
 
-It is concluded that the output binary throughput at the end of the DSP chain is higher than the maximum Bluetooth Low Energy (BLE) data throughput of \SI{721}{\kilo\bit\per\second}. This entails that only a maximum number of bins can be sent through such that the no data is left or lost due to a lower wireless transmission bitrate than the data processing bitrate. It is computed that a maximum of 20 bins per ramp can be sent. 
+It is concluded that the output binary throughput at the end of the DSP chain is higher than the maximum Bluetooth Low Energy (BLE) data throughput of \SI{721}{\kilo\bit\per\second}. This entails that only a maximum number of bins can be sent through such that the no data is left or lost due to a lower wireless transmission bitrate than the data processing bitrate. Taking into account the requirement of the minimum number of bins analysed per ramp needed for gait analysis or vital signs monitoring outlined in \cref{sec:radar_operating_conditions}, sending 20 bins per ramp entails a bitrate of \SI{682.4}{\kilo\bit\per\second}. This bitrate is now below the maximum bitrate possible for real-time transmission via BLE.
 
 \subsection{Execution time for every DSP routine}
 
-The time it takes the system to execute every DSP routine is measured. To perform this measurement the system has been configured to use an external, non-related to the operation, timer ---Timer 2--- for measuring the amount of time that each DSP routine takes to process the whole $\mathbf{v}$ vector. As the execution time is not completely deterministic (varying for processor usage level, processor cache contents, package temperature...) \cite{ARM2020} %TODO: ZZZ
-, the measurements are obtained by averaging the results of 10 characterisations.
+The time it takes the system to execute every DSP routine is measured according to the processors' manufacturer recommendations \cite{ARM2020}. To perform this measurement the system has been configured to use an external, non-related to the operation, timer ---Timer 2--- for measuring the amount of time that each DSP routine takes to process the whole $\mathbf{v}$ vector. As the execution time is not completely deterministic (varying for processor usage level, processor cache contents, package temperature...) \cite{ARM2020} %TODO: ZZZ
+, the measurements are obtained by averaging the results of 10 characterisations. The results are shown in Figure ZZZ.
+
+ZZZ
+
+It can be concluded that the total execution time of the DSP pipeline is of \SI{467}{\micro\second}. As the DSP pipeline must process the samples of one ramp within the time of the last one, it shall not exceed $T_c$. In the system implementation this constraint is fulfilled as $\SI{467}{\micro\second} \le T_c = \SI{525}{\micro\second}$. Thus for this implementation the chirp time should be configured like shown in \cref{sec:radar_operating_conditions} but with a minimum value of $T_{c_{\min}} = \SI{467}{\micro\second}$.
 
 \section{Wireless link} \label{sec:wireless_link}
 
@@ -447,6 +451,8 @@ A final characterisation has been carried out, in which the ramps that are lost 
 	\caption{Ramp lost ratio with respect to distance from the BLE antenna. No ramps are lost up to 6 m in all configurations, coinciding with the results obtained in \cref{sec:max_number_bins_vs_distance}. The ratio for 20 bins/ramp begins increasing from 6. The ratio for 10 and 5 bins/ramps is only perceived from a distance starting at 9m. The ordinate axis is represented in a logarithmic scale}
 	\label{fig:firmware_ble_char_rlr}
 \end{figure}
+
+It is concluded that for distances up to \SI{6}{\metre} no ramps are lost regardless of the amount of ramps that are transmitted. For 10 and 5 ramps per ramp, the transmission is robust for up to \SI{9}{\metre}, close to the theoretical maximum range of Bluetooth operation of \SI{10}{\metre}, as outlined in \cref{sec:mcu_selection}.
 
 % TODO: añadir explicación
 
