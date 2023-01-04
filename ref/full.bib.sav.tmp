@@ -178,11 +178,10 @@ Also, the applications of each radar are studied. Specifically, the W band radar
 
 @Standard{Bluetooth52,
   institution = {{Bluetooth Special Interest Group}},
-  title       = {{Bluetooth Core Specification}},
+  title       = {{Bluetooth Core Specification v5.2}},
   author      = {{Bluetooth SIG}},
   month       = dec,
   revision    = {v5.2},
-  url         = {https://bluetooth.com/specifications/specs/core-specification-5-2/},
   year        = {2019},
 }
 
@@ -470,4 +469,7 @@ Also, the applications of each radar are studied. Specifically, the W band radar
 @Article{Villarroel2014,
   author    = {Mauricio Villarroel and Alessandro Guazzi and Jo{\~{a}}o Jorge and Sara Davis and Peter Watkinson and Gabrielle Green and Asha Shenvi and Kenny McCormick and Lionel Tarassenko},
   journal   = {Healthcare Technology Letters},
-  title     = {{Continuous non-contact vital sign monitoring i
+  title     = {{Continuous non-contact vital sign monitoring in neonatal intensive care unit}},
+  year      = {2014},
+  month     = {sep},
+  
