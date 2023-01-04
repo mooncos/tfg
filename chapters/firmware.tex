@@ -6,12 +6,12 @@ The firmware is made up of software which controls embedded hardware in the MCU 
 
 The system firmware function is three-fold. First, it is responsible of configuring and handling the operation of the peripherals of the system, which enable the interaction with system elements found in different parts of the system. Secondly, it also provides the digital signal processing (DSP) needed to process the incoming data sampled from the ramp signals. Finally, it prepares the processed data to be sent wirelessly to a receiving device and handles this wireless communication.
 
-The integrated peripherals are configured using low-level registers in the MCU [REF] and the routines for the DSP are programmed in the source code. The source code is written in the C programming language with some parts optimised with ARM assembly (ASM) instructions. These ASM instructions are low level code that is executed by the MCU. Having some parts developed directly in ASM, the control is much greater and lower level, allowing for more optimisations of the firmware in specific parts.
+The integrated peripherals are configured using low-level registers in the MCU \cite{STMicroelectronics2022, STMicroelectronics2022a} and the routines for the DSP are programmed in the source code. The source code is written in the C programming language with some parts optimised with ARM assembly (ASM) instructions. These ASM instructions are low level code that is executed by the MCU. Having some parts developed directly in ASM, the control is much greater and lower level, allowing for more optimisations of the firmware in specific parts.
 
 The developed firmware is split into two parts, which are programmed and executed in two different central processing units (CPU) embedded into the same MCU:
 \begin{itemize}
-	\item The main processor, an ARM Cortex-M4 [REF] which handles digital signal processing (DSP) of the incoming radar signals.
-	\item The secondary processor, an ARM Cortex-M0+ [REF] which acts as a wireless co-processor handling the wireless communication.
+	\item The main processor, an ARM Cortex-M4 \cite{ARMM4} which handles digital signal processing (DSP) of the incoming radar signals.
+	\item The secondary processor, an ARM Cortex-M0+ \cite{ARMM0} which acts as a wireless co-processor handling the wireless communication.
 \end{itemize}
 
 This dual processor architecture is provided by the manufacturer of the MCU and enables the wireless communication stack to handle the BLE transmission without interrupting the data acquisition and DSP performed by the main processor. This is due to the fact that instructions related with the processing of sampled data can run in one processor while the execution of the wireless stack can run in the secondary processor at the same time. This pipeline parallelisation architecture is a key factor in allowing the real-time function of the system. A high-level diagram showing the overview of the firmware architecture is shown in \cref{fig:firmware_overview}.
@@ -111,7 +111,7 @@ Where $f_s$ is the ADC sampling frequency previously defined.
 
 \subsubsection{Direct memory access (DMA) configuration} \label{sec:dma}
 
-The direct memory access (DMA) peripheral is used to transfer data in memory in two different parts of the system. The DMA features 8 independent channels that handle up to 8 concurrent memory transfers in the system [REF]:
+The direct memory access (DMA) peripheral is used to transfer data in memory in two different parts of the system. The DMA features 8 independent channels that handle up to 8 concurrent memory transfers in the system \cite{STMicroelectronics2022}:
 \begin{itemize}
 	\item In the acquisition phase (i.e. when the ADC samples), the DMA uses Channel 1 to transfer the ADC samples to the vector $\mathbf{v}$ in SRAM.
 	\item In the data transmission phase (i.e. when the wireless transmission takes place), the DMA uses Channel 2 to transfer the DSP processed data to the memory used by the wireless co-processor. This latter operation is detailed in \cref{sec:data_transmission}.
@@ -181,7 +181,7 @@ Being $N_F$ the integer number of first samples to discard and $N_L$ the integer
 
 \subsubsection{Sample normalisation and conversion to fixed point format}
 
-In order to accelerate the computations for the FFT that are carried in a later routine, the samples are converted to a \textit{Q15} fixed point format [REF]. The \textit{Q notation} to denote fixed point formats is well known and used in the embedded DSP applications [REF2].
+In order to accelerate the computations for the FFT that are carried in a later routine, the samples are converted to a \textit{Q15} fixed point format \cite{ARMQ15}. The \textit{Q notation} to denote fixed point formats is well known and used in the embedded DSP applications \cite{ARMQ15}.
 
 The \textit{Q15} format treats 16-bit unsigned integers as a signed fractional number of 1 bit for sign and 15 bits for the fractional part. The sign bit is the most significant bit (MSB). The range of this representation is $[-1, 1-2^{-15}]$. In the binary values,
 
@@ -196,7 +196,7 @@ Where: $Q_{\max}$ and $Q_{\min}$ are the 16-bit values for the representation of
 
 \subsubsection{Fast fourier transform (FFT) computation}
 
-To reduce the amount of information that needs to be sent through the wireless BLE link, only the information of the frequency bins where the target is located is needed. To perform the complex fast Fourier transform (CFFT) the firmware makes use of the ARM CMSIS DSP library, which includes functions specific to ARM Cortex processors that take advantage of the integrated DSP slice optimizations [REF]. Variants of these functions which work with \textit{Q15} format numbers are used.
+To reduce the amount of information that needs to be sent through the wireless BLE link, only the information of the frequency bins where the target is located is needed. To perform the complex fast Fourier transform (CFFT) the firmware makes use of the ARM CMSIS DSP library, which includes functions specific to ARM Cortex processors that take advantage of the integrated DSP slice optimizations \cite{AR}. Variants of these functions which work with \textit{Q15} format numbers are used.
 
 Moreover, specific parts of the library have been improved by the use of ARM assembly (ASM) to accelerate the computation by exploiting single instruction multiple data (SIMD) ASM instructions [REF]. These instructions are supported by the ARM instruction set architecture (ISA) [REF].
 

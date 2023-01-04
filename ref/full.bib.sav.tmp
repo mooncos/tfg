@@ -408,13 +408,13 @@ Also, the applications of each radar are studied. Specifically, the W band radar
   volume  = {2015},
 }
 
-@Manual{ARM2020,
-  title  = {{Armv8.1-M Performance Monitoring User Guide}},
+@Manual{ARMM0,
+  title  = {{Cortex-M0+ Technical Reference Manual}},
   author = {{ARM Ltd.}},
-  month  = jul,
-  note   = {v. 1.186},
-  year   = {2020},
-  number = {Application Note ARM051-799564642-251},
+  month  = oct,
+  note   = {Rev. r1p2},
+  year   = {2021},
+  number = {DDI 0484C},
 }
 
 @Book{Amin2017,
@@ -472,4 +472,5 @@ Also, the applications of each radar are studied. Specifically, the W band radar
   title     = {{Continuous non-contact vital sign monitoring in neonatal intensive care unit}},
   year      = {2014},
   month     = {sep},
-  
+  number    = {3},
+  pages     = {87
