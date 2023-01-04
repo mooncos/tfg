@@ -143,13 +143,13 @@ The results show that for signals whose amplitude is greater than \SI{4}{\milli\
 
 As the input voltage range of the ADC in the MCU and the voltage range of $I_\mathrm{rad}$ and $Q_\mathrm{rad}$ differs, an additional IF stage is designed and tested, which introduces a DC-shift and amplifies the signal. Additionally, this stage provides a low impedance input to the ADC. After characterising the IF signals and the embedded ADC, it is possible to design this stage. 
 
-In order to drive the ADC correctly and minimise measurement errors, a careful design of the driving circuit is carried out. First, considering the internal SAR ADC sampling mechanism \cite[pp.~356,~363]{STMicroelectronics2022a}, the driving input to the ADC must have low impedance to benefit from a low gain error, low settling time error, and less distortion \cite{Franco2014}. This is achieved by driving the input with a non-inverting op-amp tailored to provide a specific gain and to offset the input by a reference voltage.
+In order to drive the ADC correctly and minimise measurement errors, a careful design of the driving circuit is carried out. First, considering the internal SAR ADC sampling mechanism \cite[pp.~356,~363]{STMicroelectronics2022a}, the driving input to the ADC must have low impedance to benefit from a low gain error, low settling time error, and less distortion \cite{Franco2014}. This is achieved by driving the input with a non-inverting operational amplifier (OA) tailored to provide a specific gain and to offset the input by a reference voltage.
 
 Parting from recommended ADC buffer design guidelines from Texas Instruments \cite[p.~17]{TexasInstruments2022} and \cite{Franco2014}, a common circuit used for this purpose is laid out in the multi-purpose simulation software Keysight ADS. The circuit is shown in \cref{fig:if_cir}.
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=\linewidth]{if_stage_sucio/prueba_impresion_ads.pdf} %TODO: cambiar
+	\includegraphics[width=\linewidth]{if_stage_sucio/prueba_impresion_ads.pdf} %TODO: cambiar figura
 	\caption{Circuit of the IF stage signal conditioning step. \textit{V\_DC} is the DC-shift provided. The resistors of the feedback networks are responsible of setting the gain configuration. A low-value capacitance is placed at the ouput to provide the input of the ADC with a small amount of loading to reduce influence of high-frequency noise}
 	\label{fig:if_cir}
 \end{figure}
