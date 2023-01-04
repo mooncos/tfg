@@ -414,7 +414,7 @@ At first instance, the raw binary throughput of the BLE link has been measured. 
 	\label{fig:firmware_ble_char_bitrate}
 \end{figure}
 
-The system is capable of delivering around \SI{690}{\kilo\bit\per\second} for a distance to the radar system less than 4 meters, which is very close to the \SI{710}{\kilo\bit\per\second} theoretical maximum bitrate of the protocol, as discussed in Section ZZZ. The throughput diminishes in an exponential way when the distance is greater than 6 meters, and falling abruptly when reaching 10 meters ---the maximum radio distance for a reliable connection as per the Bluetooth core specification--- [REF].
+The system is capable of delivering around \SI{690}{\kilo\bit\per\second} for a distance to the radar system less than 4 meters, which is very close to the \SI{720}{\kilo\bit\per\second} theoretical maximum bitrate of the protocol, as discussed in \cref{sec:mcu_selection}. The throughput diminishes in an exponential way when the distance is greater than 6 meters, and falling abruptly when reaching 10 meters ---the maximum radio distance for a reliable connection as per the Bluetooth core specification--- [REF].
 
 \subsection{Maximum number of transmitted bins per ramp versus distance} \label{sec:max_number_bins_vs_distance}
 
@@ -430,7 +430,8 @@ A characterisation regarding the bins per ramp that can be sent without any erro
 The system is capable of permitting up to 23 bins per ramp for distances up to \SI{1}{\metre} and it has been configured to send 20 bins per ramp, as discussed in \cref{sec:packet_generation}. In this situation, the ramps are sent with no retransmissions or errors in distances up to 7 metres. The maximum number of bins decreases rapidly when approaching the theoretical BLE radio distance limit of 10 metres [REF].
 
 \subsection{Bit error ratio (BER)}
-\change[inline]{Jesús me ha dicho que directamente quite esta medida, de momento la dejo aquí sin explicar por si hubiera que incluirla}
+
+A characterisation of the bit error ratio (BER) of the communication has been performed. The system is left transmitting \SI{5}{\mega\bit} of data at different distances of the receiving device from the BLE antenna. The system is configured to transmit incrementing and decrementing (in a loop) 16-bit numbers up to the specified data amount. The distances studied are \SI{25}{\centi\metre}, \SI{50}{\centi\metre} and 1 to 10 \si{\metre} at \SI{1}{\metre} steps.
 
 \cref{fig:firmware_ble_char_ber}.
 
