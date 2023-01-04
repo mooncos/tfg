@@ -50,7 +50,18 @@ As per \cref{eqn:range_res}, the \textit{range resolution} per frequency bin of 
 	\Delta R = \frac{c}{2W} = \frac{c}{2 \cdot \num{2e9}} = \SI{0.0749}{\metre}
 \end{equation}
 
+In the context of gait analysis introduced in \cref{sec:gait_methods}, the micro-Doppler information related to the variations in velocity of the extremities of the target human being is interpreted in a Range-Doppler matrix, as illustrated in \cref{fig:range_doppler_matrix} \cite{Amin2017,Richards2010,Senigagliesi2020}.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=\linewidth]{range_doppler_matrix}
+	\caption[Temporal characteristics of a human gait cycle]{Range-Doppler matrix mapping. Every ramp of the CWLFM radar signal is sampled. A FFT is computed for every ramp. Additionally the frequency components for every ramp are summed so that one complex number per ramp is displayed   (adapted from \cite{Zanardi2021})}
+	\label{fig:range_doppler_matrix}
+\end{figure}
+
 The minimum amount of frequency bins per ramp of the CWLFM signal that must be analysed to obtain useful information is dependent on the application \cite{Richards2010}. In the case of gait analysis, it is decided that a minimum of 20 frequency bins per ramp should be analysed to obtain information in a $0.0749 \cdot 20 = \SI{1.498}{\metre}$ range, which is sufficient for gait analysis of a walking patient \cite{Amin2017, Richards2010}. Additionally, this minimum is also sufficient to analyse vital signals, due to the fact that in this scenario the target patient is static and only small variations in organ movement is analysed \cite{Amin2017}.
+
+
 
 % esto viene de la ecuacion de delta R que depende de la aplicación en la que se utilice el radar. en el caso de gait analysis con 20 bines se obtiene informacion en un rango de x metros que es suficiente para el análisis de la marcha [libro AMIN, RICHARDS]. En el caso de medición de señales vitales, 20 bines también es suficiente para analizar. en nuestro caso basandonos en la ecuacion delta R con 20 bines se obtiene una resolucion en frecuencia de 1.49 m qu es más que suficiente para analizar la marcha de una persona en el caso de gait analysis o el latido de un corazon en el caso de señales vitales.
 
