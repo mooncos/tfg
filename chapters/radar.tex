@@ -180,7 +180,18 @@ after giving a fixed value of \SI{10}{\kilo\ohm} to $R_1$:
 By allowing for some margin at the extrema of the output, and considering that there aren't commercial resistors of the computed value, the closest value of \SI{39}{\kilo\ohm} has been chosen for $R_4$. This value corresponds to the closest E12 value available, which is the preferred series of values for electronic components \cite{IEC2015}. Leaving some margin also lessens the impact of the noise floor of the ADC.
 At the output of the OA, a small capacitor is placed in parallel to allow for smooth voltage output and high-frequency voltage spikes suppression.
 
-The chosen OA has been OPA2354AIDDA [REF], because it has a sufficiently large bandwidth for the application (suitable GBW) and there is readily available stock at the laboratory.
+The chosen OA has been OPA2354AIDDA [REF], because it has a sufficiently large bandwidth for the application (suitable GBW) and there is readily available stock at the laboratory. Additional capabilities such as a stage to convert from differential format IF signals to single-ended has also been added in case working with other radars require it. This implementation is described in Appendix C. %TODO: Appendix ZZZ
+
+Finally, the design has been laid out in a PCB of 5 cm x 5 cm and manufactured by JLCPCB. The resulting design is shown in \cref{fig:if_phy}. Details of the layout and implementation, with circuit schematic and layout images can be found in Appendix C. %TODO: Appendix ZZZ
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\linewidth]{if_stage_sucio/if_phy.jpeg}
+	\caption{Manufactured and assembled IF PCB}
+	\label{fig:if_phy}
+\end{figure}
+
+\subsection{Signal conditioning simulation and testing}
 
 %\subsection{Signal conditioning simulation}
 %
