@@ -45,6 +45,8 @@ This yields the following maximum operating range ($R_{\max}$):
 \end{align}
 which is sufficient for an indoor environment of operation requiring around \SI{10}{\meter} distance maximum. The current radar node is configured with the obtained parameters of the CWLFM signal.
 
+As per \cref{eqn:range_res}, the \textit{range resolution} 
+
 \subsection{Voltage ramp at the input of the voltage controlled oscillator (VCO)}  \label{sec:vco_characterisation}
 
 As described in \cref{sec:cwlfm_wp}, CWFM radars sweep continuously a certain RF band. The MMIC used in the current radar node, TRX-024-046 \cite{ZZZ}, with the operating conditions described in \cref{sec:radar_operating_conditions}, sweeps the frequency band between \SI{23}{\giga\hertz} and \SI{25}{\giga\hertz}. The RF sweep is controlled by the VCO present in the baseband board. The voltage at its input is controlled with a phase-locked loop (PLL) as described in \cref{sec:baseband_general}.

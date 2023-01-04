@@ -42,8 +42,9 @@ By beating $s_T(t)$ and $s_R(t)$ a beat signal is generated $s_b(t, \tau_m)$. Th
 	\caption[Beat frequency for the transmitted and received signal scattered by a target at $R(\tau_m)$ meters away from the radar]{Beat frequency for the transmitted and received signal scattered by a target at $R(\tau_m)$ meters away from the radar. Note that the beat frequency is the difference between frequencies of transmitted an received signals at the time intervals where transmitted and received ramps are within the same period \cite{Sardinero2022} 		\label{fig_cwlfm_ramps}}
 \end{figure}
 
-The beat frequency is used for target location, allowing the monitorisation of several people simultaneously \cite{Antolinos2020}. The location can be found by performing the fast Fourier transform (FFT) of the beat signal. The minimum physical separation between to targets so that they can be detected independently (called \textit{range resolution}) can be obtained from \cref{eqn_range_res}, where $W$ is the swept bandwidth and $\sigma \ge 1$ a parameter bound to FFT windowing characteristics \cite{Sardinero2022}.
-\begin{equation} \label{eqn_range_res}
+The beat frequency is used for target location, allowing the monitorisation of several people simultaneously \cite{Antolinos2020}. The location can be found by performing the fast Fourier transform (FFT) of the beat signal. The minimum physical separation between to targets so that they can be detected independently (called \textit{range resolution}) can be obtained from \cref{eqn_range_res}, where $W$ is the swept bandwidth % and $\sigma \ge 1$ a parameter bound to FFT windowing characteristics
+\cite{Sardinero2022}.
+\begin{equation} \label{eqn:range_res}
 	\Delta R = \frac{c}{2W} % TODO: REVISAR \Delta R = \frac{\alpha c}{2W}
 \end{equation}
 

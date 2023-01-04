@@ -227,14 +227,12 @@ The binary throughput at every routine of the DSP chain is measured. To perform 
 
 ZZZ
 
-It is concluded that the output binary throughput at the end of the DSP chain is higher than the maximum Bluetooth Low Energy (BLE) data throughput of \SI{721}{\kilo\bit\per\second}. This entails that only a maximum number of bins can be sent through such that the no data is left or lost due to a lower wireless transmission bitrate than the data processing bitrate.
-
-Nonetheless, these
+It is concluded that the output binary throughput at the end of the DSP chain is higher than the maximum Bluetooth Low Energy (BLE) data throughput of \SI{721}{\kilo\bit\per\second}. This entails that only a maximum number of bins can be sent through such that the no data is left or lost due to a lower wireless transmission bitrate than the data processing bitrate. It is computed that a maximum of 20 bins per ramp can be sent. 
 
 \subsection{Execution time for every DSP routine}
 
 The time it takes the system to execute every DSP routine is measured. To perform this measurement the system has been configured to use an external, non-related to the operation, timer ---Timer 2--- for measuring the amount of time that each DSP routine takes to process the whole $\mathbf{v}$ vector. As the execution time is not completely deterministic (varying for processor usage level, processor cache contents, package temperature...) \cite{ARM2020} %TODO: ZZZ
-, the measurements are carried out
+, the measurements are obtained by averaging the results of 10 characterisations.
 
 \section{Wireless link} \label{sec:wireless_link}
 
