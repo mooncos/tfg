@@ -135,9 +135,9 @@ This characterises the system in such a way that the frequency of the IF signals
 % TODO: Write that this limitation is in accordance with targets located within a specific range of the radar (ask Nacho)
 
 \subsubsection{ADC1 noise floor}
-To characterise the ADC, a measurement of the noise floor is carried out. To perform this measurement, the two inputs of ADC1 are loaded with \SI{50}{\ohm} resistors and a measurement is carried out by the MCU. The measurement is performed by an Agilent MSO8104A Infiniium oscilloscope and the data is converted to mV and additionally expressed in logarithmic units. In Figure ZZZ, it is shown the measurement results.
+To characterise the ADC, a measurement of the noise floor is carried out. To perform this measurement, the two inputs of ADC1 are loaded with \SI{50}{\ohm} resistors and a measurement is carried out by the MCU. The measurement is performed by an Agilent MSO8104A Infiniium oscilloscope and the data is converted to mV and additionally expressed in logarithmic units, shown in Figure ZZZ.
 
-
+The results show that for signals whose amplitude is greater than \SI{4}{\milli\volt} they can be detected and correctly digitised. Moreover it can be seen that the noise floor level averages around \SI{-70}{dBm}. Despite not being the the same level as the high-cost, high-precision ADC used in the current design which averages around \SI{-110}{dBm}, it is sufficiently enough to digitise the IF signals, as the part of the signals which has the lowest amplitude is the start of the ramps, where the PLL is unlocked and no useful information is present. As these samples are discarded, the effect is minimal.
 
 \subsection{Signal conditioning, additional IF stage}
 In order to drive the ADC correctly and minimise measurement errors, a careful design of the driving circuit is carried out. First, considering the internal SAR ADC sampling mechanism \cite[pp.~356,~363]{STMicroelectronics2022a}, the driving input to the ADC must have low impedance to benefit from a low gain error, low settling time error, and less distortion \cite{Franco2014}. This is achieved by driving the input with a non-inverting op-amp tailored to provide a specific gain and to offset the input by a reference voltage.
