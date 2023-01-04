@@ -180,7 +180,7 @@ after giving a fixed value of \SI{10}{\kilo\ohm} to $R_1$:
 By allowing for some margin at the extrema of the output, and considering that there aren't commercial resistors of the computed value, the closest value of \SI{39}{\kilo\ohm} has been chosen for $R_4$. This value corresponds to the closest E12 value available, which is the preferred series of values for electronic components \cite{IEC2015}. Leaving some margin also lessens the impact of the noise floor of the ADC.
 At the output of the OA, a small capacitor is placed in parallel to allow for smooth voltage output and high-frequency voltage spikes suppression.
 
-The chosen OA has been OPA2354AIDDA [REF], because it has a sufficiently large bandwidth for the application (suitable GBW) and there is readily available stock at the laboratory. Additional capabilities such as a stage to convert from differential format IF signals to single-ended has also been added in case working with other radars require it. This implementation is described in Appendix C. %TODO: Appendix ZZZ
+The chosen OA has been OPA2354AIDDA [REF], because it has a sufficiently large bandwidth for the application (suitable GBW) and there is readily available stock at the laboratory. This OA is rated to work with input signals of up to 2 MHz. Additional capabilities such as a stage to convert from differential format IF signals to single-ended has also been added in case working with other radars require it. This implementation is described in Appendix C. %TODO: Appendix ZZZ
 
 Finally, the design has been laid out in a PCB of 5 cm x 5 cm and manufactured by JLCPCB. The resulting design is shown in \cref{fig:if_phy}. Details of the layout and implementation, with circuit schematic and layout images can be found in Appendix C. %TODO: Appendix ZZZ
 
@@ -192,6 +192,19 @@ Finally, the design has been laid out in a PCB of 5 cm x 5 cm and manufactured b
 \end{figure}
 
 \subsection{Signal conditioning simulation and testing}
+
+The IF stage design has been simulated using the Keysight ADS software as well as tested after manufacturing. The test results show the correct operation of the IF stage. The transient and frequency operation have been tested.
+
+Firts, the transient characteristic has been tested. The IF stage inputs have been connected to a sinusoidal signal generator with the same amplitude characteristics as $I_\mathrm{rad}$ and $Q_\mathrm{rad}$. The frequency of the generated signal was changed up to 1 MHz. The output of the signal at some key frequencies have been measured by a Agilent MSO8104A Infiniium oscilloscope. The results are compared to the simulations and the input signals. The results are shown in ZZZ. As the configurations for both $I_\mathrm{rad}$ and $Q_\mathrm{rad}$ is identical, only the results from one are shown.
+
+\begin{figure}[htb]
+	\centering
+	\subfloat[10 Hz]{\includegraphics[width=0.5\linewidth]{sucio_graficos/if/10hz.png} \label{fig:if_signal_test_10hz}}
+	\subfloat[50 kHz]{\includegraphics[width=0.5\linewidth]{sucio_graficos/if/50khz.png} \label{fig:if_signal_test_50khz}} \\
+	\subfloat[50 kHz]{\includegraphics[width=0.5\linewidth]{sucio_graficos/if/500khz.png} \label{fig:if_signal_test_500khz}}
+	\subfloat[1 MHz]{\includegraphics[width=0.5\linewidth]{sucio_graficos/if/500khz.png} \label{fig:if_signal_test_1mhz}}
+	\caption{Simulation and testing results of the transient operation of the IF stage for different input signal frequencies. Blue signals are the input signal. Black signals are the simulation results obtained from ADS. Red signals are the measured output signals \label{fig:if_signal_test}}
+\end{figure}
 
 %\subsection{Signal conditioning simulation}
 %
