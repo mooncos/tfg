@@ -196,9 +196,9 @@ Where: $Q_{\max}$ and $Q_{\min}$ are the 16-bit values for the representation of
 
 \subsubsection{Fast fourier transform (FFT) computation}
 
-To reduce the amount of information that needs to be sent through the wireless BLE link, only the information of the frequency bins where the target is located is needed. To perform the complex fast Fourier transform (CFFT) the firmware makes use of the ARM CMSIS DSP library, which includes functions specific to ARM Cortex processors that take advantage of the integrated DSP slice optimizations \cite{AR}. Variants of these functions which work with \textit{Q15} format numbers are used.
+To reduce the amount of information that needs to be sent through the wireless BLE link, only the information of the frequency bins where the target is located is needed. To perform the complex fast Fourier transform (CFFT) the firmware makes use of the ARM CMSIS DSP library, which includes functions specific to ARM Cortex processors that take advantage of the integrated DSP slice optimizations \cite{ARMM4, ARMCMSIS}. Variants of these functions which work with \textit{Q15} format numbers are used.
 
-Moreover, specific parts of the library have been improved by the use of ARM assembly (ASM) to accelerate the computation by exploiting single instruction multiple data (SIMD) ASM instructions [REF]. These instructions are supported by the ARM instruction set architecture (ISA) [REF].
+Moreover, specific parts of the library have been improved by the use of ARM assembly (ASM) to accelerate the computation by exploiting single instruction multiple data (SIMD) ASM instructions \cite{ARMM4}. These instructions are supported by the ARM instruction set architecture (ISA) \cite{ARMM4}.
 
 After the CFFT algorithm execution, the data is kept in $\mathbf{v}$ and the frequency bins are laid out as follows:
 \begin{equation}
@@ -213,7 +213,7 @@ After computing the CFFT, the DMA controller transfers the data to the BLE stack
 
 The firmware allows for an optional processing step only active when the secondary mode of operation is enabled. In this scenario, an additional routine is executed, in which bins of frequency information are summed. In this operation mode, the transmission via the BLE link is the result of a complex sum of frequency bins, per ramp. Which bins are summed is configurable at runtime by the user. The sum of the bins is stored in two 32-bit integers (for the real and complex part of the sum respectively) that is later added to a queue for BLE transmission. This transmission of the bin summations enable the computation of the short-time Fourier transform (STFT) in the receiving device.
 
-To ensure that the summation of bins is done as fast as possible a constraint on the configuration of the number of bins that are summed is imposed, such that the number of bins summed for every ramp must be a multiple of 4. This is due to the frequency bins being aligned in SRAM in multiples of 4 bytes. When memory is aligned in this configuration, ARM ISA supports SIMD instructions that allow the computation of 4 sums in one clock cycle of the processor, allowing for a much faster computation time [REF]. A detailed analysis of the implementation of this routine and the comparison of computation times can be found in Section DSP CHARACTERISATION % TODO: Section ZZZ \cref{anx:bin_summation}.
+To ensure that the summation of bins is done as fast as possible a constraint on the configuration of the number of bins that are summed is imposed, such that the number of bins summed for every ramp must be a multiple of 4. This is due to the frequency bins being aligned in SRAM in multiples of 4 bytes. When memory is aligned in this configuration, ARM ISA supports SIMD instructions that allow the computation of 4 sums in one clock cycle of the processor, allowing for a much faster computation time \cite{ARM2022}. A detailed analysis of the implementation of this routine can be found in Appendix E and the comparison of computation times can be found in \cref{sec:dsp_test}.
 
 \section{DSP pipeline characterisation} \label{sec:dsp_test}
 
