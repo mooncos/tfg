@@ -56,7 +56,7 @@ The minimum amount of frequency bins per ramp of the CWLFM signal that must be a
 
 \subsection{Voltage ramp at the input of the voltage controlled oscillator (VCO)}  \label{sec:vco_characterisation}
 
-As described in \cref{sec:cwlfm_wp}, CWFM radars sweep continuously a certain RF band. The MMIC used in the current radar node, TRX-024-046 \cite{ZZZ}, with the operating conditions described in \cref{sec:radar_operating_conditions}, sweeps the frequency band between \SI{23}{\giga\hertz} and \SI{25}{\giga\hertz}. The RF sweep is controlled by the VCO present in the baseband board. The voltage at its input is controlled with a phase-locked loop (PLL) as described in \cref{sec:baseband_general}.
+As described in \cref{sec:cwlfm_wp}, CWFM radars sweep continuously a certain RF band. The MMIC used in the current radar node, TRX-024-046 \cite{SR2021}, with the operating conditions described in \cref{sec:radar_operating_conditions}, sweeps the frequency band between \SI{23}{\giga\hertz} and \SI{25}{\giga\hertz}. The RF sweep is controlled by the VCO present in the baseband board. The voltage at its input is controlled with a phase-locked loop (PLL) as described in \cref{sec:baseband_general}.
 
 During a sweep cycle the voltage at the input of the VCO increases constantly to cover the whole frequency band. The evolution of the voltage with time has the shape of a rising ramp, as it is shown in Figure ZZZ. At the end of the sweep cycle, the voltage at the input of the VCO decreases to begin another sweep cycle. To prevent the PLL from unlocking during a large period of time, at the end of the sweep cycle, the voltage at the input of the VCO decreases smoothly. The evolution of the voltage with time has the shape of a falling ramp steeper than the aforementioned rising ramp. This falling ramp is referred to as dual ramp.
 
@@ -104,7 +104,8 @@ For the selection of the microcontroller several criteria are outlined:
 	\item The MCU must incorporate one or more wireless communication capabilities built in. It is preferred that the protocols used are standard and widely used in Internet of Things devices such as WiFi or Bluetooth Low Energy (BLE) \cite{AlSarawi2017}.
 \end{enumerate}
 
-After researching current available options in the market at the time of writing, a handful of MCU were selected. The result of the research of the commercial available microcontrollers is detailed in Appendix ZZZ. From the final list, the MCU that complied to all criteria is the STM32WB15CC MCU from ST Microelectronics \cite{STMicroelectronics2022}.
+After researching current available options in the market at the time of writing, a handful of MCU were selected. The result of the research of the commercial available microcontrollers is detailed in Appendix C. %TODO: ZZZ
+From the final list, the MCU that complied to all criteria is the STM32WB15CC MCU from ST Microelectronics \cite{STMicroelectronics2022}.
 
 The STM32WB15CC MCU features a dual processor architecture. The first processor is an ARM Cortex-M4 processor \cite{STMicroelectronics2022}. This MCU has an embedded ADC, denominated ADC1, with the following characteristics:
 \begin{itemize}
@@ -119,7 +120,7 @@ Additionally, the MCU has an integrated ARM Cortex-M0+ wireless co-processor tha
 	\item Maximum theoretical BLE operating range: \SI{10}{\meter} \cite{Bluetooth52}.
 \end{itemize}
 
-\subsection{ADC1 characterisation}
+\subsection{ADC1 characterisation}\label{sec:adc1-characterisation}
 
 The chosen microcontroller unit has one integrated high-speed and general-purpose successive approximation (SAR) ADC, denominated ADC1. The sampling characteristics of ADC1, such as the input signal voltage and current bounds, as well as the maximum sampling rate, are important to account for the limitations of the acquisition system.
 
@@ -189,9 +190,9 @@ after giving a fixed value of \SI{10}{\kilo\ohm} to $R_1$:
 By allowing for some margin at the extrema of the output, and considering that there aren't commercial resistors of the computed value, the closest value of \SI{39}{\kilo\ohm} has been chosen for $R_4$. This value corresponds to the closest E12 value available, which is the preferred series of values for electronic components \cite{IEC2015}. Leaving some margin also lessens the impact of the noise floor of the ADC.
 At the output of the OA, a small capacitor is placed in parallel to allow for smooth voltage output and high-frequency voltage spikes suppression.
 
-The chosen OA has been OPA2354AIDDA \cite{TexasInstruments2014}, because it has a sufficiently large bandwidth for the application (suitable GBW) and there is readily available stock at the laboratory. This is chosen so that the design is capable of working for input signals frequencies of well over the required 1 MHz bandwidth. Additional capabilities such as a stage to convert from differential format IF signals to single-ended has also been added in case working with other radars require it. This implementation is described in Appendix C. %TODO: Appendix ZZZ
+The chosen OA has been OPA2354AIDDA \cite{TexasInstruments2014}, because it has a sufficiently large bandwidth for the application (suitable GBW) and there is readily available stock at the laboratory. This is chosen so that the design is capable of working for input signals frequencies of well over the required 1 MHz bandwidth. Additional capabilities such as a stage to convert from differential format IF signals to single-ended has also been added in case working with other radars require it. This implementation is described in Appendix D. %TODO: Appendix ZZZ
 
-Finally, the design has been laid out in a 5 cm x 5 cm PCB and manufactured by JLCPCB. The resulting design is shown in \cref{fig:if_phy}. Details of the layout and implementation, with circuit schematic and layout images can be found in Appendix C. %TODO: Appendix ZZZ
+Finally, the design has been laid out in a 5 cm x 5 cm PCB and manufactured by JLCPCB. The resulting design is shown in \cref{fig:if_phy}. Details of the layout and implementation, with circuit schematic and layout images can be found in Appendix D. %TODO: Appendix ZZZ
 
 \begin{figure}[h]
 	\centering
@@ -226,11 +227,12 @@ Secondly, the frequency response of the IF stage is characterised. This is to ve
 	\label{fig:if_bode}
 \end{figure}
 
-\subsection{MCU PCB design}
+\subsection{MCU PCB design}\label{sec:mcu-pcb-design}
 
 The PCB in which the MCU will be embedded is designed. The PCB is designed such that it follows all the manufacturer recommendations outlined in \cite{STMicroelectronics2022, STMicroelectronics2022a, STMicroelectronics2022b}. It includes an embedded BLE antenna, low dropout (LDO) voltage regulators to distribute power to the circuit, a micro universal serial bus (USB) connector to provide power input to the circuit, two SMA connectors to input the signals output from the IF stage, a programming header for the MCU and several header pins to allow the easy diagnosis of all signals in the PCB.
 
-The PCB measures 5 cm x 5 cm and is manufactured with a ROGERS 4350B dielectric core by L.A.B. Circuits S.A. Details of the layout and implementation, including circuit schematic and layout images, can be found in Appendix D. An image of the manufactured PCB is shown in \cref{fig:mcu_pcb}
+The PCB measures 5 cm x 5 cm and is manufactured with a ROGERS 4350B dielectric core by L.A.B. Circuits S.A. Details of the layout and implementation, including circuit schematic and layout images, can be found in Appendix E. %TODO: ZZZ
+An image of the manufactured PCB is shown in \cref{fig:mcu_pcb}
 
 \begin{figure}[h]
 	\centering
@@ -246,9 +248,13 @@ After testing, it is concluded that the PCB MCU functions as intended and that i
 
 First, the ADC sampling of a full ramp of the $I_\mathrm{adc}$ and $Q_\mathrm{adc}$ is carried out. The full range of the signal is captured, indicating the correct sampling of the signals by the MCU. The results are shown in ZZZ.
 
+Figure ZZZ
+
+It can be seen that the full range of the IF signals is captured correctly, and that the signal does not appear clipped or saturated.
+
 Secondly, the radar equation verification is characterised.
 \change[inline]{Don't know what to write here}
-The result is shown in ZZZ.
+The result is shown in Figure ZZZ.
 
 %\subsection{Signal conditioning simulation}
 %

@@ -1,7 +1,7 @@
 \chapter{Radar system firmware development}\label{sec:radar-system-firmware-development}
 The main objective of the system is the replacement of the high-cost, deferred sampling analogue-to-digital converter (ADC) with a microcontroller unit (MCU) capable of processing the signals in real-time and transmitting the useful information to a receiving device using a Bluetooth Low Energy (BLE) link.
 
-For that purpose, an MCU has been selected according to selection criteria detailed in Chapter 2 and a firmware has been developed and tested. This firmware is executed in the embedded MCU integrated in the MCU PCB, described in Chapter 4. % TODO: Section ZZZ
+For that purpose, an MCU has been selected according to selection criteria detailed in Chapter 2 and a firmware has been developed and tested. This firmware is executed in the embedded MCU integrated in the MCU PCB, shown in \cref{sec:mcu-pcb-design}.
 The firmware is made up of software which controls embedded hardware in the MCU package and carries out processing of the incoming signals.
 
 The system firmware function is three-fold. First, it is responsible of configuring and handling the operation of the peripherals of the system, which enable the interaction with system elements found in different parts of the system. Secondly, it also provides the digital signal processing (DSP) needed to process the incoming data sampled from the ramp signals. Finally, it prepares the processed data to be sent wirelessly to a receiving device and handles this wireless communication.
@@ -41,14 +41,13 @@ In this section, the firmware part devoted to the processing of the incoming con
 The STM32WB15CC microcontroller unit (MCU) integrates several peripherals useful for the purpose of signal digitisation and processing. These peripherals must be configured by the firmware prior to performing the DSP routines. The following peripherals are used in this part of the firmware:
 \begin{itemize}
 	\item Reset and clock controller (RCC) that configures the clock frequency of the peripherals and the MCU. This is configured to the maximum possible clock frequency that the MCU allows of \SI{64}{\mega\hertz}. The maximum clock frecuency is chosen so that the processor can execute each instruction in a shorter time.
-	\item 10-channel 12-bit analogue-to-digital converter (ADC) of which two channels are used, connected to the incoming intermediate (IF) frequency signals $I_{\mathrm{adc}}$ and $Q_{\mathrm{adc}}$. As outlined in Section 2 % TODO: Section ZZZ
-	, this ADC can have a maximum sampling rate of \SI{2.5}{MSps}.
+	\item 10-channel 12-bit analogue-to-digital converter (ADC) of which two channels are used, connected to the incoming intermediate (IF) frequency signals $I_{\mathrm{adc}}$ and $Q_{\mathrm{adc}}$. As outlined in \cref{sec:adc1-characterisation}, this ADC can have a maximum sampling rate of \SI{2.5}{MSps}.
 	\item Configurable timers, used to discipline the ADCs' sampling. They are trig\-gered by the external ramp trigger signal \textit{Trig} coming from the radar.
 	\item Direct memory access (DMA) peripheral, used for memory transfers to and from peripherals and the MCU integrated static random-access memory (SRAM) without interrupting the firmware execution in the main CPU.
 	\item General purpose input/output pins (GPIO) used for reset button, indication LEDs and the external ramp trigger signal \textit{Trig} coming from the radar.
 \end{itemize}
 
-These peripherals work in conjunction with the software DSP to obtain the data to be sent via the wireless BLE link. The configuration of these peripherals performed in the firmware source code can be found in Appendix ZZZ.
+These peripherals work in conjunction with the software DSP to obtain the data to be sent via the wireless BLE link. The configuration of these peripherals performed in the firmware source code can be found in Appendix F. %TODO: ZZZ
 
 \subsubsection{Reset and clock controller (RCC) configuration} \label{sec:rcc}
 
@@ -155,7 +154,7 @@ A diagram of the GPIO configurations in the pins of the MCU package is shown in 
 	\label{fig:firmware_gpio}
 \end{figure}
 
-Additional details of the configuration of the GPIO pins can be found in Appendix E. % TODO: Appendix ZZZ
+Additional details of the configuration of the GPIO pins can be found in Appendix G. % TODO: Appendix ZZZ
 
 \subsection{DSP routines} \label{sec:dsp_routines}
 
@@ -205,7 +204,7 @@ After the CFFT algorithm execution, the data is kept in $\mathbf{v}$ and the fre
 	\mathbf{v'''} = [\operatorname{Re}(V_0), \operatorname{Im}(V_0),\operatorname{Re}(V_1), \operatorname{Im}(V_1), ..., \operatorname{Re}(V_{N-1}), \operatorname{Im}(V_{N-1}),0,...,0]
 \end{equation}
 Where $V_i$ is the $i$-th bin of the FFT of the vector of sample data $\mathbf{v}$ and $N$ the FFT size which determine the number of frequency bins obtained. As outlined in Chapter 2 % TODO: Chapter ZZZ \cref{cha:if}
-, the FFT size is set to 256, but the firmware source code allows for a simple modification of this parameter. The detailed implementation of the CFFT algorithm in the firmware can be found in Appendix C. % TODO: A high-level diagram of the resulting frequency bins vector is found in Figure ZZZ.
+, the FFT size is set to 256, but the firmware source code allows for a simple modification of this parameter. The detailed implementation of the FFT algorithm in the firmware can be found in Appendix H. % TODO: A high-level diagram of the resulting frequency bins vector is found in Figure ZZZ.
 
 After computing the CFFT, the DMA controller transfers the data to the BLE stack queue ready for the transmission via the BLE link. Due to the BLE maximum bitrate characteristic outlined in \cref{sec:ble_characterisation}, only up to 23 complex bins per ramp can be transmitted, the selection of the bins chosen for transmission allows for configuration by the user in the source code.
 
@@ -213,7 +212,7 @@ After computing the CFFT, the DMA controller transfers the data to the BLE stack
 
 The firmware allows for an optional processing step only active when the secondary mode of operation is enabled. In this scenario, an additional routine is executed, in which bins of frequency information are summed. In this operation mode, the transmission via the BLE link is the result of a complex sum of frequency bins, per ramp. Which bins are summed is configurable at runtime by the user. The sum of the bins is stored in two 32-bit integers (for the real and complex part of the sum respectively) that is later added to a queue for BLE transmission. This transmission of the bin summations enable the computation of the short-time Fourier transform (STFT) in the receiving device.
 
-To ensure that the summation of bins is done as fast as possible a constraint on the configuration of the number of bins that are summed is imposed, such that the number of bins summed for every ramp must be a multiple of 4. This is due to the frequency bins being aligned in SRAM in multiples of 4 bytes. When memory is aligned in this configuration, ARM ISA supports SIMD instructions that allow the computation of 4 sums in one clock cycle of the processor, allowing for a much faster computation time \cite{ARM2022}. A detailed analysis of the implementation of this routine can be found in Appendix E and the comparison of computation times can be found in \cref{sec:dsp_test}.
+To ensure that the summation of bins is done as fast as possible a constraint on the configuration of the number of bins that are summed is imposed, such that the number of bins summed for every ramp must be a multiple of 4. This is due to the frequency bins being aligned in SRAM in multiples of 4 bytes. When memory is aligned in this configuration, ARM ISA supports SIMD instructions that allow the computation of 4 sums in one clock cycle of the processor, allowing for a much faster computation time \cite{ARM2022}. A detailed analysis of the implementation of this routine can be found in Appendix I and the comparison of computation times can be found in \cref{sec:dsp_test}.
 
 \section{DSP pipeline characterisation} \label{sec:dsp_test}
 
@@ -366,7 +365,7 @@ Processed DSP data is found in the $\mathbf{v}$ vector in SRAM memory, as detail
 
 For packet loss prevention and to ensure packet retransmission in case of error, a packet queuing system has been developed for the radar system, it follows the first in first out (FIFO) principle \cite{Tanenbaum2015,Kurose2006}. This principle has been chosen as it guarantees that in the event of a packet transmission error, the packet data is still present in the queue for a retransmission attempt while new generated data is not lost or overwritten before being sent.
 
-The queuing system stores the generated packets temporarily in memory until they are extracted by the BLE stack CPU and sent through the BLE link. The FIFO queue has been implemented in the firmware as a driver with data manipulation functions. The FIFO driver source code can be found in Appendix ZZZ. An illustration of the architecture of data storage and extraction of the FIFO queue can be seen in Figure ZZZ.
+The queuing system stores the generated packets temporarily in memory until they are extracted by the BLE stack CPU and sent through the BLE link. The FIFO queue has been implemented in the firmware as a driver with data manipulation functions. The FIFO driver source code can be found in Appendix J. An illustration of the architecture of data storage and extraction of the FIFO queue can be seen in Figure ZZZ.
 
 In the implementation of the system, the FIFO queue has been configured as follows:
 \begin{itemize}
