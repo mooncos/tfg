@@ -29,7 +29,7 @@ With these constraints, it is possible to obtain the minimum sampling frequencie
 	\caption{Sampling frequencies and pulse repetition intervals for different parameters.}
 	\label{tab:fs_Tc}
 \end{longtable}
-	\change[inline]{no me convence esta tabla, cambiar por un gráfico que relacione los distintos aspectos y resumen de lo que se habla en esta sección (en forma de esquema)}
+	%TODO: \change[inline]{no me convence esta tabla, cambiar por un gráfico que relacione los distintos aspectos y resumen de lo que se habla en esta sección (en forma de esquema)}
 
 \subsection{Radar operating conditions for gait analysis} \label{sec:radar_operating_conditions}
 
@@ -50,7 +50,7 @@ In the context of gait analysis introduced in \cref{sec:gait_methods}, the micro
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=\linewidth]{range_doppler_matrix}
-	\caption[Range-Doppler matrix mapping. Every ramp of the CWLFM radar signal is sampled. A FFT is computed for every ramp. Additionally the frequency components for every ramp are summed so that one complex number per ramp is displayed in one cell of the matrix]{Range-Doppler matrix mapping. Every ramp of the CWLFM radar signal is sampled. A FFT is computed for every ramp. Additionally the frequency components for every ramp are summed so that one complex number per ramp is displayed in one cell of the matrix  (adapted from \cite{Senigagliesi2020})}
+	\caption[Range-Doppler matrix mapping. Each ramp of the CWLFM radar signal is sampled. A FFT is computed for every ramp. Additionally the frequency components for every ramp are summed so that one complex number per ramp is displayed in one cell of the matrix]{Range-Doppler matrix mapping. Every ramp of the CWLFM radar signal is sampled. A FFT is computed for every ramp. Additionally the frequency components for every ramp are summed so that one complex number per ramp is displayed in one cell of the matrix  (adapted from \cite{Senigagliesi2020})}
 	\label{fig:range_doppler_matrix}
 \end{figure}
 
@@ -69,36 +69,63 @@ The minimum amount of frequency bins per ramp of the CWLFM signal that must be a
 
 As described in \cref{sec:cwlfm_wp}, CWFM radars sweep continuously a certain RF band. The MMIC used in the current radar node, TRX-024-046 \cite{SR2021}, with the operating conditions described in \cref{sec:radar_operating_conditions}, sweeps the frequency band between \SI{23}{\giga\hertz} and \SI{25}{\giga\hertz}. The RF sweep is controlled by the VCO present in the baseband board. The voltage at its input is controlled with a phase-locked loop (PLL) as described in \cref{sec:baseband_general}.
 
-During a sweep cycle the voltage at the input of the VCO increases constantly to cover the whole frequency band. The evolution of the voltage with time has the shape of a rising ramp, as it is shown in Figure ZZZ. At the end of the sweep cycle, the voltage at the input of the VCO decreases to begin another sweep cycle. To prevent the PLL from unlocking during a large period of time, at the end of the sweep cycle, the voltage at the input of the VCO decreases smoothly. The evolution of the voltage with time has the shape of a falling ramp steeper than the aforementioned rising ramp. This falling ramp is referred to as dual ramp.
+During a sweep cycle the voltage at the input of the VCO increases constantly to cover the whole frequency band. The evolution of the voltage with time has the shape of a rising ramp, as it is shown in \cref{fig:vco_rising_ramp}. At the end of the sweep cycle, the voltage at the input of the VCO decreases to begin another sweep cycle. To prevent the PLL from unlocking during a large period of time, at the end of the sweep cycle, the voltage at the input of the VCO decreases smoothly. The evolution of the voltage with time has the shape of a falling ramp steeper than the aforementioned rising ramp. This falling ramp is referred to as dual ramp.
 
-The VCO ramps are measured with an Agilent MSO8104A Infiniium oscilloscope and the data is captured. Under the conditions described in \cref{sec:cwlfm_wp}, the rising ramp has a duration of \SI{505}{\micro\second}. The dual ramp has a duration of \SI{20}{\micro\second}. Thus, a complete sweep cycle has a duration of $T_c = \SI{525}{\micro\second}$. The voltage at the input of the VCO is shown in Figure ZZZ. Despite the dual ramp, the PLL unlocks for a short period of time at the beginning of the rising ramp. The state of the PLL during the ramp phases is shown in Figure ZZZ.
+\begin{figure}[htb]
+	\centering
+	\subfloat[Voltage ramp at the input of the VCO. PLL status is labelled during the rising ramp]{\includegraphics[width=0.5\linewidth]{sucio_graficos/vco/vco_pll.png} \label{fig:vco_rising_ramp}}
+	\subfloat[Discarded samples correspoding to instances where the PLL is unlocked]{\includegraphics[width=0.5\linewidth]{sucio_graficos/vco/vco_discard.png} \label{fig:vco_discard}}
+	\caption{Measurements of the input signal of the VCO. It is shown that to avoid sampling data when the input deviates from the configured rising ramp of CWLFM signals, the samples are discarded \label{fig:vco}}
+\end{figure}
 
-It is necessary to discard approximately a 10\% of the samples from both ends of each sweep cycle capture during the phases when the PLL is unlocked and a dual ramp is present, as they do not provide information about the CWFM signals. The samples that are discarded are represented in Figure ZZZ.
+The VCO ramps are measured with an Agilent MSO8104A Infiniium oscilloscope and the data is captured. Under the conditions described in \cref{sec:cwlfm_wp}, the rising ramp has a duration of \SI{505}{\micro\second}. The dual ramp has a duration of \SI{20}{\micro\second}. Thus, a complete sweep cycle has a duration of $T_c = \SI{525}{\micro\second}$. The voltage at the input of the VCO is shown in \cref{fig:vco}. Despite the dual ramp, the PLL unlocks for a short period of time at the beginning of the rising ramp. The state of the PLL during the ramp phases is shown in \cref{fig:vco_rising_ramp}.
+
+It is necessary to discard approximately 10\% of the samples from both ends of each sweep cycle capture during the phases when the PLL is unlocked and a dual ramp is present, as they do not provide information about the CWFM signals. The samples that are discarded are represented in \cref{fig:vco_discard}.
 
 \subsection{Trigger signal characterisation} \label{sec:trigger_signal_characterisation}
 
-In addition to the IF signals, the baseband stage also outputs a trigger signal to allow the ADC in the acquisition stage to determine the beginning of each ramp of the signal. The trigger signal is measured in conjunction with the VCO ramps with an Agilent MSO8104A Infiniium oscilloscope and the data is captured. In Figure ZZZ, it is shown the measured ramps and trigger signal.
+In addition to the IF signals, the baseband stage also outputs a trigger signal to allow the ADC in the acquisition stage to determine the beginning of each ramp of the signal. The trigger signal is measured in conjunction with the VCO ramps with an Agilent MSO8104A Infiniium oscilloscope and the data is captured. In \cref{fig:trigger}, it is shown the measured ramps and trigger signal.
 
-The trigger signal has a high value at the end of the rising ramp and and at the end of the dual ramp. It has a low value elsewhere. The characteristics of the trigger signal are shown in Table ZZZ.
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.6\linewidth]{sucio_graficos/vco/vco_trigger.png} %TODO: cambiar figura
+	\caption{Measurement of the trigger and VCO input signals. The trigger signal takes a high value at the end of the rising and dual ramps. The trigger signal has a low value elsewhere}
+	\label{fig:trigger}
+\end{figure}
+
+The trigger signal has a high value at the end of the rising ramp and at the end of the dual ramp. It has a low value elsewhere. It is important to note that the trigger signal duration is different depending on the instant it takes a high value. It has been measured that the trigger signal duration at the end of the rising ramp is \SI{0.2}{\micro\second} while the duration at the end of the dual ramp is of \SI{4}{\micro\second}.
 
 \subsection{Intermediate frequency (IF) signals characterisation} \label{sec:if_signals_characterisation}
 
 With the configuration described in \cref{sec:radar_operating_conditions}, the signals output by the baseband stage from the current radar node are characterised. From the characterisation, the most important aspect is the voltage range of the signal. As the sampling of these signals is later carried out by the acquisition stage, the input range of the acquisition stage must be compatible with the output voltage range of the IF signals from the baseband stage.
 
-The radar is configured according to \cref{sec:radar_operating_conditions} and put in operation. The $I_\mathrm{rad}$ and $Q_\mathrm{rad}$ signals are then measured with an Agilent MSO8104A Infiniium oscilloscope and the data is captured. The measured ramp signals for one sweep cycle are shown in Figure ZZZ.
+The radar is configured according to \cref{sec:radar_operating_conditions} and put in operation. The $I_\mathrm{rad}$ and $Q_\mathrm{rad}$ signals are then measured with an Agilent MSO8104A Infiniium oscilloscope and the data is captured. The measured ramp signals for one sweep cycle are shown in \cref{fig:if_raw}.
+
+\begin{figure}[htb]
+	\centering
+	\subfloat[$I_\mathrm{rad}$]{\includegraphics[width=0.5\linewidth]{sucio_graficos/if_raw/if_raw_i.png} \label{fig:if_raw_i}}
+	\subfloat[$Q_\mathrm{rad}$]{\includegraphics[width=0.5\linewidth]{sucio_graficos/if_raw/if_raw_q.png} \label{fig:if_raw_q}}
+	\caption{Measurements of the IF signals ($I_\mathrm{rad}$ and $Q_\mathrm{rad}$) output from the baseband board. The discarded samples according to \cref{sec:vco_characterisation} are also shown \label{fig:if_raw}}
+\end{figure}
 
 The IF signals from the baseband board have the following characteristics:
-\begin{align} \label{eqn:iq_volts}
-	I_\mathrm{rad}(t) &\in [-0.7, 0.7]\ \si{\volt} \\
-	Q_\mathrm{rad}(t) &\in [-0.4, 0.4]\ \si{\volt} \\
-	V_{\mathrm{DC},I} &= V_{\mathrm{DC},Q} = \SI{0}{\volt} \\
-	T_c &= \SI{525}{\micro\second}
-\end{align}
+\begin{gather} \label{eqn:iq_volts}
+	I_\mathrm{rad}(t) \in [-0.7, 0.7]\ \si{\volt}\quad
+	Q_\mathrm{rad}(t) \in [-0.4, 0.4]\ \si{\volt} \\
+	V_{\mathrm{DC},I} = V_{\mathrm{DC},Q} = \SI{0}{\volt} \\
+	T_c = \SI{525}{\micro\second}
+\end{gather}
 Where $V_{\mathrm{DC},I}$ and $V_{\mathrm{DC},Q}$ refer to the DC voltage level of the $I_\mathrm{rad}$ and $Q_\mathrm{rad}$ signals, respectively. The maximum amplitude of both signals is \SI{1.4}{Vpp}. The acquisition stage input range must contain these values, otherwise an additional conditioning stage must be developed to adequate the signals to the input range of the ADC in the acquisition stage. 
 
 \section{New radar node design} \label{sec:new_design}
 
-To address the problems related to the high-cost, non real-time operation and scalability of the current radar node, a new radar node is designed. A high-level diagram of the new radar node system is shown in Figure ZZZ. It is of interest to compare the diagram of the new node with the diagram of the current node present in \cref{fig:current_system}. This design addresses the more expensive part of the current radar node, which is the acquisition stage, as shown in \cref{sec:hw_cost}. For this purpose the new acquisition stage involves the substitution of the high-cost, energy-inefficient and voluminous PC with ADC card configuration with a microcontroller unit (MCU). This new stage is designed in a printed circuit board (PCB) layout and manufactured accordingly. The MCU chosen is the STM32WB15CC MCU from ST Microelectronics \cite{STMicroelectronics2022} and the criteria based on its selection is described in this section.
+To address the problems related to the high-cost, non real-time operation and scalability of the current radar node, a new radar node is designed. A high-level diagram of the new radar node system is shown in \cref{fig:new_system}. It is of interest to compare the diagram of the new node with the diagram of the current node present in \cref{fig:current_system}. This design addresses the more expensive part of the current radar node, which is the acquisition stage, as shown in \cref{sec:hw_cost}. For this purpose the new acquisition stage involves the substitution of the high-cost, energy-inefficient and voluminous PC with ADC card configuration with a microcontroller unit (MCU). This new stage is designed in a printed circuit board (PCB) layout and manufactured accordingly. The MCU chosen is the STM32WB15CC MCU from ST Microelectronics \cite{STMicroelectronics2022} and the criteria based on its selection is described in this section.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=\linewidth]{complete_sys.pdf}
+	\caption{Overview of the full radar system components of the newly developed 24 GHz CWLFM radar with corresponding inputs and outputs. Baseband signals are denoted as $I_{\mathrm{rad}}$ and $Q_{\mathrm{rad}}$. Conditioned signals from the additional IF stage are denoted as $I_{\mathrm{adc}}$ and $Q_{\mathrm{adc}}$. The trigger signal coming from the baseband board is denoted as \textit{Trig}. The new parts of the radar system are highlighted in blue \label{fig:new_system}}
+\end{figure}
 
 Moreover, it is decided that the new acquisition stage must communicate and transmit the digital signals from the radar wirelessly to enable real-time data acquisition and design the node for use in a multi-radar netted configuration. To benefit from low energy consumption, real-time transmission of data, minimal power requirements as well as ease of integration \cite{Gomez2012}, the Bluetooth Low Energy (BLE) protocol is chosen as the interface to transmit sampled data. This interface substitutes the physical connection of the ADC card to the PC via the PCI port. A receiving device equipped with Bluetooth capabilities receives the sampled data coming from the radar node to visualise and perform additional processing if needed. The characteristics of this wireless communication link and the criteria based on its selection is also described in this section.
 
@@ -147,7 +174,7 @@ Since the channels are sequentially sampled and all information from both signal
 	f_{s_{I}}, f_{s_{Q}} \ge 2 f_{i_{\max}}
 \end{equation}
 
-Given that ADC1 has a total sampling rate of \SI{2.5}{\mega s\per\second} \cite[p.~103]{STMicroelectronics2022}, every channel will be sampled at half the total sampling rate $2.5/2 = \SI{1.25}{\mega s\per\second}$. Thus,
+Given that ADC1 has a total sampling rate of \SI{2.5}{\mega s\per\second} \cite[p.~103]{STMicroelectronics2022}, each channel will be sampled at half the total sampling rate $2.5/2 = \SI{1.25}{\mega s\per\second}$. Thus,
 \begin{equation} \label{eqn:nyquist_sampling}
 	f_{I_{\max}}, f_{Q_{\max}} \le \frac{\SI{1.25}{\mega s\per\second}}{2} = \SI{625}{\kilo\hertz}
 \end{equation}
@@ -156,7 +183,14 @@ This characterises the system in such a way that the frequency of the IF signals
 % TODO: Write that this limitation is in accordance with targets located within a specific range of the radar (ask Nacho)
 
 \subsubsection{ADC1 noise floor}
-To characterise the ADC, a measurement of the noise floor is carried out. To perform this measurement, the two inputs of ADC1 are loaded with \SI{50}{\ohm} resistors and a measurement is carried out by the MCU. The measurement is performed by an Agilent MSO8104A Infiniium oscilloscope and the data is converted to mV and additionally expressed in logarithmic units, shown in Figure ZZZ.
+To characterise the ADC, a measurement of the noise floor is carried out. To perform this measurement, the two inputs of ADC1 are loaded with \SI{50}{\ohm} resistors and a measurement is carried out by the MCU. The measurement is performed by an Agilent MSO8104A Infiniium oscilloscope and the data is converted to mV and additionally expressed in logarithmic units, shown in \cref{fig:adc_nf}.
+
+\begin{figure}[htb]
+	\centering
+	\subfloat[Measurement in absolute units of mV]{\input{fig/adc/adc_nf_mV.pgf} \label{fig:adc_nf_mv}}
+	\subfloat[FFT of the measurement, expressed in logarithmic units of  dBm]{\input{fig/adc/adc_nf_freq.pgf} \label{fig:adc_nf_freq}}
+	\caption{Measurements of the noise floor of the integrated ADC (ADC1) by attaching a \SI{50}{\ohm} load to the inputs \label{fig:adc_nf}}
+\end{figure}
 
 The results show that for signals whose amplitude is greater than \SI{4}{\milli\volt} they can be detected and correctly digitised. Moreover it can be seen that the noise floor level averages around \SI{-70}{dBm}. Despite not being the the same level as the high-cost, high-precision ADC used in the current design which averages around \SI{-110}{dBm} \cite{ADLINKTechnologies2010}, it is sufficiently enough to digitise the IF signals. The part of the signals which has the lowest amplitude is the start of the ramps, where the PLL is unlocked and no useful information is present. As these samples that can be affected by noise are discarded, the effect is minimal.
 
@@ -166,48 +200,51 @@ As the input voltage range of the ADC in the MCU and the voltage range of $I_\ma
 
 In order to drive the ADC correctly and minimise measurement errors, a careful design of the driving circuit is carried out. First, considering the internal SAR ADC sampling mechanism \cite[pp.~356,~363]{STMicroelectronics2022a}, the driving input to the ADC must have low impedance to benefit from a low gain error, low settling time error, and less distortion \cite{Franco2014}. This is achieved by driving the input with a non-inverting operational amplifier (OA) tailored to provide a specific gain and to offset the input by a reference voltage.
 
-Parting from recommended ADC buffer design guidelines from Texas Instruments \cite[p.~17]{TexasInstruments2022} and \cite{Franco2014}, a common circuit used for this purpose is laid out in the multi-purpose simulation software Keysight ADS. The circuit is shown in \cref{fig:if_cir}.
+%Parting from recommended ADC buffer design guidelines from Texas Instruments \cite[p.~17]{TexasInstruments2022} and \cite{Franco2014}, a common circuit used for this purpose is laid out in the multi-purpose simulation software Keysight ADS. The circuit is shown in \cref{fig:if_cir}.
+%
+%\begin{figure}[h]
+%	\centering
+%	\includegraphics[width=\linewidth]{if_stage_sucio/prueba_impresion_ads.pdf} %TODO: cambiar figura
+%	\caption{Circuit of the IF stage signal conditioning step containing an OA. \textit{V\_DC} is the DC-shift provided. The resistors of the feedback networks are responsible of setting the gain configuration. Two configurations of this circuit are used, one for every component of the IF signal from the baseband radar}
+%	\label{fig:if_cir}
+%\end{figure}
+%
+%The OA used in the driver can be any op-amp having a GBW that is able to accommodate all the incoming signal from the filter:
+%\begin{equation}
+%	GBW_{OA} \ge \frac{BW_{f}}{G}
+%\end{equation}
+%being $G$ the gain of the OA and $BW_{f}$ the bandwidth of the filter.
+%
+%
+%\subsubsection{Gain configuration}
+%The values of $R_1, R_2, R_3, R_4$ are used to set the gain $G$ of the OA.
+%In this particular application a pure AC waveform of \SI{1.4}{Vpp} needs to map to a waveform of \SI{3.3}{Vpp}, thus:
+%\begin{equation}
+%	G = \frac{3.3}{0.8} = 4.125 %TODO: change to correct values
+%\end{equation}
+%and after analysing the circuit feedback loops:
+%\begin{gather}
+%	G = \frac{R_4}{R_1} \frac{R_1+R_2}{R_3+R_4}\\
+%	R_1 = R_3, R_2=R_4\\
+%	G= \frac{R_4}{R_1} %TODO: change to correct values and calculations
+%\end{gather}
+%after giving a fixed value of \SI{10}{\kilo\ohm} to $R_1$:
+%\begin{equation}
+%	G \cdot \SI{10}{\kilo\ohm} = R_4 = \SI{41.25}{\kilo\ohm} %TODO: change to correct values and calculations
+%\end{equation}
+%By allowing for some margin at the extrema of the output, and considering that there aren't commercial resistors of the computed value, the closest value of \SI{39}{\kilo\ohm} has been chosen for $R_4$. This value corresponds to the closest E12 value available, which is the preferred series of values for electronic components \cite{IEC2015}. Leaving some margin also lessens the impact of the noise floor of the ADC.
+%At the output of the OA, a small capacitor is placed in parallel to allow for smooth voltage output and high-frequency voltage spikes suppression.
+%
+%The chosen OA has been OPA2354AIDDA \cite{TexasInstruments2014}, because it has a sufficiently large bandwidth for the application (suitable GBW) and there is readily available stock at the laboratory. This is chosen so that the design is capable of working for input signals frequencies of well over the required 1 MHz bandwidth. Additional capabilities such as a stage to convert from differential format IF signals to single-ended has also been added in case working with other radars require it. This implementation is described in Appendix D. %TODO: Appendix ZZZ
+%
+%%Finally, t SUMMARY
+%The design has been carried out such that the OA has a sufficiently large bandwidth for the application (suitable GBW). This is chosen so that the design is capable of working for input signals frequencies of well over the required 1 MHz bandwidth. Additional capabilities such as a stage to convert from differential format IF signals to single-ended has also been added in case working with other radars require it. The detailed IF stage implementation can be found in Appendix D. %TODO: Appendix ZZZ
+
+The design has been laid out in a 5 cm x 5 cm PCB and manufactured by JLCPCB. The resulting design is shown in \cref{fig:if_phy}. Details of the PCB design, with circuit schematic and layout images can be found in Appendix D. %TODO: Appendix ZZZ
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=\linewidth]{if_stage_sucio/prueba_impresion_ads.pdf} %TODO: cambiar figura
-	\caption{Circuit of the IF stage signal conditioning step containing an OA. \textit{V\_DC} is the DC-shift provided. The resistors of the feedback networks are responsible of setting the gain configuration. Two configurations of this circuit are used, one for every component of the IF signal from the baseband radar}
-	\label{fig:if_cir}
-\end{figure}
-
-The OA used in the driver can be any op-amp having a GBW that is able to accommodate all the incoming signal from the filter:
-\begin{equation}
-	GBW_{OA} \ge \frac{BW_{f}}{G}
-\end{equation}
-being $G$ the gain of the OA and $BW_{f}$ the bandwidth of the filter.
-
-
-\subsubsection{Gain configuration}
-The values of $R_1, R_2, R_3, R_4$ are used to set the gain $G$ of the OA.
-In this particular application a pure AC waveform of \SI{1.4}{Vpp} needs to map to a waveform of \SI{3.3}{Vpp}, thus:
-\begin{equation}
-	G = \frac{3.3}{0.8} = 4.125 %TODO: change to correct values
-\end{equation}
-and after analysing the circuit feedback loops:
-\begin{gather}
-	G = \frac{R_4}{R_1} \frac{R_1+R_2}{R_3+R_4}\\
-	R_1 = R_3, R_2=R_4\\
-	G= \frac{R_4}{R_1} %TODO: change to correct values and calculations
-\end{gather}
-after giving a fixed value of \SI{10}{\kilo\ohm} to $R_1$:
-\begin{equation}
-	G \cdot \SI{10}{\kilo\ohm} = R_4 = \SI{41.25}{\kilo\ohm} %TODO: change to correct values and calculations
-\end{equation}
-By allowing for some margin at the extrema of the output, and considering that there aren't commercial resistors of the computed value, the closest value of \SI{39}{\kilo\ohm} has been chosen for $R_4$. This value corresponds to the closest E12 value available, which is the preferred series of values for electronic components \cite{IEC2015}. Leaving some margin also lessens the impact of the noise floor of the ADC.
-At the output of the OA, a small capacitor is placed in parallel to allow for smooth voltage output and high-frequency voltage spikes suppression.
-
-The chosen OA has been OPA2354AIDDA \cite{TexasInstruments2014}, because it has a sufficiently large bandwidth for the application (suitable GBW) and there is readily available stock at the laboratory. This is chosen so that the design is capable of working for input signals frequencies of well over the required 1 MHz bandwidth. Additional capabilities such as a stage to convert from differential format IF signals to single-ended has also been added in case working with other radars require it. This implementation is described in Appendix D. %TODO: Appendix ZZZ
-
-Finally, the design has been laid out in a 5 cm x 5 cm PCB and manufactured by JLCPCB. The resulting design is shown in \cref{fig:if_phy}. Details of the layout and implementation, with circuit schematic and layout images can be found in Appendix D. %TODO: Appendix ZZZ
-
-\begin{figure}[h]
-	\centering
-	\includegraphics[width=0.6\linewidth]{if_stage_sucio/if_phy.jpeg}
+	\includegraphics[width=0.5\linewidth]{if_stage_sucio/if_phy.jpeg}
 	\caption{Manufactured and assembled IF PCB}
 	\label{fig:if_phy}
 \end{figure}
@@ -234,7 +271,7 @@ Secondly, the frequency response of the IF stage is characterised. This is to ve
 \begin{figure}[htb]
 	\centering
 	\includegraphics[width=0.6\linewidth]{sucio_graficos/if/bodeplot_manual.png}
-	\caption{Frequency response of the IF stage. It is shown that the frequency response is flat well more than the required 1 MHz bandwidth}
+	\caption{Frequency response of the IF stage. It is shown that the frequency response is flat throughout more than the required 1 MHz bandwidth}
 	\label{fig:if_bode}
 \end{figure}
 
@@ -247,7 +284,7 @@ An image of the manufactured PCB is shown in \cref{fig:mcu_pcb}
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=0.6\linewidth]{if_stage_sucio/mcu_pcb}
+	\includegraphics[width=0.5\linewidth]{if_stage_sucio/mcu_pcb}
 	\caption{Manufactured and assembled MCU PCB}
 	\label{fig:mcu_pcb}
 \end{figure}
@@ -257,21 +294,27 @@ An image of the manufactured PCB is shown in \cref{fig:mcu_pcb}
 A series of characterisations have been carried out to assess the operation of the MCU PCB. These comprise verifying the correct sampling of the signals by the ADC and verifying the radar equation fulfilment so that it is concluded that the MCU PCB does not alter the operation of the radar system in the first place. These characterisations are complimented by the characterisations of the MCU firmware and the wireless connection outlined in \cref{sec:dsp_test} and \cref{sec:ble_characterisation}.
 After testing, it is concluded that the PCB MCU functions as intended and that its operation does not alter the baseband board or radar element performance.
 
-First, the ADC sampling of a full ramp of the $I_\mathrm{adc}$ and $Q_\mathrm{adc}$ is carried out. The full range of the signal is captured, indicating the correct sampling of the signals by the MCU. The results are shown in ZZZ.
+First, the ADC sampling of a full ramp of the $I_\mathrm{adc}$ and $Q_\mathrm{adc}$ is carried out. The full range of the signal is captured, indicating the correct sampling of the signals by the MCU. The results are shown in \cref{fig:mcu_test_adc}.
 
-Figure ZZZ
+\begin{figure}[htb]
+	\centering
+	\input{fig/adc/adc_samp.pgf}
+	\caption{Measurement of one example of the  $I_\mathrm{adc}$ and $Q_\mathrm{adc}$ signals by the MCU PCB ADC. Note that the signal has a proper DC-shift, centred around \SI{1.65}{\volt} due to the additional IF signal conditioning. No clipping or saturation occurs} % TODO: put axes labels
+	\label{fig:mcu_test_adc}
+\end{figure}
 
-It can be seen that the full range of the IF signals is captured correctly, and that the signal does not appear clipped or saturated.
+It can be seen that the full range of the IF signals is captured correctly, and that the signal does not appear clipped or saturated, additionally the discard of extrema samples has been carried out.
 
-Secondly, the radar equation verification is characterised.
-\change[inline]{Don't know what to write here}
-The result is shown in Figure ZZZ. Radar equation received power is inversely proportional to the distance from the antenna in the ratio R\^4. every meter -12 dB. Margin of error present but is similar to the margin of error found in commercial radars Pozar, Richards. This verifies that the use of the MCU PCB does not alter the correct function of the baseband board and the RF elements.
+Secondly, the radar equation \cite{Pozar2011} verification is characterised. A target is measured at different distances and the power received by the radar is analysed. This test is performed in order to guarantee that the conditioning and processing of the radar signals does not alter the operation and performance of the RF stage and the baseband board. A photograph of the testing setup can be seen in \cref{fig:radar_eq_setup}. The results can be seen in \cref{fig:radar_eq_results}.
 
-Hablar de la app pc por encima con capturas.
+\begin{figure}[htb]
+	\centering
+	\subfloat[Radar equation interpolation for different target distances]{\includegraphics[width=0.7\linewidth]{fig/radar_eq/pasillo_resultados_matlab.png} \label{fig:radar_eq_results}} %TODO: vector graphics
+	\subfloat[Setup for the measurement]{\includegraphics[width=0.3\linewidth]{radar_eq/radar_eq_setup.jpg} \label{fig:radar_eq_setup}}
+	\caption[Measurement of the fulfilment of the radar equation. It can be seen the power received decreasing with ratio $R^4$. At every maximum of the different distances measurement, the radar equation is interpolated, resulting in very cohesive lines with a small error margin]{Measurement of the fulfilment of the radar equation. It can be seen the power received decreasing with ratio $R^4$. At every maximum of the different distances measurement, the radar equation is interpolated, resulting in very cohesive lines with a small error margin \cite{Richards2010,Pozar2011} \label{fig:radar_eq}}
+\end{figure}
 
-Concluir: ir objetivo por objetivo diciendo si se ha cumplido y si se han tenido o no dificultades. Cerrar con una medida del gait of a person
-
-Mencionar que este trbajo esta dentro del objetivo del paper y decir que está on revision.
+Radar equation received power is inversely proportional to the distance from the antenna following the ratio $R^4$. As the radar waves are transmitted, reflect on the target and come back, this translates to losing around \SI{-12}{dB} for every metre. At every distance the radar equation is interpolated and the radar equation line is obtained. It can be seen that there exists at small margin of error, but it is similar to that found in commercial radars \cite{Richards2010,Pozar2011}. This verifies that the use of the MCU PCB does not alter the correct function of the baseband board and the RF elements.
 
 %\subsection{Signal conditioning simulation}
 %

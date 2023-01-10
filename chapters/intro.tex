@@ -8,44 +8,48 @@
 
 	These signals must be digitised to extract the valuable information they contain. Current digitisation methods require expensive analogue-to-digital converters (ADCs) to process the samples from the signals \cite[p.~7]{Antolinos2020} \cite[p.~26]{Sardinero2022} and cannot provide real-time measurements \cite[p.~38]{Sardinero2022}. Besides, current systems that approach real-time often discard a large amount of useful samples.
 
-	Thus, the design of a radar system with real-time data acquisition, processing, and transmission is developed for use in situations where real-time data of the radar and low-cost equipment are needed, such as performing gait analysis for Parkinson's disease characterisation.
+	Thus, the design of a radar system with real-time data acquisition, processing, and transmission is developed for use in situations where real-time data of the radar and low-cost equipment are needed, such as performing gait analysis for Parkinson's disease characterisation. The work of this Bachelor's Thesis is part of the objective of the conference paper ``mm-Wave wireless radar network for early detection of Parkinson’s Disease by gait analysis'' submitted to the IEEE Radar Conference 2023, on review at the time of writing.
 
 	\section{Gait analysis in the context of Parkinson's disease} \label{sec:gait_analysis}
 
 	Modern sensing technologies and approaches have shown promise in aiding the diagnosis and monitoring of symptoms in Parkinson's disease (PD) patients \cite{Biase2020}. Change in gait patterns is the most affected physical symptom related to a patient suffering from PD \cite{Zanardi2021}. The gait cycle of a walking person, either healthy or with a gait-affecting disease, can be measured and analysed quantitatively, such that relevant numerical data can be used to obtain an understanding on the level of PD severity in an unhealthy person \cite{Zanardi2021}.
 
-	The gait cycle contains several spatiotemporal features which can be measured and observed to extract an objective conclusion on the broader gait analysis. The more commonly used types of features to describe the gait pattern of a person are shown in \cref{tab:gait_feat}. An illustration of the temporal distribution of these features on the gait cycle of a person is shown in \cref{fig:gait_drawing}. An image outlining the features of stride analysis is shown in \cref{fig:gait_stride}.
+	The gait cycle contains several spatiotemporal features which can be measured and observed to extract an objective conclusion on the broader gait analysis. The more commonly used features to describe the gait are illustrated in \cref{fig:gait_drawing} and \cref{fig:gait_stride}.
+	
+	% ALTERNATIVE PARAGRAPH
+	
+	%The gait cycle contains several spatiotemporal features which can be measured and observed to extract an objective conclusion on the broader gait analysis. The more commonly used types of features to describe the gait pattern of a person are shown in \cref{tab:gait_feat}. An illustration of the temporal distribution of these features on the gait cycle of a person is shown in \cref{fig:gait_drawing}. An image outlining the features of stride analysis is shown in \cref{fig:gait_stride}.
 
-	{\footnotesize\renewcommand*{\arraystretch}{1.4}
-		\begin{longtable}{@{}>{\raggedright\arraybackslash\bfseries}m{0.3\linewidth}>{\raggedright\arraybackslash}m{0.6\linewidth}@{}}
-		\toprule
-		Feature & Description \\* \midrule
-		\endhead
-		Gait cycle & Time from initial contact to the next initial contact on the same foot. It includes both the stance phase and swing phase.  \\
-		Stance phase & Time during which the foot is in contact with the surface in a gait cycle. \\
-		Swing phase & Time during which the foot is airborne in a gait cycle. \\
-		Double limb support & Time during which both feet are in contact with the surface in a gait cycle. \\
-		Single limb support & Time during which only one foot are in contact with the surface in a gait cycle. \\
-		Step duration & Time period between two successive events of the same type on opposite limbs. \\
-		Stride length & Linear distance on the surface between two successive initial contacts on the same limb. \\
-		Step length & Linear distance on the surface between two successive events on the same limb. \\
-		Step width & Horizontal linear distance between two points on opposite limbs. \\
-		Foot progression angle & Angle between the longitudinal axis of the foot and the line of gait progression. \\* \bottomrule
-		\caption[Spatiotemporal gait and stride features]{Spatiotemporal gait and stride features (adapted from \cite{Biase2020})}
-		\label{tab:gait_feat}
-	\end{longtable}}
+%	{\footnotesize\renewcommand*{\arraystretch}{1.4}
+%		\begin{longtable}{@{}>{\raggedright\arraybackslash\bfseries}m{0.3\linewidth}>{\raggedright\arraybackslash}m{0.6\linewidth}@{}}
+%		\toprule
+%		Feature & Description \\* \midrule
+%		\endhead
+%		Gait cycle & Time from initial contact to the next initial contact on the same foot. It includes both the stance phase and swing phase.  \\
+%		Stance phase & Time during which the foot is in contact with the surface in a gait cycle. \\
+%		Swing phase & Time during which the foot is airborne in a gait cycle. \\
+%		Double limb support & Time during which both feet are in contact with the surface in a gait cycle. \\
+%		Single limb support & Time during which only one foot are in contact with the surface in a gait cycle. \\
+%		Step duration & Time period between two successive events of the same type on opposite limbs. \\
+%		Stride length & Linear distance on the surface between two successive initial contacts on the same limb. \\
+%		Step length & Linear distance on the surface between two successive events on the same limb. \\
+%		Step width & Horizontal linear distance between two points on opposite limbs. \\
+%		Foot progression angle & Angle between the longitudinal axis of the foot and the line of gait progression. \\* \bottomrule
+%		\caption[Spatiotemporal gait and stride features]{Spatiotemporal gait and stride features (adapted from \cite{Biase2020})}
+%		\label{tab:gait_feat}
+%	\end{longtable}}
 
 	\begin{figure}[ht]
 		\centering
-		\includegraphics[width=\linewidth]{gait_cycle}
-		\caption[Temporal characteristics of a human gait cycle]{Temporal characteristics of a human gait cycle (adapted from \cite{Zanardi2021})}
+		\includegraphics[width=0.7\linewidth]{gait_cycle}
+		\caption[Temporal features of a human gait cycle]{Temporal features of a human gait cycle (adapted from \cite{Zanardi2021})}
 		\label{fig:gait_drawing}
 	\end{figure}
 
     \begin{figure}[ht]
     	\centering
-    	\includegraphics[width=0.8\linewidth]{gait_stride}
-    	\caption[Spatial characteristics of a human gait cycle]{Spatial characteristics of a human gait cycle (adapted from \cite{Biase2020})}
+    	\includegraphics[width=0.7\linewidth]{gait_stride}
+    	\caption[Spatial features of a human gait cycle]{Spatial features of a human gait cycle (adapted from \cite{Biase2020})}
     	\label{fig:gait_stride}
     \end{figure}
 
@@ -85,7 +89,7 @@
 
 \section{Objectives}
 
-	In the context of gait analysis and vital signs monitoring, current state-of-the-art implementations \cite{Antolinos2020,Biase2020,Zanardi2021,Seifert2019, Iyer2022, Amin2017} depend on the post-processing of captured radar signals after sampling them beforehand in order to extract frequency information \cite{Antolinos2020, Seifert2019} or feed into a machine learning model \cite{Iyer2022}. This deferred treatment of the signals renders impossible the real-time display, interpretation and analysis of the data. Moreover, the processing of these signals is done by high-performant computers that are built with expensive hardware and connected physically to the radar nodes via cables. The state-of-the-art implementations are shifting to a multi-node, multi-static network of radars that capture multiple streams of signals and process them \textcolor{blue}{What do I reference here? We talk about this in out Radar Conference 2023 paper.} . It is not viable to have one computer per radar node to process the signals or have them connect to a few computers via cables.
+	In the context of gait analysis and vital signs monitoring, current state-of-the-art implementations \cite{Antolinos2020,Biase2020,Zanardi2021,Seifert2019, Iyer2022, Amin2017} depend on the post-processing of captured radar signals after sampling them beforehand in order to extract frequency information \cite{Antolinos2020, Seifert2019} or feed into a machine learning model \cite{Iyer2022}. This deferred treatment of the signals renders impossible the real-time display, interpretation and analysis of the data. Moreover, the processing of these signals is done by high-performant computers that are built with expensive hardware and connected physically to the radar nodes via cables. The state-of-the-art implementations are shifting to a multi-node, multi-static network of radars that capture multiple streams of signals and process them \cite{Smith2008,Karabacak2013,Tekeli2013,Tahmoush2009}. It is not viable to have one computer per radar node to process the signals or have them connect to a few computers via cables.
 
 	The main objective of this Bachelor's Thesis is to develop a radar sensor that enables digitisation of the radar signals and allows the extraction of biomarkers, such as vital signs and gait patterns, centring on the latter application. The radar sensor is based on a current W-band CWFM radar node (whose designs are described in \cite{Sardinero2022,Montesano2019}). It is of interest that this radar sensor can provide real-time measurements while being low-cost and provide a wireless means of data capture. The secondary objectives for this project as well as the means to fulfil them are as follows:
 	\begin{itemize}

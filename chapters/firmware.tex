@@ -149,8 +149,8 @@ A diagram of the GPIO configurations in the pins of the MCU package is shown in 
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[width=\linewidth, draft]{example-image}
-	\caption{Outline of the MCU pin connections. The connections are classified as such: \textit{TRIG} is the trigger signal from the radar, \textit{IADC} and \textit{QADC} are the I and Q signals from the IF stage. \textit{RF} is the connection to the antenna. \textit{LED\_ERROR} and \textit{LED\_STATUS} are the output LEDs and \textit{RST} is the reset button}
+	\includegraphics[width=0.6\linewidth]{gpio/gpio.png}
+	\caption{Outline of the MCU pin connections. The connections are classified as such: \textit{TRIG} is the trigger signal from the radar, \textit{I\_ADC} and \textit{Q\_ADC} are the I and Q signals from the IF stage. \textit{RF} is the connection to the antenna. \textit{LED\_ERROR} and \textit{LED\_STATUS} are the output LEDs and \textit{RST} is the reset button. \textit{OSCILLO} is a pin present for debugging and testing internal signals. Pins prefixed \textit{RCC\_OSC} are connected to oscillators on the MCU board to provide the source frequency of the clock signals}
 	\label{fig:firmware_gpio}
 \end{figure}
 
@@ -184,14 +184,16 @@ In order to accelerate the computations for the FFT that are carried in a later 
 
 The \textit{Q15} format treats 16-bit unsigned integers as a signed fractional number of 1 bit for sign and 15 bits for the fractional part. The sign bit is the most significant bit (MSB). The range of this representation is $[-1, 1-2^{-15}]$. In the binary values,
 
-The ADC sample readings are of 12 bits and the highest possible value of an ADC sample reading corresponds to \SI{3300}{\milli\volt}. Therefore, the ADC values range is $[0, 2^{12}-1]$. To adapt the integer range of the ADC readings to the integer range of the \textit{Q15} representation a scaling operation is performed. This operation does not affect the output of the FFT as it is a linear and time invariant scaling operation. The binary operation on the $\mathbf{v'}$ vector is as follows:
-\begin{gather}
-	v''_i = \frac{v'_i(Q_{\max}-Q_{\min})+r_f}{A_{\max}-A_{\min}} + Q_{\min}\\
-	Q_{\max} = \mathrm{0x8000}\quad Q_{\min} = \mathrm{0x7FFF} \\
-	A_{\max} = \mathrm{0x0FFF}\quad A_{\min} = \mathrm{0x0000} \\
-	r_f = \left\lfloor \frac{A_{\max}-A_{\min}}{2} \right\rfloor = \mathrm{0x07FF}
-\end{gather}
-Where: $Q_{\max}$ and $Q_{\min}$ are the 16-bit values for the representation of the highest and lowest values respectively in the \textit{Q15} format. $A_{\max}$ and $A_{\min}$ are the 12-bit values for the representation of the highest and lowest ADC reading. $r_f$ is a rounding factor that is added so that the division in the scaling factor is rounded to the nearest integer.
+The ADC sample readings are of 12 bits and the highest possible value of an ADC sample reading corresponds to \SI{3300}{\milli\volt}. Therefore, the ADC values range is $[0, 2^{12}-1]$. To adapt the integer range of the ADC readings to the integer range of the \textit{Q15} representation a scaling operation is performed. This operation does not affect the output of the FFT as it is a linear and time invariant scaling operation. The algorithm for the data format conversion is detailed in Appendix H %TODO: Appendix ZZZ
+
+%The binary operation on the $\mathbf{v'}$ vector is as follows:
+%\begin{gather}
+%	v''_i = \frac{v'_i(Q_{\max}-Q_{\min})+r_f}{A_{\max}-A_{\min}} + Q_{\min}\\
+%	Q_{\max} = \mathrm{0x8000}\quad Q_{\min} = \mathrm{0x7FFF} \\
+%	A_{\max} = \mathrm{0x0FFF}\quad A_{\min} = \mathrm{0x0000} \\
+%	r_f = \left\lfloor \frac{A_{\max}-A_{\min}}{2} \right\rfloor = \mathrm{0x07FF}
+%\end{gather}
+%Where: $Q_{\max}$ and $Q_{\min}$ are the 16-bit values for the representation of the highest and lowest values respectively in the \textit{Q15} format. $A_{\max}$ and $A_{\min}$ are the 12-bit values for the representation of the highest and lowest ADC reading. $r_f$ is a rounding factor that is added so that the division in the scaling factor is rounded to the nearest integer.
 
 \subsubsection{Fast fourier transform (FFT) computation}
 
@@ -212,28 +214,38 @@ After computing the CFFT, the DMA controller transfers the data to the BLE stack
 
 The firmware allows for an optional processing step only active when the secondary mode of operation is enabled. In this scenario, an additional routine is executed, in which bins of frequency information are summed. In this operation mode, the transmission via the BLE link is the result of a complex sum of frequency bins, per ramp. Which bins are summed is configurable at runtime by the user. The sum of the bins is stored in two 32-bit integers (for the real and complex part of the sum respectively) that is later added to a queue for BLE transmission. This transmission of the bin summations enable the computation of the short-time Fourier transform (STFT) in the receiving device.
 
-To ensure that the summation of bins is done as fast as possible a constraint on the configuration of the number of bins that are summed is imposed, such that the number of bins summed for every ramp must be a multiple of 4. This is due to the frequency bins being aligned in SRAM in multiples of 4 bytes. When memory is aligned in this configuration, ARM ISA supports SIMD instructions that allow the computation of 4 sums in one clock cycle of the processor, allowing for a much faster computation time \cite{ARM2022}. A detailed analysis of the implementation of this routine can be found in Appendix I and the comparison of computation times can be found in \cref{sec:dsp_test}.
+To ensure that the summation of bins is done as fast as possible a constraint on the configuration of the number of bins that are summed is imposed, such that the number of bins summed for every ramp must be a multiple of 4. This is due to the frequency bins being aligned in SRAM in multiples of 4 bytes. When memory is aligned in this configuration, ARM ISA supports SIMD instructions that allow the computation of 4 sums in one clock cycle of the processor, allowing for a much faster computation time \cite{ARMM4}. A detailed analysis of the implementation of this routine can be found in Appendix I and the comparison of computation times can be found in \cref{sec:dsp_test}.
 
 \section{DSP pipeline characterisation} \label{sec:dsp_test}
 
 In order to evaluate the performance of the firmware related with the DSP routines a series of metrics are gathered and analysed. These characterisations of the DSP routines execution have been performed with the developed system with the hardware implementation described in \cref{sec:new_design} and the firmware implementation described in this section.
 
-The results gained from this characterisation demonstrate that the system is capable of executing the DSP routines in real-time with the imposed conditions that $T_c \ge \SI{467}{\micro\second}$ and that the raw binary throughput of the DSP stage is of ZZZ Mbps.
+The results gained from this characterisation demonstrate that the system is capable of executing the DSP routines in real-time with the imposed conditions that $T_c \ge \SI{467}{\micro\second}$ and that the raw binary throughput of the DSP stage is of \SI{4.02}{\mega\bit\per\second}.
 
 \subsection{Binary throughput after every DSP routine}
 
-The binary throughput at every routine of the DSP chain is measured. To perform this measurement the system has been configured to use an external (non-related to the operation) timer ---Timer 2--- for measuring the amount of time that each DSP routine takes to process 320 bits (the bits corresponding to 10 samples of a ramp). The result is later converted to standard binary throughput units. The results are shown in Figure ZZZ.
+The binary throughput at every routine of the DSP chain is measured. To perform this measurement the system has been configured to use a non-related external timer ---Timer 2--- for measuring the amount of time that each DSP routine takes to process 320 bits (the bits corresponding to 10 samples of a ramp). The result is later converted to standard binary throughput units. The results are shown in \cref{fig:firmware_dsp_bitrate}.
 
-ZZZ
+\begin{figure}[ht]
+	\centering
+	\includegraphics{dsp/dsp_bitrate.pdf}
+	\caption{Bitrate at the exit of each DSP routine. \textit{Preprocess} refers to the discard of extrema samples and Q15 format conversion, which is performed in the same step. It can be observed how the FFT takes up the most amount of computation and reduces the bitrate of the system significantly. The frequency bin summation step is also measured, despite being optional}
+	\label{fig:firmware_dsp_bitrate}
+\end{figure}
 
-It is concluded that the output binary throughput at the end of the DSP chain is higher than the maximum Bluetooth Low Energy (BLE) data throughput of \SI{721}{\kilo\bit\per\second}. This entails that only a maximum number of bins can be sent through such that the no data is left or lost due to a lower wireless transmission bitrate than the data processing bitrate. Taking into account the requirement of the minimum number of bins analysed per ramp needed for gait analysis or vital signs monitoring outlined in \cref{sec:radar_operating_conditions}, sending 20 bins per ramp entails a bitrate of \SI{682.4}{\kilo\bit\per\second}. This bitrate is now below the maximum bitrate possible for real-time transmission via BLE.
+It is concluded that the output binary throughput at the end of the DSP chain is higher than the maximum Bluetooth Low Energy (BLE) data throughput of \SI{721}{\kilo\bit\per\second}. This entails that only a maximum number of bins can be sent through such that the no data is left or lost due to a lower wireless transmission bitrate than the data processing bitrate. Taking into account the requirement of the minimum number of bins analysed per ramp needed for gait analysis or vital signs monitoring outlined in \cref{sec:radar_operating_conditions}, sending 20 bins per ramp entails a bitrate of \SI{682.4}{\kilo\bit\per\second}. This bitrate is now below the maximum bitrate possible for real-time transmission via BLE. In the case of the second operation mode and performing the frequency bin summation, the final bitrate is \SI{272.3}{\kilo\bit\per\second}, which is below the maximum for BLE transmission and no additional processing is necessary.
 
 \subsection{Execution time for every DSP routine}
 
-The time it takes the system to execute every DSP routine is measured according to the processors' manufacturer recommendations \cite{ARM2020}. To perform this measurement the system has been configured to use an external, non-related to the operation, timer ---Timer 2--- for measuring the amount of time that each DSP routine takes to process the whole $\mathbf{v}$ vector. As the execution time is not completely deterministic (varying for processor usage level, processor cache contents, package temperature...) \cite{ARM2020} %TODO: ZZZ
-, the measurements are obtained by averaging the results of 10 characterisations. The results are shown in Figure ZZZ.
+The time it takes the system to execute every DSP routine is measured according to the processors' manufacturer recommendations \cite{ARM2020}. To perform this measurement the system has been configured to use a non-related external timer ---Timer 2--- for measuring the amount of time that each DSP routine takes to process the whole $\mathbf{v}$ vector. As the execution time is not completely deterministic (varying for processor usage level, processor cache contents, package temperature...) \cite{ARM2020} %TODO: ZZZ
+, the measurements are obtained by averaging the results of 10 characterisations. The results are shown in \cref{fig:firmware_dsp_time}.
 
-ZZZ
+\begin{figure}[ht]
+	\centering
+	\includegraphics{dsp/dsp_time.pdf}
+	\caption{Execution time of each DSP routine. \textit{Preprocess} refers to the discard of extrema samples and Q15 format conversion, which is performed in the same step. It can be observed that the execution time of the FFT takes up the most amount of the execution time in comparison with the execution times of other stages. This is due to the fact that the FFT requires a high amount of computations to obtain the result}
+	\label{fig:firmware_dsp_time}
+\end{figure}
 
 It can be concluded that the total execution time of the DSP pipeline is of \SI{467}{\micro\second}. As the DSP pipeline must process the samples of one ramp within the time of the last one, it shall not exceed $T_c$. In the system implementation this constraint is fulfilled as $\SI{467}{\micro\second} \le T_c = \SI{525}{\micro\second}$. Thus for this implementation the chirp time should be configured like shown in \cref{sec:radar_operating_conditions} but with a minimum value of $T_{c_{\min}} = \SI{467}{\micro\second}$.
 
@@ -243,7 +255,7 @@ The wireless link is the part of the system used for the transmission of sampled
 
 In this section, the firmware part responsible for handling the wireless communication is described. As previously mentioned the BLE protocol is implemented in the wireless link. The firmware for the wireless link consists of two different parts: a part devoted to the construction of packets to be sent and another part devoted to the transmission of the built packets. These two parts are explained in this section. Moreover, the characteristics and configuration of the BLE protocol stack and the description of the BLE controller interface are detailed.
 
-\subsection{BLE system implementation}
+\subsection{BLE system implementation}\label{sec:ble-system-implementation}
 
 % Bluetooth Low Energy has been developed by the Bluetooth SIG so as to achieve a low power, low latency standard wireless communication protocol while maintaining reasonable data transmission rate [REF].
 
@@ -347,7 +359,7 @@ During the system operation, the firmware is programmed such that at a system re
 
 \begin{figure}[!ht]
 	\centering
-	\includegraphics[width=0.6\linewidth]{firmware/firmware_ble_link_timeline}
+	\includegraphics[width=0.45\linewidth]{firmware/firmware_ble_link_timeline}
 	\caption{Chronological sequence diagram of the BLE interaction between the system device (radar system) and the data receiving device. The red coloured arrows represent packets sent during the advertisement mode, broadcast to all devices near the radar system. The receiving device idles until it requests a connection to the system. The blue arrows represent connection requests and acknowledgements (ACK). The green arrow represents a \textit{Characteristic} notification subscription. The orange arrows represent data packets
 		\label{fig:firmware_ble_link_timeline}}
 \end{figure}
@@ -365,7 +377,14 @@ Processed DSP data is found in the $\mathbf{v}$ vector in SRAM memory, as detail
 
 For packet loss prevention and to ensure packet retransmission in case of error, a packet queuing system has been developed for the radar system, it follows the first in first out (FIFO) principle \cite{Tanenbaum2015,Kurose2006}. This principle has been chosen as it guarantees that in the event of a packet transmission error, the packet data is still present in the queue for a retransmission attempt while new generated data is not lost or overwritten before being sent.
 
-The queuing system stores the generated packets temporarily in memory until they are extracted by the BLE stack CPU and sent through the BLE link. The FIFO queue has been implemented in the firmware as a driver with data manipulation functions. The FIFO driver source code can be found in Appendix J. An illustration of the architecture of data storage and extraction of the FIFO queue can be seen in Figure ZZZ.
+The queuing system stores the generated packets temporarily in memory until they are extracted by the BLE stack CPU and sent through the BLE link. The FIFO queue has been implemented in the firmware as a driver with data manipulation functions. The FIFO driver source code can be found in Appendix J. An illustration of the architecture of data storage and extraction of the FIFO queue can be seen in \cref{fig:firmware_fifo}.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=\linewidth]{firmware/firmware_fifo}
+	\caption{Illustration of the operation of the FIFO queue. New constructed packets are input into the queue. The packets are sent in the order in which they were put into the queue, this preserves ordering. In case a packet could not be transmitted, new packets wait in the queue to be transmitted as soon as the transmission resumes, so that no data is lost. The system can recover from up to 21 continuous packet losses, one packet less than the maximum size of the FIFO queue
+		\label{fig:firmware_fifo}}
+\end{figure}
 
 In the implementation of the system, the FIFO queue has been configured as follows:
 \begin{itemize}
@@ -374,7 +393,6 @@ In the implementation of the system, the FIFO queue has been configured as follo
 \end{itemize}
 
 For the queue operation, the system stores at all moments a pointer to the queue start and end items. When a new packet has been generated, it is stored in the end pointer address and the pointer is incremented. When a packet is extracted from the queue and sent, the start pointer is incremented. As the FIFO queue size has been set to 22, the system is capable of recovering without discarding new ramp data for a maximum of 21 continuous packet transmission errors.
-The storage and retrieval operations of the queue are depicted in Figure ZZZ.
 
 \subsubsection{DSP data packet generation} \label{sec:packet_generation}
 
@@ -384,9 +402,16 @@ In this stage, a 16-bit (2-byte) packet ID is appended at the end of every paylo
 
 For the case of direct transmission of bins and as every packet holds up to 245 bytes of ramp data, the maximum number of complex bins that can be stored in a packet is 61. This is due to the fact that the real and complex component of a particular bin occupy 16 bits each, for a total of 32 bits (4 bytes), as seen in \cref{fig:firmware_adc_dma_vector}.
 
-The system allows to fit frequency information of multiple ramps into one packet. In the system implementation, the number of complex bins per ramp that are transmitted is set to 20. In this configuration, the frequency bins of three ramps fit into one packet, and as such, the packet is added to the queue as soon as the data of three ramps has been processed by the DSP pipeline. The organisation of the ramp data in each packet using this configuration is depicted in Figure ZZZ. Encapsulating frequency data from multiple ramps has the benefit of increasing the ramp throughput per packet at the cost of decreasing the BLE data packet throughput. Nonetheless, decreasing the BLE data packet throughput is beneficial for reducing the transmission error probability as packets are transmitted more sparsely in time. The relationship between this effects is shown in Figure ZZZ.
+The system allows to fit frequency information of multiple ramps into one packet. In the system implementation, the number of complex bins per ramp that are transmitted is set to 20. In this configuration, the frequency bins of three ramps fit into one packet, and as such, the packet is added to the queue as soon as the data of three ramps has been processed by the DSP pipeline. The organisation of the ramp data in each packet using this configuration is depicted in \cref{fig:firmware_packet} Encapsulating frequency data from multiple ramps has the benefit of increasing the ramp throughput per packet at the cost of decreasing the BLE data packet throughput. Nonetheless, decreasing the BLE data packet throughput is beneficial for reducing the transmission error probability as packets are transmitted more sparsely in time. %The relationship between this effects is shown in Figure ZZZ.
 
-The number of bins that are sent per ramp as well as the number of ramps that are encapsulated in each packet can be configured by the user in the source code. It is important to take into account the limitation of the minimum number of frequency bins that contain information about the target range in the application of gait analysis described in ZZZ. This minimum is of ZZZ bins per ramp which is less than the configured 20 bins per ramp of the system. % esto viene de la ecuacion de delta R que depende de la aplicación en la que se utilice el radar. en el caso de gait analysis con 20 bines se obtiene informacion en un rango de x metros que es suficiente para el análisis de la marcha [libro AMIN, RICHARDS]. En el caso de medición de señales vitales, 20 bines también es suficiente para analizar. en nuestro caso basandonos en la ecuacion delta R con 20 bines se obtiene una resolucion en frecuencia de 1.49 m qu es más que suficiente para analizar la marcha de una persona en el caso de gait analysis o el latido de un corazon en el caso de señales vitales.
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=\linewidth]{firmware/firmware_packet}
+	\caption{Diagram of the ramp data organisation of the configuration of 20 bins per ramp, 3 ramps per packet. $I[n]$ and $Q[n]$ correspond to the real and complex components of the frequency bins of the ramp. The indices in the diagram start at 0 but it can be configured to start at any frequency bin index. At the end of the packet, a \textit{Packet ID} number is attached to uniquely identify the packet and set of ramps for ordering
+		\label{fig:firmware_packet}}
+\end{figure}
+
+The number of bins that are sent per ramp as well as the number of ramps that are encapsulated in each packet can be configured by the user in the source code. It is important to take into account the limitation of the minimum number of frequency bins that contain information about the target range in the application of gait analysis described in \cref{sec:radar_operating_conditions}.
 
 As the number of sent bins per ramp and the number of ramps that are encapsulated per packet are related, they must be configured correctly. Setting the desired number of ramps encapsulated per packet, it is possible to obtain the maximum number of bins that can be sent per ramp as follows:
 \begin{equation}
@@ -399,7 +424,7 @@ Therefore, a packet is generated and added to the queue every $N_R$ ramps.
 
 \section{Wireless link characterisation} \label{sec:ble_characterisation}
 
-To evaluate the performance of the wireless link based on the Bluetooth Low Energy protocol, a series of measurements have been experimentally performed and their results evaluated. These characterisations of the wireless communication have been performed with the developed system with the hardware implementation described in Section ZZZ and the firmware implementation described in this section.
+To evaluate the performance of the wireless link based on the Bluetooth Low Energy protocol, a series of measurements have been experimentally performed and their results evaluated. These characterisations of the wireless communication have been performed with the developed system with the hardware implementation described in \cref{sec:new_design} and the firmware implementation described in this section.
 
 The results obtained from this characterisation demonstrate that the system is capable of reliably working in real-time with the imposed conditions of the transmission of 20 bins of frequency data per ramp for distances up to 6 metres. For a wireless system whose maximum theoretical distance range of operation is 10 m, it is seen that the requirements for real-time wireless transmission are fulfilled for a comprehensible distance from the radar system.
 
@@ -453,6 +478,30 @@ A final characterisation has been carried out, in which the ramps that are lost 
 
 It is concluded that for distances up to \SI{6}{\metre} no ramps are lost regardless of the amount of ramps that are transmitted. For 10 and 5 ramps per ramp, the transmission is robust for up to \SI{9}{\metre}, close to the theoretical maximum range of Bluetooth operation of \SI{10}{\metre}, as outlined in \cref{sec:mcu_selection}.
 
-% TODO: añadir explicación
+\section{Receiving device companion application}
+
+To evaluate the system performance and allow the display and storage of the information produced by the radar system and sent via the Bluetooth Low Energy (BLE) connection, a PC application has also been developed. The application works with the two operating modes of the radar and is able to display in real-time the information coming from the radar node as well as storing the data in the PC. As the connection between the receiving device and the radar is wireless, the only requirements are that receiving device has installed a BLE card that supports the Bluetooth protocols outlined in \cref{sec:ble-system-implementation} and that it has an operating system installed which conforms to the requirements outlined in Appendix K. In the implementation of this work, a \textit{Qualcomm Atheros QCA61x4 Bluetooth} BLE-enabled card is used.
+
+The application is programmed in the Python programming language. The application is provided with documentation (Appendix K) that allows for easy modification if necessary. It makes use of the libraries \textit{Bleak} \cite{BleakDoc} for handling the BLE connection and data reception, \textit{NumPy} \cite{NumPyDoc} for numerical processing and \textit{Qt} \cite{QtDoc} for the graphical user interface (GUI). Screenshots of the application GUI while in use can be found in \cref{fig:pc}. %TODO: references
+
+The application allows to scan BLE devices in order to find the radar node, connect and disconnect to and from the radar node, display live real-time data coming from the radar and store the incoming data automatically in CSV format on disk.
+
+As a final function test, the gait of a person is measured. A screenshot of the result while performing the measurement is shown in \cref{fig:pc_gait}.
+
+\begin{figure}[htb]
+	\centering
+	\subfloat[Display of results of a reflective target in the primary operating mode]{\includegraphics[height=7.25cm]{img/gui_range.png} \label{fig:pc_range}}
+	\subfloat[Display of results of a walking person capture in the secondary operating mode]{\includegraphics[height=7.25cm]{img/gui_gait.png} \label{fig:pc_gait}}
+	\caption{Screenshots of the PC application interface operating in the two modes of the radar firmware, the primary mode (a) intended for range information and the secondary mode (b), with the Range-Doppler matrix display based on the frequency bin summation \label{fig:pc}}
+\end{figure}
+
+\chapter{Conclusions}
+
+The main objective of this Bachelor's Thesis was to develop a radar node or sensor that enables digitisation of the radar signals and allows the extraction of biomarkers, such as vital signs and gait patterns, with special interest in evaluating the system performance on the latter application. The radar sensor has been designed to provide real-time wireless data transmission and being low-cost. The secondary objectives for this project have been fulfilled.
+
+The measurement and analysis of the signals produced by the RF and baseband boards has been carried out. A MCU has been selected and integrated into the system. This part proved the most difficult due to semiconductor supply shortages during the time of writing. Finally, the MCU was sourced from another retailer with a long lead time. The signals generated by the baseband board were incompatible with the range of input of the MCU ADC, therefore an additional conditioning PCB has been developed with further compatibility requirements in mind. A DSP pipeline has been implemented including discard of useless samples, conversion to a suitable format, FFT computation and an optional step of frequency bins summation. A wireless link to transmit radar data has been implemented by leveraging the BLE protocol stack. A user application has been developed to evaluate the system performance, as well as display and store the information transmitted by the developed radar system. Finally, a measurement of the gait of a person has been carried out to test integration of all the parts of the system.
+
+
+During the development of the Bachelor's Thesis, there were identified several improvements that could be implemented moving forward. New MCUs have appeared in the market that feature ADCs with a high sampling rate and WiFi capabilities. As the WiFi protocol could allow for a higher throughput transmission, the substitution of the MCU unit could be of interest to investigate. Moreover, the exploration of the combination of two MCUs, one fast MCU or FPGA with a large ADC input range could be integrated separate to a dedicated MCU for BLE or WiFi transmission. All in all, higher throughputs and improvements on the connection reliability could prove useful for transmitting a higher quantity of useful radar data in a shorter amount of time.
 
 
