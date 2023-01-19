@@ -79,7 +79,7 @@ Also, the applications of each radar are studied. Specifically, the W band radar
 }
 
 @Article{Antolinos2020,
-  author    = {El{\'{\i}}as Antolinos and Federico Garc{\'{\i}}a-Rial and Clara Hern{\'{a}}ndez and Daniel Montesano and Juan I. Godino-Llorente and Jes{\'{u}}s Grajal},
+  author    = {Elías Antolinos and Federico García-Rial and Clara Hernández and Daniel Montesano and Juan I. Godino-Llorente and Jesús Grajal},
   journal   = {Remote Sensing},
   title     = {Cardiopulmonary Activity Monitoring Using Millimeter Wave Radars},
   year      = {2020},
@@ -473,4 +473,256 @@ Also, the applications of each radar are studied. Specifically, the W band radar
   year      = {2014},
   month     = {sep},
   number    = {3},
-  pages     = {87
+  pages     = {87--91},
+  volume    = {1},
+  doi       = {10.1049/htl.2014.0077},
+  publisher = {Institution of Engineering and Technology ({IET})},
+}
+
+@Article{Lv2018,
+  author    = {Qinyi Lv and Lei Chen and Kang An and Jun Wang and Huan Li and Dexin Ye and Jiangtao Huangfu and Changzhi Li and Lixin Ran},
+  journal   = {{IEEE} Transactions on Microwave Theory and Techniques},
+  title     = {{Doppler Vital Signs Detection in the Presence of Large-Scale Random Body Movements}},
+  year      = {2018},
+  month     = {sep},
+  number    = {9},
+  pages     = {4261--4270},
+  volume    = {66},
+  doi       = {10.1109/tmtt.2018.2852625},
+  publisher = {Institute of Electrical and Electronics Engineers ({IEEE})},
+}
+
+@Standard{Bluetooth40,
+  title    = {{Bluetooth Core Specification v4.0}},
+  author   = {{Bluetooth SIG}},
+  month    = mar,
+  revision = {v4.0},
+  year     = {2014},
+  school   = {{Bluetooth Special Interest Group}},
+}
+
+@Standard{Blel2cap,
+  title    = {{Health Device Profile, L2CAP Protocol Specification}},
+  author   = {{Bluetooth SIG}},
+  month    = may,
+  revision = {8},
+  year     = {2012},
+  school   = {{Bluetooth Special Interest Group}},
+}
+
+@Article{Peng2019,
+  author    = {Zhengyu Peng and Changzhi Li},
+  journal   = {Sensors},
+  title     = {{Portable Microwave Radar Systems for Short-Range Localization and Life Tracking: A Review}},
+  year      = {2019},
+  month     = {mar},
+  number    = {5},
+  pages     = {1136},
+  volume    = {19},
+  doi       = {10.3390/s19051136},
+  publisher = {{MDPI} {AG}},
+}
+
+@Manual{SR2021,
+  title  = {{TRX\_024\_046 24-GHz Highly Integrated IQ Transceiver}},
+  author = {{Silicon Radar GmbH}},
+  month  = oct,
+  note   = {v1.3},
+  year   = {2021},
+  number = {Datasheet TRX\_024\_046},
+}
+
+@Manual{SR2021eval,
+  title  = {{Product Sheet SiRad Easy r4 RFE Board TRX\_024\_046}},
+  author = {{Silicon Radar GmbH}},
+  month  = mar,
+  note   = {v1.3},
+  year   = {2021},
+  number = {Product Sheet TRX\_024\_046},
+}
+
+@Manual{TexasInstrumentsADF,
+  title  = {{ADF4159 Direct Modulation/Fast Waveform Generating, 13 GHz, Fractional-N Frequency Synthesizer}},
+  author = {{Analog Devices}},
+  month  = aug,
+  note   = {Rev. E},
+  year   = {2014},
+  number = {Datasheet ADF4159},
+}
+
+@Manual{TexasInstruments2014,
+  title  = {{OPAx354 250-MHz, Rail-to-Rail I/O, CMOS Operational Amplifiers}},
+  author = {{Texas Instruments}},
+  month  = apr,
+  note   = {Rev. C},
+  year   = {2018},
+  number = {Datasheet SBOS233G},
+}
+
+@Manual{ARM2020,
+  title  = {{Armv8.1-M Performance Monitoring User Guide}},
+  author = {{ARM Ltd.}},
+  month  = jul,
+  note   = {v. 1.186},
+  year   = {2020},
+  number = {Application Note ARM051-799564642-251},
+}
+
+@Manual{ARMQ15,
+  title  = {{ARM Developer Suite Recommendation and RFC Number Representation Format Standards}},
+  author = {{ARM Ltd.}},
+  year   = {1999},
+  number = {DUI 0066D},
+  page   = {86},
+}
+
+@Manual{ARMM4,
+  title  = {{Cortex-M4 Technical Reference Manual}},
+  author = {{ARM Ltd.}},
+  month  = jan,
+  note   = {Rev. r2p0},
+  year   = {2022},
+  number = {DDI 0673D},
+}
+
+@Manual{ARMCMSIS,
+  title  = {{ARM CMSIS DSP Software Library Reference Documentation}},
+  author = {{ARM Ltd.}},
+  month  = jul,
+  year   = {2022},
+}
+
+@Book{Tanenbaum2015,
+  author    = {Tanenbaum, Andrew S. and Bos, Herbert},
+  publisher = {Pearson},
+  title     = {{Modern Operating Systems}},
+  year      = {2015},
+  isbn      = {9780133591620},
+  subtitle  = {Forth Edition},
+}
+
+@Book{Kurose2006,
+  author    = {Kurose, James F. and Ross, Keith W.},
+  publisher = {Addison Wesley},
+  title     = {{Computer Networking Complete Package (3rd Edition) with study companion}},
+  year      = {2006},
+  isbn      = {9780321418494},
+  pages     = {160-172},
+}
+
+@Article{Senigagliesi2020,
+  author    = {Linda Senigagliesi and Gianluca Ciattaglia and Adelmo de Santis and Ennio Gambi},
+  journal   = {Electronics},
+  title     = {{People Walking Classification Using Automotive Radar}},
+  year      = {2020},
+  month     = {mar},
+  number    = {4},
+  pages     = {588},
+  volume    = {9},
+  doi       = {10.3390/electronics9040588},
+  publisher = {{MDPI} {AG}},
+}
+
+@Book{Pozar2011,
+  author    = {Pozar, David M.},
+  publisher = {Wiley},
+  title     = {Microwave engineering},
+  year      = {2011},
+  isbn      = {9780470631553},
+}
+
+@InProceedings{Smith2008,
+  author    = {Graeme E. Smith and Karl Woodbridge and Chris J. Baker},
+  booktitle = {2008 {IEEE} Radar Conference},
+  title     = {{Multistatic Micro-Doppler Signature of personnel}},
+  year      = {2008},
+  month     = {may},
+  publisher = {{IEEE}},
+  doi       = {10.1109/radar.2008.4721060},
+}
+
+@InProceedings{Karabacak2013,
+  author    = {C. Karabacak and S. Z. Gürbüz and M. B. Guldogan and A. C. Gürbüz},
+  booktitle = {{SPIE} Proceedings},
+  title     = {{Multi-aspect angle classification of human radar signatures}},
+  year      = {2013},
+  editor    = {G. Charmaine Gilbreath and Chadwick Todd Hawley},
+  month     = {may},
+  publisher = {{SPIE}},
+  doi       = {10.1117/12.2017709},
+}
+
+@InProceedings{Tekeli2013,
+  author    = {Burkan Tekeli and Sevgi Zubeyde Gurbuz and Melda Yuksel and Ali Cafer Gurbuz and Mehmet Burak Guldogan},
+  booktitle = {2013 {IEEE} Radar Conference ({RadarCon}13)},
+  title     = {{Classification of human micro-Doppler in a radar network}},
+  year      = {2013},
+  month     = {apr},
+  publisher = {{IEEE}},
+  doi       = {10.1109/radar.2013.6586080},
+}
+
+@InProceedings{Tahmoush2009,
+  author    = {Dave Tahmoush and Jerry Silvious},
+  booktitle = {2009 {IEEE} 3rd International Conference on Biometrics: Theory, Applications, and Systems},
+  title     = {{Radar micro-doppler for long range front-view gait recognition}},
+  year      = {2009},
+  month     = {sep},
+  publisher = {{IEEE}},
+  doi       = {10.1109/btas.2009.5339049},
+}
+
+@Manual{BleakDoc,
+  title  = {{Bleak v0.19.5 documentation}},
+  author = {Henrik Blidh},
+  month  = sep,
+  year   = {2022},
+  url    = {https://bleak.readthedocs.io/en/stable/},
+}
+
+@Manual{NumPyDoc,
+  title  = {{NumPy Reference Release 1.23.0}},
+  author = {{NumPy Community}},
+  month  = jun,
+  year   = {2022},
+  url    = {https://numpy.org/doc/1.23/numpy-ref.pdf},
+}
+
+@Manual{QtDoc,
+  title  = {{PyQtGraph User Guide v0.13.2.dev0}},
+  author = {{PyQtGraph Developers}},
+  month  = dec,
+  year   = {2022},
+  url    = {https://pyqtgraph.readthedocs.io/en/latest/user_guide/index.html},
+}
+
+@Manual{EUConform2022,
+  title  = {Technical documentation and EU declaration of conformity},
+  author = {{European Union}},
+  year   = {2022},
+  url    = {https://europa.eu/youreurope/business/product-requirements/compliance/technical-documentation-conformity/index_en.htm},
+}
+
+@Article{Liu2022,
+  author    = {Yingcheng Liu and Guo Zhang and Christopher G. Tarolli and Rumen Hristov and Stella Jensen-Roberts and Emma M. Waddell and Taylor L. Myers and Meghan E. Pawlik and Julia M. Soto and Renee M. Wilson and Yuzhe Yang and Timothy Nordahl and Karlo J. Lizarraga and Jamie L. Adams and Ruth B. Schneider and Karl Kieburtz and Terry Ellis and E. Ray Dorsey and Dina Katabi},
+  journal   = {Science Translational Medicine},
+  title     = {{Monitoring gait at home with radio waves in Parkinson's disease: A marker of severity, progression, and medication response}},
+  year      = {2022},
+  month     = {sep},
+  number    = {663},
+  volume    = {14},
+  doi       = {10.1126/scitranslmed.adc9669},
+  publisher = {American Association for the Advancement of Science ({AAAS})},
+}
+
+@Article{Trabassi2022,
+  author    = {Dante Trabassi and Mariano Serrao and Tiwana Varrecchia and Alberto Ranavolo and Gianluca Coppola and Roberto De Icco and Cristina Tassorelli and Stefano Filippo Castiglia},
+  journal   = {Sensors},
+  title     = {{Machine Learning Approach to Support the Detection of Parkinson's Disease in {IMU}-Based Gait Analysis}},
+  year      = {2022},
+  month     = {may},
+  number    = {10},
+  pages     = {3700},
+  volume    = {22},
+  doi       = {10.3390/s22103700},
+ 

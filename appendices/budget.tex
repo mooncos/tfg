@@ -1,0 +1,85 @@
+\chapter{Economic budget}
+
+This appendix covers an approximate budget for the developed project. The labour involves a single person, an engineering student. The hourly salary of the engineering student is calculated based on the income from an internship salary, awarded for the development of the project. \cref{tab:labour_costs} lists the labour costs associated with the project.
+
+\begin{table}[h]
+	\centering
+	\begin{tblr}{
+			width = \linewidth,
+			colspec = {QQQ},
+			cells = {c},
+			hlines = {0.08em},
+			hline{2} = {-}{0.05em},
+		}
+		\textbf{Hours} & \textbf{Cost/hour (€)} & \textbf{Total (€)}\\
+		720 & 8.30 & 5,976.00
+	\end{tblr}
+	\caption{Labour costs.}
+	\label{tab:labour_costs}
+\end{table}
+
+The cost of the equipment and materials used in the project is detailed in \cref{tab:material_costs}.
+
+\begin{table}[h!]
+	\centering
+	\resizebox{\linewidth}{!}{%
+		\begin{tblr}{
+				vline{5} = {23}{},
+				hline{1,24} = {-}{0.08em},
+				hline{2,23} = {-}{},
+			}
+			\textbf{Item} & {\textbf{Cost}\\\textbf{(€)}} & {\textbf{Use}\\\textbf{(months)}} & {\textbf{Deprec.}\\\textbf{(years)}} & {\textbf{Total}\\\textbf{(€)}}\\
+			Personal Computer (SW included) & 950.00 & 12 & 5 & 190.00\\
+			MATLAB License & 800.00 & 12 & 1 & 800.00\\
+			Altium Designer License & 750.00 & 12 & 1 & 750.00\\
+			ADLINK PCI-9846 ADC & 3,630.00 & 12 & 10 & 363.00\\
+			ADF1459 PFD & 19.59 & 12 & 3 & 6.53\\
+			Attiny87 Control MCU & 1.91 & 12 & 3 & 0.64\\
+			OPA2354AIDDA OAs & 10.53 & 12 & 3 & 3.51\\
+			LD3985M33R Linear regulator & 5.58 & 12 & 3 & 1.86\\
+			MMIC (TRX\_024\_046 EvalKit) & 328.50 & 12 & 5 & 65.70\\
+			BUF802IRGTR HPF OA & 3.71 & 12 & 3 & 1.24\\
+			OPA859QDSGRQ1 DC shift OA & 4.28 & 12 & 3 & 1.43\\
+			STM32WB15CCU6 MCU & 6.15 & 12 & 3 & 2.05\\
+			146175-0001 BLE Antenna & 1.57 & 12 & 3 & 0.52\\
+			KE-32.768-7-E Crystal 32.768 kHz & 0.98 & 12 & 3 & 0.33\\
+			Q24FA20H0019612 Crystal 32 MHz & 1.51 & 12 & 3 & 0.50\\
+			PCB (5x5 cm JLCPCB) & 17.94 & 12 & 3 & 5.98\\
+			Passive components and connectors in PCBs & 20.00 & 12 & 3 & 6.67\\
+			Oscilloscope Agilent MSO8104A & 25,250.00 & 12 & 10 & 2,525.00\\
+			Spectrum Analyser Agilent & 30,000.00 & 12 & 10 & 3,000.00\\
+			ST-LINK MCU Programmer & 17.92 & 12 & 3 & 5.97\\
+			RF and measurement setup (cables, connectors, microscope, etc) & 2,000.00 & 12 & 5 & 400.00\\
+			\textbf{TOTAL (Direct Costs)} &  &  &  & \textbf{8,130.92}
+		\end{tblr}
+	}
+	\caption{Material costs.}
+	\label{tab:material_costs}
+\end{table}
+
+After taking into account indirect costs and VAT, the final cost of the project is summarised in \cref{tab:final_costs}.
+
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{ll|l} 
+		\toprule
+		\textbf{Concept} & \multicolumn{1}{l}{\textbf{Percentage}} & \textbf{Total (€)} \\ 
+		\hline
+		Material Resources (DC) &  & 8,130.92 \\ 
+		General Expenses (IC) & 15\% over DC & 1,219.64 \\
+		Labour costs & & 5,976.00 \\ 
+		\hline
+		& \multicolumn{1}{l}{} &  \\ 
+		\hline
+		Subtotal &  & \textbf{15,326.56} \\ 
+		VAT & 21\% & 3,218.58 \\ 
+		\hline
+		& \multicolumn{1}{l}{} &  \\ 
+		\bottomrule
+		\multicolumn{1}{!{\vrule width \heavyrulewidth}l}{\textbf{Budget Total}} & \multicolumn{1}{l!{\vrule width \heavyrulewidth}}{} & \multicolumn{1}{l!{\vrule width \heavyrulewidth}}{\textbf{18,545.14}} \\
+		\bottomrule
+	\end{tabular}
+	\caption{Summary of total costs.}
+	\label{tab:final_costs}
+\end{table}
+

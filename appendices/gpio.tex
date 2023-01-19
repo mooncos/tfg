@@ -1,0 +1,30 @@
+\chapter{GPIO pins configuration} \label{app:gpio}
+
+In this appendix, a table with the configurations to the GPIO pins is attached in \cref{tab:gpio}. In the source code, the configuration is performed as follows:
+
+\ccode{listings/gpio.c}{gpio.c}
+
+\begin{table}
+	\centering
+	\rotatebox{90}{{\footnotesize
+		\begin{tblr}{
+				hline{1,14} = {-}{0.08em},
+				hline{2} = {-}{},
+			}
+			\textbf{Pin name} & \textbf{Signal on pin} & \textbf{Output level} & \textbf{Mode} & \textbf{Pull-up/down} & \textbf{Output speed} & \textbf{Fast Mode} & \textbf{Label}\\
+			PA1 & ADC1\_IN6 & n/a & Analog mode & No pull-up and no pull-down & n/a & Enable & I\_ADC\\
+			PA2 & ADC1\_IN7 & n/a & Analog mode & No pull-up and no pull-down & n/a & Enable & Q\_ADC\\
+			PA5 & n/a & n/a & External Interrupt - Rising edge & Pull-up & n/a & n/a & RST\\
+			PA6 & n/a & Low & Output Push Pull & No pull-up and no pull-down & Low & n/a & LED\_STATUS\\
+			PB0 & n/a & Low & Output Push Pull & No pull-up and no pull-down & Low & n/a & LED\_ERROR\\
+			PB8 & n/a & Low & Output Push Pull & No pull-up and no pull-down & Very High & Enable & OSCILLO\\
+			PB9 & n/a & n/a & External Interrupt - Rising edge & No pull-up and no pull-down & n/a & n/a & TRIG\\
+			OSC\_IN & RCC\_OSC\_IN & n/a & n/a & n/a & n/a & n/a & \\
+			OSC\_OUT & RCC\_OSC\_OUT & n/a & n/a & n/a & n/a & n/a & \\
+			PC14-OSC32\_IN & RCC\_OSC32\_IN & n/a & n/a & n/a & n/a & n/a & \\
+			PC15-OSC32\_OUT & RCC\_OSC32\_OUT & n/a & n/a & n/a & n/a & n/a & \\
+			RF1 & RF\_RF1 & n/a & n/a & n/a & n/a & n/a & 
+	\end{tblr}}}
+	\caption{GPIO pins configuration table.}
+	\label{tab:gpio}
+\end{table}

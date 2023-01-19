@@ -1,15 +1,20 @@
-\documentclass[11pt,parskip=half-,chapterprefix=true,appendixprefix=true]{scrreprt}
+\documentclass[11pt,parskip=half-,chapterprefix=true,appendixprefix=true,numbers=noenddot,bibliography=totoc]{scrreprt}
 
 \input{internal/preamble.tex}
-%\includeonly{chapters/intro.tex}
+
+\input{internal/glossary.tex}
 
 \begin{document}
-
+	
+	\pagenumbering{alph}
 	\include{cover/cover.tex}
 
 	\pagenumbering{roman}
 	%include index and figure index and table index
 	\include{chapters/toc.tex}
+	\include{chapters/lof.tex}
+	\include{chapters/lot.tex}
+	\include{chapters/abbr.tex}
 
 	\include{chapters/ack.tex}
 
@@ -25,13 +30,28 @@
 
 	\include{chapters/firmware.tex}
 
-	\appendix
+	\include{chapters/conclusion.tex}
 
-	%\include{appendices/test.tex}
-
-	%\include{chapters/system_characteristics.tex}
-
-	\bibliographystyle{IEEEtran}
+	%\bibliographystyle{IEEEtran}
 	%\bibliography{sources.bib}
-	\bibliography{IEEEabrv,ref/full.bib}
+	%\bibliography{IEEEabrv,ref/full.bib}
+	\printbibliography 
+	
+	\appendix
+	
+	\include{appendices/econ_environ.tex}
+	\include{appendices/budget.tex}
+	\include{appendices/detailed_cost.tex}
+	\include{appendices/detailed_cost_new.tex}
+	\include{appendices/mcus.tex}
+	\include{appendices/if_detail.tex}
+	\include{appendices/mcu_detail.tex}
+	\include{appendices/peripherals_code.tex}
+	\include{appendices/gpio.tex}
+	\include{appendices/q15.tex}
+	\include{appendices/fft.tex}
+	\include{appendices/fifo.tex}
+	\include{appendices/zenith_docs.tex}
+	
+
 \end{document}

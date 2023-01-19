@@ -1,0 +1,17 @@
+\chapter{Peripherals configuration in the source code} \label{app:peripherals}
+
+In this appendix, it is shown the source code responsible for configuring all the peripherals according to the requirements and configurations outlined in \cref{sec:mcu_peripherals}.
+
+For the ADC peripheral:
+\ccode{listings/adc.c}{adc.c}
+
+For the TIM1 peripheral:
+\ccode{listings/tim.h}{tim.h}
+\ccode{listings/tim_macros.h}{tim\_macros.h}
+\ccode{listings/tim.c}{tim.c}
+
+For the DMA peripheral:
+\ccode{listings/dma.c}{dma.c}
+
+For the ADC peripheral and the general system, some configurations are done in the Main part of the source code:
+\ccode{listings/main.h}{main.h}

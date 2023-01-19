@@ -1,0 +1,117 @@
+\chapter{FFT algorithm implementation for the system} \label{app:fft}
+
+In this appendix, the algorithm implementation for the FFT computation in the DSP pipeline is described.
+
+Parting from \cref{sec:fast-fourier-transform-fft-computation}, the system implementation of the FFT algorithm is based on Radix-4 decimation in frequency (DIF) algorithm described in \cite{Kosaka, R4DIF}, commonly used as a parallel FFT computing algorithm. It has been slightly modified from the formal definition of the algorithm \cite{Kosaka} so as to adapt it to the developed system.
+
+The definition of the algorithm is known and detailed in \cite{R4DIF}. The FFT is a particular fast implementation of a discrete fourier transform (DFT). A DFT is defined as follows \cite{Oppenheim2013}:
+\begin{gather}
+	X[k] = \sum_{n=0}^{N-1} x[n] W_N^{nk}\\
+	W_N^{nk} = e^{-j2\pi nk /N} \qquad 0 \le k \le N-1
+\end{gather}
+Where $X[k]$ and $W_N^{nk}$ are frequency domain and time domain sequences respectively.
+
+To implement a fast algorithm that avoids the costly multiplications and summations necessary for the DFT definition algorithm, the DFT process is decomposed into 4 different smaller DFTs \cite{Kosaka}:
+\begin{equation}
+	X[k] = \sum_{n=0}^{N/4-1} x[n] W_N^{nk} + \sum_{n=N/4}^{2N/4-1} x[n] W_N^{nk} + \sum_{n=2N/4}^{3N/4-1} x[n] W_N^{nk} + \sum_{n=3N/4}^{N-1} x[n] W_N^{nk}
+\end{equation}
+By performing the substitution $m = n - \frac{cN}{4}$, it is possible to rewrite the sum as:
+\begin{equation}
+	X[k] = \sum_{n = 0}^{\frac{N}{4} - 1} x[n]W_N^{kn} + \sum_{m = 0}^{\frac{N}{4} - 1} x\left[m + \frac{N}{4}\right]W_N^{k(m + \frac{N}{4})} + \\ \sum_{m = 0}^{\frac{N}{4} - 1} x\left[m + \frac{2N}{4}\right]W_N^{k(m + \frac{2N}{4})} + \sum_{m = 0}^{\frac{N}{4} - 1} x\left[m + \frac{3N}{4}\right]W_N^{k(m + \frac{3N}{4})}
+\end{equation}
+
+Considering each $W_N$ term, a simplification can be performed such that:
+\begin{equation}
+	W_N^{k(m + \frac{cN}{4})} = W_N^{km} W_N^{\frac{ckN}{4}} = W_N^{km}W_4^{ck} \hspace{0.3cm} \forall \hspace{0.3cm} c \in [1, 3]
+\end{equation}
+
+As the $W_N^{km}$ term is common to all sums, it can be factored out. By reversing the variable change it is obtained:
+\begin{equation} \label{eqn:dft_simp1}
+	X[k] = \sum_{n = 0}^{\frac{N}{4} - 1}  \left(x[n]W_4^{0k} + x\left[n + \frac{N}{4}\right]W_4^{1k} + x\left[n + \frac{2N}{4}\right]W_4^{2k} + x\left[n + \frac{3N}{4}\right]W_4^{3k}\right)  W_N^{kn}
+\end{equation}
+
+Where the $W_4^{ck}$ terms (commonly called \textit{twiddle factors} \cite{Kosaka}) are as follows:
+\begin{gather}
+	W_4^{0k} = W_4^0 = 1 \\ 
+	W_4^{1k} = (W_4^1)^k = (-j)^k \\
+	W_4^{2k} = (W_4^2)^k = (-1)^k \\
+	W_4^{3k} = (W_4^3)^k = (j)^k
+\end{gather}
+\cref{eqn:dft_simp1} then becomes:
+\begin{equation} \label{eqn:dft_simp2}
+	X[k] = \sum_{n = 0}^{\frac{N}{4} - 1}  \left(x[n] + x\left[n + \frac{N}{4}\right](-j)^k + x\left[n + \frac{2N}{4}\right](-1)^k + x\left[n + \frac{3N}{4}\right](j)^k\right)  W_N^{kn}
+\end{equation}
+
+Nonetheless, this equation is not properly defined as the sum goes from $0$ to $N/4 -1$ but the $W_N$ term is based on $N$ and not $N/4$.
+
+In a DIF procedure, a DFT matrix is formed, where the inputs are read row-wise and the output column-wise \cite{R4DIF}. Therefore to convert the base, it is necessary to obtain $X[4k], X[4k + 1], X[4k + 2], X[4k + 3]$ instead of $X[k]$:
+\begin{align} \label{eqn:troncho}
+	X[4k] &= \sum_{n = 0}^{\frac{N}{4} - 1} \left( x[n] + x\left[n + \frac{N}{4}\right](-j)^{4k} + x\left[n + \frac{2N}{4}\right](-1)^{4k} + x\left[n + \frac{3N}{4}\right]j^{4k} \right) W_N^{4kn} \\
+	X[4k + 1] &= \sum_{n = 0}^{\frac{N}{4} - 1} \left( x[n] + x\left[n + \frac{N}{4}\right](-j)^{4k + 1} + x\left[n + \frac{2N}{4}\right](-1)^{4k + 1} + x\left[n + \frac{3N}{4}\right]j^{4k + 1} \right) W_N^{(4k + 1)n} \\
+	X[4k + 2] &= \sum_{n = 0}^{\frac{N}{4} - 1} \left( x[n] + x\left[n + \frac{N}{4}\right](-j)^{4k + 2} + x\left[n + \frac{2N}{4}\right](-1)^{4k + 2} + x\left[n + \frac{3N}{4}\right]j^{4k + 2} \right) W_N^{(4k + 2)n} \\
+	X[4k + 3] &= \sum_{n = 0}^{\frac{N}{4} - 1} \left( x[n] + x\left[n + \frac{N}{4}\right](-j)^{4k + 3} + x\left[n + \frac{2N}{4}\right](-1)^{4k + 3} + x\left[n + \frac{3N}{4}\right]j^{4k + 3} \right) W_N^{(4k + 3)n}
+\end{align}
+
+By simplifying the constant terms:
+\begin{gather}
+	(-j)^{4k} = ((-j)^4)^k = 1^k = 1 \\
+	(-j)^{4k + 1} = (-j)^{4k} (-j)^1 = -j \\
+	(-j)^{4k + 2} = (-j)^{4k} (-j)^2 = -1 \\
+	(-j)^{4k + 3} = (-j)^{4k} (-j)^3 = j
+\end{gather}
+\cref{eqn:troncho} is reduced to:
+\begin{align}
+	X[4k] &= \sum_{n = 0}^{\frac{N}{4} - 1} \left( x[n] + x\left[n + \frac{N}{4}\right] + x\left[n + \frac{2N}{4}\right] + x\left[n + \frac{3N}{4}\right] \right) W_N^{4kn} \\
+	X[4k + 1] &= \sum_{n = 0}^{\frac{N}{4} - 1} \left( x[n] + x\left[n + \frac{N}{4}\right](-j) + x\left[n + \frac{2N}{4}\right](-1) + x\left[n + \frac{3N}{4}\right]j \right) W_N^{(4k + 1)n} \\
+	X[4k + 2] &= \sum_{n = 0}^{\frac{N}{4} - 1} \left( x[n] + x\left[n + \frac{N}{4}\right](-1) + x\left[n + \frac{2N}{4}\right] + x\left[n + \frac{3N}{4}\right](-1) \right) W_N^{(4k + 2)n} \\
+	X[4k + 3] &= \sum_{n = 0}^{\frac{N}{4} - 1} \left( x[n] + x\left[n + \frac{N}{4}\right]j + x\left[n + \frac{2N}{4}\right](-1) + x\left[n + \frac{3N}{4}\right](-j) \right) W_N^{(4k + 3)n}
+\end{align}
+The outer \textit{twiddle factors} can be expressed as follows:
+\begin{gather}
+	W_N^{4kn} = W_{\frac{N}{4}}^{kn} \\
+	W_N^{(4k + 1)n} = W_N^{4kn} W_N^{1n} = W_N^nW_{\frac{N}{4}}^{kn} \\
+	W_N^{(4k + 2)n} = W_N^{4kn} W_N^{2n} = W_N^{2n}W_{\frac{N}{4}}^{kn} \\
+	W_N^{(4k + 3)n} = W_N^{4kn} W_N^{3n} = W_N^{3n}W_{\frac{N}{4}}^{kn} \\
+\end{gather}
+And finally:
+\begin{align} \label{eqn:tocho2}
+	X[4k] &= \sum_{n = 0}^{\frac{N}{4} - 1} \left( x[n] + x\left[n + \frac{N}{4}\right] + x\left[n + \frac{2N}{4}\right] + x\left[n + \frac{3N}{4}\right] \right)  W_{\frac{N}{4}}^{kn} \\
+	X[4k + 1] &= \sum_{n = 0}^{\frac{N}{4} - 1} \left( x[n] + x\left[n + \frac{N}{4}\right](-j) + x\left[n + \frac{2N}{4}\right](-1) + x\left[n + \frac{3N}{4}\right]j \right) W_N^nW_{\frac{N}{4}}^{kn} \\
+	X[4k + 2] &= \sum_{n = 0}^{\frac{N}{4} - 1} \left( x[n] + x\left[n + \frac{N}{4}\right](-1) + x\left[n + \frac{2N}{4}\right] + x\left[n + \frac{3N}{4}\right](-1) \right) W_N^{2n}W_{\frac{N}{4}}^{kn} \\
+	X[4k + 3] &= \sum_{n = 0}^{\frac{N}{4} - 1} \left( x[n] + x\left[n + \frac{N}{4}\right]j + x\left[n + \frac{2N}{4}\right](-1) + x\left[n + \frac{3N}{4}\right](-j) \right) W_N^{3n}W_{\frac{N}{4}}^{kn}
+\end{align}
+
+This algorithm splits a DFT into sets of 4 smaller DFT. This FFT algorithm is up to four times faster than computing the raw DFT \cite{R4DIF}. Up to this point, the implementation follows the one in \cite{R4DIF}. Nonetheless, this is only possible with a DFT size of a factor of 4. Moreover, the resulting sums of the FFT implementation \cite{R4DIF} are not laid out to take advantage of the single instruction multiple data (SIMD) ARM instructions to accelerate computation. Thus, from this point, the following modifications have been carried out to allow a faster computation:
+\begin{enumerate}
+	\item 0-pad the input sequence until the size reached is a multiple of 4
+	\item Split the input sequence according to the input sequence indices in \cref{eqn:tocho2} and successively until obtaining a tree of DFTs of size four.
+	\item Perform the algorithm in a loop and combine all DFTs until the output sequence is reached
+	\item Reorder the output sequence so that bin $M$ corresponds to the result of the DFT at index $M$.
+\end{enumerate}
+The algorithm that is performed in a loop is optimised using SIMD ARM instructions to accelerate the computation. The algorithm that is performed for every size 4 DFT is expressed in a matrix form:
+
+\begin{equation}
+	\mathbf{X} = \mathbf{x}\mathbf{W_4} \odot
+	\begin{bmatrix}
+		1 \\
+		W_N^{1n} \\
+		W_N^{2n} \\
+		W_N^{3n} \\
+	\end{bmatrix}
+\end{equation}
+Where $\mathbf{x}= \left[x[n], x\left[n + \frac{N}{4}\right], x\left[n + \frac{2N}{4}\right], x\left[n + \frac{3N}{4}\right]\right]$, $\mathbf{X}= [x[4k], x[4k+1], x[4k+2], x[4k+3]$ and $\odot$ is the Hadamard product (element-wise product of vectors). Also $\mathbf{W_4}$ and the values of the $W_N^{cn}$ vector are provided by the ARM CMSIS library \cite{ARMCMSIS} and stored in memory.
+
+For reference, in this case, $\mathbf{W_4}$ is as follows:
+\begin{equation}
+	\mathbf{W_4} =     
+	\begin{bmatrix}
+		1 & 1 & 1 & 1 \\
+		1 & -j & -1 & j \\
+		1 & -1 & 1 & -1 \\
+		1 & j & -1 & -j \\
+	\end{bmatrix}
+\end{equation}
+
+The matrix multiplication is performed as follows in the ARM assembly source code:
+{\renewcommand\fcolorbox[4][]{\textcolor{black}{\strut#4}}
+\inputminted[obeytabs=true,tabsize=2,breaklines,label=matmul\_simd.s,frame=topline,fontsize=\footnotesize]{asm}{listings/matrix.s}

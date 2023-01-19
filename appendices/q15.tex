@@ -1,0 +1,16 @@
+\chapter{\textit{Q15} format conversion algorithm} \label{app:q15}
+
+In this appendix, the algorithm for the \textit{Q15} format \cite{ARMQ15} conversion is described. It is also shown the implementation in the firmware source code.
+
+Parting from \cref{sec:normalisation}, the \textit{Q15} format conversion is performed on the $\mathbf{v'}$ vector. A series of binary operations take place for every $v'_i \in \mathbf{v'}$. The operation for each value yields a modified vector $v''_i \in \mathbf{v''}$ such that:
+\begin{gather}
+	v''_i = \frac{v'_i(Q_{\max}-Q_{\min})+r_f}{A_{\max}-A_{\min}} + Q_{\min}\\
+	Q_{\max} = \mathrm{0x8000}\quad Q_{\min} = \mathrm{0x7FFF} \\
+	A_{\max} = \mathrm{0x0FFF}\quad A_{\min} = \mathrm{0x0000} \\
+	r_f = \left\lfloor \frac{A_{\max}-A_{\min}}{2} \right\rfloor = \mathrm{0x07FF}
+\end{gather}
+Where: $Q_{\max}$ and $Q_{\min}$ are the 16-bit values for the representation of the highest and lowest values respectively in the \textit{Q15} format. $A_{\max}$ and $A_{\min}$ are the 12-bit values for the representation of the highest and lowest ADC reading. $r_f$ is a rounding factor that is added so that the division in the scaling factor is rounded to the nearest integer.
+
+In the firmware source code, the conversion is implemented as follows:
+\ccode{listings/q15.c}{q15.c}
+It is important to note that this loop also discards the extrema samples as per detailed in \cref{sec:outlying-samples-discard}.

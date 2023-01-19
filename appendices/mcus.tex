@@ -1,0 +1,42 @@
+\chapter{Comparison of commercially available microcontroller units (MCU)} \label{app:mcu_comparison}
+
+In this appendix, the results of the research on currently available microcontroller units (MCU) is described. The MCUs need to have an integrated analogue-to-digital (ADC) with a sufficiently high sampling rate, as well as wireless transmission capabilities. Additionally, the MCUs must comply with the characteristics outlined in \cref{sec:mcu_selection}.
+
+For the selection of candidate MCUs, popular manufacturers of embedded hardware were consulted. Additionally, the component distributors and stock warehouses were contacted and their online marketplaces were searched for the different MCU models. At the time of writing, this proved difficult due to an ongoing semiconductor supply shortage.
+
+The properties that were looked after during the research of the MCUs were, in order from most important to less important:
+\begin{enumerate}
+	\item Integrated high-speed ADC (number of ADCs is less important)
+	\item Wireless capabilities (centred on Bluetooth and WiFi)
+	\item Resolution of the ADC samples (12-bit or better)
+	\item Current consumption (around 100-150 mA average)
+	\item Manufacturer (familiarity with development tools)
+\end{enumerate}
+
+The results of the research have been summarised in \cref{tab:mcus_comparison}. As explained in \cref{sec:mcu_selection}, after consideration of the available options and stock, the STM32WB15CC \cite{STMicroelectronics2022} from ST Microelectronics was chosen as it fulfilled all requirements. Nonetheless, the MCU selection had a stock problem and the pieces had to be sourced from an overseas distributor, delaying the arrival process of the MCUs.
+
+\begin{table}
+	\centering
+	\rotatebox{90}{
+	\begin{tblr}{
+			column{3} = {c},
+			column{4} = {c},
+			column{5} = {c},
+			column{6} = {c},
+			column{7} = {c},
+			column{8} = {c},
+			column{9} = {c},
+			hline{1,8} = {-}{0.08em},
+			hline{2} = {-}{},
+		}
+		\textbf{IC}& \textbf{Fab.} & \textbf{ADC \#} & \textbf{Chs.} & \textbf{Bits} & \textbf{$f_{s\max}$ (MSps)} & \textbf{Bluetooth} & \textbf{WiFi} & \textbf{$I_{DC \max}$ (mA)}\\
+		\textbf{STM32F765VG} \cite{STM32F765VG} & ST & 3 & 24 & 12 & 2.4 & N/A & N/A & 420\\
+		\textbf{EFR32BG22} \cite{EFR32BG22} & SiLabs & 1 & 4 & 12 & 1 & BLE 5.3 & WiFi 5 & 105\\
+		\textbf{STM32WB15CC} \cite{STMicroelectronics2022} & ST & 1 & 8 & 12 & 1.5 & BLE 5.2 & N/A & 85\\
+		\textbf{STM32F091CB} \cite{STM32F091CB} & ST & 1 & 4 & 12 & 1.25 & N/A & N/A & 36\\
+		\textbf{STM32F303RE} \cite{STM32F303RE} & ST & 4 & 40 & 12 & 5 & N/A & N/A & 145\\
+		\textbf{XMC4700} \cite{XMC4700} & Infineon & 4 & 8 & 12 & 2.18 & N/A & N/A & 98
+	\end{tblr}}
+	\caption{Commercially available microcontrollers comparison summary. Most of the researched MCU lacked wireless functionalities and were rejected.}
+	\label{tab:mcus_comparison}
+\end{table}

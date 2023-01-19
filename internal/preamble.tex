@@ -35,14 +35,28 @@
 \usepackage{booktabs}
 \usepackage{xargs}
 \usepackage{pgf}
+\usepackage{pmboxdraw}
+\usepackage{rotating}
+%\usepackage[acronym,nonumberlist]{glossaries}
+%\makeglossaries
+\usepackage[abbreviations,nonumberlist,toc=false,section=chapter]{glossaries-extra}
+\makenoidxglossaries
+\glsaddall
 \usepackage[colorinlistoftodos,prependcaption]{todonotes}
 \usepackage[top=2.5cm,right=2.5cm,bottom=2.5cm,left=2.5cm]{geometry}
 %\usepackage[numbers]{natbib}
 %\usepackage[backend=biber,dateabbrev=false,urldate=iso,seconds=true,language=british,dashed=false,style=ieee]{biblatex}
 \pdfminorversion=7
 
+\usepackage[backend=biber, sorting=none, style=ieee, citestyle=numeric-comp]{biblatex}
+\bibliography{ref/full.bib}
+
+\usepackage{courier}
+\usepackage{minted}
+\newcommand{\ccode}[2]{\inputminted[obeytabs=true,tabsize=2,breaklines,label=#2,frame=topline,fontsize=\footnotesize]{c}{#1}}
+
 \hypersetup{
-	hidelinks = true,
+	hidelinks
 %	colorlinks = false,
 %	linkcolor =  blue,
 %	anchorcolor = blue,
@@ -81,7 +95,7 @@ headsepline
 \newcommandx{\improvement}[2][1=]{\todo[linecolor=Plum,backgroundcolor=Plum!25,bordercolor=Plum,#1]{#2}}
 \newcommandx{\thiswillnotshow}[2][1=]{\todo[disable,#1]{#2}}
 
-\graphicspath{{img/}{fig/}{fig/intro}}
+\graphicspath{{img/}{fig/}{fig/intro}{ext_docs/}}
 
 \def \titulo{Design and characterisation of a continuous-wave linear frequency-modulated radar at 24 GHz for real-time applications}
 \def \autor{Marcos Gómez Bracamonte}
